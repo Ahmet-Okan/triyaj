@@ -946,6 +946,29 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 .islem-cevap.yeni-cevap{animation:cevap-gel 1.2s ease-out}
 @keyframes cevap-gel{from{background:rgba(220,171,75,.22)}}
 .pen-govde.kolonlu .islem-cevap{break-inside:avoid}
+/* ===== Oyun modu: Pratik / Gerçekçi ===== */
+.giris-mod{margin-bottom:6px}
+.mod-sec{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mod-dugme{display:grid;gap:6px;align-content:start;padding:14px 16px 15px;border:1px solid var(--cizgi-2);border-left:4px solid var(--cizgi-2);background:rgba(18,17,16,.92);color:var(--metin);text-align:left;cursor:pointer;font:inherit;min-height:44px}
+.mod-dugme b{font:700 18px/1 var(--f-baslik);letter-spacing:.14em;text-transform:uppercase;color:var(--soluk)}
+.mod-dugme span{font:italic 14px/1.45 var(--f-govde);color:var(--soluk)}
+.mod-dugme:hover{border-color:var(--soluk)}
+.mod-dugme[aria-checked="true"]{background:linear-gradient(90deg,rgba(239,233,220,.08),rgba(18,17,16,.92) 80%)}
+.mod-dugme[aria-checked="true"] b{color:var(--beyaz)} .mod-dugme[aria-checked="true"] span{color:var(--metin)}
+.mod-pratik[aria-checked="true"]{border-color:var(--iyi);border-left-color:var(--iyi)}
+.mod-gercekci[aria-checked="true"]{border-color:var(--kotu);border-left-color:var(--kotu)}
+.mod-pratik[aria-checked="true"] b{color:var(--iyi)} .mod-gercekci[aria-checked="true"] b{color:var(--kotu)}
+@media (max-width:640px){ .mod-sec{grid-template-columns:1fr} }
+.ayar-mod{display:grid;gap:10px;padding:4px 0 14px;margin-bottom:6px;border-bottom:1px solid var(--cizgi)}
+.ayar-mod > b{font:600 15px var(--f-baslik);letter-spacing:.16em;text-transform:uppercase;color:var(--beyaz)}
+.ayar-mod .mod-sec{grid-template-columns:1fr}
+.ayar-mod-not{margin-left:12px;padding:5px 9px 4px;border:1px solid var(--kotu);color:var(--kotu);font:600 12px var(--f-baslik);letter-spacing:.12em;text-transform:uppercase}
+.mod-etiket{display:inline-grid;place-items:center;min-height:40px;padding:6px 10px 5px;border:1px solid var(--kotu);background:rgba(239,95,67,.1);color:var(--kotu);font:700 13px/1 var(--f-baslik);letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+.vk-skor.vk-g{background:var(--kotu);color:var(--beyaz)}
+.vk-skor.bos.vk-g{background:rgba(11,10,9,.8);color:#d9a597;border-color:var(--kotu)}
+.mod-yazi.mod-gercekci{color:var(--kotu)} .mod-yazi.mod-pratik{color:var(--iyi)}
+/* masanın boş halindeki satır içi raptiye ikonu (boyutsuz SVG ekranı kaplıyordu) */
+.masa-govde .ipucu svg{display:inline-block;width:14px;height:14px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:1.6}
 /* ===== Sonuç geldi simgesi (sol alt; Ercan Abi'nin karşı köşesi) ===== */
 .sonuc-ikon{position:fixed;z-index:24;left:calc(72px + 16px);bottom:20px;display:flex;align-items:center;gap:10px;max-width:236px;padding:8px 14px 8px 8px;border:1px solid var(--uyari);
   background:rgba(11,10,9,.96);color:var(--metin);box-shadow:0 12px 30px rgba(0,0,0,.7);cursor:pointer;text-align:left;font:inherit;animation:si-gel .35s ease-out,si-nabiz 1.8s ease-in-out .35s infinite}
@@ -1858,8 +1881,17 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function simdi() { return (window.performance && performance.now) ? performance.now() : Date.now(); }
   function onceYaz(sn) { return sn < 60 ? "az önce" : Math.floor(sn / 60) + " dk önce"; }
   function kalanYaz(sn) { return M.saatYaz(Math.ceil(Math.max(0, sn) - 1e-6)); }
-  function enIyiOku(id) { try { var v = localStorage.getItem("triyaj-en-iyi-" + id); return v == null ? null : parseInt(v, 10); } catch (e) { return null; } }
-  function enIyiYaz(id, skor) { try { var e = enIyiOku(id); if (e == null || skor > e) localStorage.setItem("triyaj-en-iyi-" + id, String(skor)); } catch (e) { /* depolama kapalı olabilir */ } }
+  // Oyun modu: Pratik (varsayılan; düşünmek bedava) ya da Gerçekçi (saat hiç durmaz, vazgeç/danış/rehber yok).
+  // Seçim localStorage "triyaj-mod"da; vaka başında ui.mod sabitlenir, vaka sürerken değişmez.
+  var MOD_AD = { pratik: "Pratik", gercekci: "Gerçekçi" };
+  function modOku() { try { return localStorage.getItem("triyaj-mod") === "gercekci" ? "gercekci" : "pratik"; } catch (e) { return "pratik"; } }
+  function modYaz(m) { ui.modSecim = m === "gercekci" ? "gercekci" : "pratik"; try { localStorage.setItem("triyaj-mod", ui.modSecim); } catch (e) { /* yok say */ } }
+  ui.modSecim = modOku();
+  function gercekci() { return ui.mod === "gercekci"; }
+  // En iyi skor iki mod için ayrı: Gerçekçi skorlar "-gercekci" ekiyle saklanır.
+  function enIyiAnahtar(id, mod) { return "triyaj-en-iyi-" + id + (mod === "gercekci" ? "-gercekci" : ""); }
+  function enIyiOku(id, mod) { try { var v = localStorage.getItem(enIyiAnahtar(id, mod)); return v == null ? null : parseInt(v, 10); } catch (e) { return null; } }
+  function enIyiYaz(id, skor, mod) { try { var e = enIyiOku(id, mod); if (e == null || skor > e) localStorage.setItem(enIyiAnahtar(id, mod), String(skor)); } catch (e) { /* depolama kapalı olabilir */ } }
   function vitalSinif(k, v) {
     if (v === null || v === undefined) return "kritik";
     switch (k) {
@@ -1971,19 +2003,22 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     try {
       var q = new URLSearchParams(location.search).get("duello"); if (!q) return null;
       var p = q.split("."), v = bul(V, p[0]), sk = parseInt(p[1], 10);
-      return v && sk >= 0 && sk <= 1000 ? { id: v.id, skor: sk } : null;
+      return v && sk >= 0 && sk <= 1000 ? { id: v.id, skor: sk, mod: p[2] === "g" ? "gercekci" : "pratik" } : null;
     } catch (e) { return null; }
   })();
   function duelloHTML() {
     if (!DUELLO) return "";
     var v = bul(V, DUELLO.id);
-    return '<div class="duello-bant"><b>Meydan okuma</b><p>Bir arkadaşın <em>' + esc(v.baslik) + "</em> vakasını <strong>" + DUELLO.skor + "</strong> puanla bitirdi. Geçebilir misin?</p>" +
-      '<button class="btn" type="button" data-act="baslat" data-id="' + esc(v.id) + '" data-k="duello-kabul">Kabul et</button></div>';
+    return '<div class="duello-bant"><b>Meydan okuma</b><p>Bir arkadaşın <em>' + esc(v.baslik) + "</em> vakasını <strong>" + DUELLO.skor + "</strong> puanla bitirdi (" +
+      MOD_AD[DUELLO.mod] + " mod). Geçebilir misin?</p>" +
+      '<button class="btn" type="button" data-act="duello-kabul" data-id="' + esc(v.id) + '" data-k="duello-kabul">Kabul et</button></div>';
   }
+  // Paylaşım metni: motorun metnine oynanan mod eklenir.
+  function paylasMetni(s, p) { return M.paylasimMetni(s, p).replace(/\n/, " · " + MOD_AD[ui.mod || "pratik"] + " mod\n"); }
   function meydanOku() {
     var s = ui.s, p = ui.p; if (!s || !p) return;
-    var url = location.origin + location.pathname + "?duello=" + ui.vaka.id + "." + p.toplam;
-    var metin = (ui.vaka.id === gununVakasi() ? "Günün vakası · " : "") + M.paylasimMetni(s, p) + "\nBenden iyi yapabilir misin?";
+    var url = location.origin + location.pathname + "?duello=" + ui.vaka.id + "." + p.toplam + (gercekci() ? ".g" : "");
+    var metin = (ui.vaka.id === gununVakasi() ? "Günün vakası · " : "") + paylasMetni(s, p) + "\nBenden iyi yapabilir misin?";
     var b = $("meydanBtn");
     if (navigator.share) { navigator.share({ title: "Triyaj", text: metin, url: url }).catch(function () {}); return; }
     var hepsi = metin + "\n" + url;
@@ -2008,9 +2043,12 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<div class="ayar-dene"><button type="button" class="btn kucuk ikincil" data-dene="soru">Düğme sesi</button><button type="button" class="btn kucuk ikincil" data-dene="alarm">Alarm</button><button type="button" class="btn kucuk ikincil" data-dene="korku">Hasta yakını</button></div>';
     }
     if (sek === "oyun") {
-      return anahtar("rehber", "Rehberli ilk vaka", ui.rehberIste, "Ercan Abi ekranı adım adım gösterir; sonraki vakada yeniden açılır") +
-        (ui.ekran === "vaka" && ui.s && !ui.s.bitti ? '<div class="ayar-dene"><button type="button" class="btn kucuk ikincil" data-dene="rehber">Rehberi şimdi göster</button></div>' : "") +
-        '<p class="ipucu">Duraklatma (Space) puanı etkilemez; sonuç ekranında kaç kez duraklattığın yazar. Ercan Abi\'ye danışmak da puan kırmaz.</p>';
+      var vakada = ui.ekran === "vaka" && ui.s && !ui.s.bitti;
+      return '<div class="ayar-mod"><b>Oyun modu</b>' + modSeciciHTML("ayar") +
+        (vakada && ui.modSecim !== ui.mod ? '<p class="ipucu">Seçtiğin mod sonraki vakada geçerli; bu vaka ' + MOD_AD[ui.mod] + " modda sürüyor.</p>" : "") + "</div>" +
+        anahtar("rehber", "Rehberli ilk vaka", ui.rehberIste, "Ercan Abi ekranı adım adım gösterir; sonraki vakada yeniden açılır (yalnız Pratik mod)") +
+        (vakada && !gercekci() ? '<div class="ayar-dene"><button type="button" class="btn kucuk ikincil" data-dene="rehber">Rehberi şimdi göster</button></div>' : "") +
+        '<p class="ipucu">Pratik modda duraklatma (Space) puanı etkilemez; sonuç ekranında kaç kez duraklattığın yazar. Ercan Abi\'ye danışmak da puan kırmaz. Gerçekçi modda ikisi de yok.</p>';
     }
     if (sek === "nasil") {
       return '<div class="ayar-metin">' +
@@ -2023,10 +2061,11 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         "<h3>Ekran</h3><p>Solda karar menüsü: tıklayınca büyük pencere açılır, üst şeridinde hasta ve canlı vitaller durur. Ortada hasta ve monitör. Ercan Abi sağ alt köşede: bir şey deyince balon çıkar, soru sorarsa seçenekler balonda. Eski mesajlar ve danışmak için üstüne tıkla. Alttaki zaman şeridine (telefonda vaka saatine) tıklayınca bütün olaylar özet ya da tam liste olarak açılır. Üst çubuk dikkat isteyen her şeyi gösterir. Altı çizili terimlerin üstüne gelince açıklaması açılır.</p>" +
         "<h3>Masa</h3><p>Sağda (M tuşu). İğnelediğin her şey orada. Cevap, bulgu, sonuç, müdahale, e-Nabız satırı, ölçüm ya da Ercan Abi'nin sözünün yanındaki küçük raptiyeye basınca masaya kart olarak düşer. Masayı açınca saat durur.</p>" +
         "<h3>Sonuç geldi</h3><p>Bir tetkik sonucu gelince sol alt köşede sonuç kâğıdı belirir; tıklayınca doğrudan tetkikin Sonuçlar sayfası açılır.</p>" +
+        "<h3>Modlar</h3><p><b>Pratik:</b> düşünmek bedava. Duraklatabilir, masa, olaylar ve ayarlar açıkken saati durdurursun; son müdahaleden 30 sn içinde vazgeçer, Ercan Abi'ye danışırsın. <b>Gerçekçi:</b> saat hiç durmaz; duraklatma, vazgeçme, danışma ve rehber yok. İki modun en iyi skoru ayrı tutulur. Mod vaka listesinin üstünden ya da Ayarlar > Oyun'dan seçilir.</p>" +
         "<h3>Ercan Abi ve hasta yakını</h3><p>Ercan Abi kızar, onaylar, soru sorar; danışmak puan kırmaz. Hasta yakını bir anda gelir: dürüst ve net bilgi vermek en iyisidir, görmezden gelirsen geri döner.</p></div>";
     }
     if (sek === "kisayol") {
-      var ks = [["1 – 5", "Öykü ve geçmiş, Muayene, Tetkik, Müdahale, Tanı · büyük pencere açılır, aynı tuş ya da Esc kapatır"], ["Z · Ctrl+Z", "Son müdahaleden ya da tetkik isteminden vazgeç (30 sn içinde)"], ["N", "e-Nabız"], ["O", "Vaka akışı (bütün olaylar) · ya da zaman şeridine / vaka saatine tıkla"], ["E", "Ercan Abi: eski mesajlar ve danış · ya da sağ alttaki Ercan Abi'ye tıkla"], ["M", "Masa: iğnelediğin cevap, sonuç ve Ercan Abi'nin sözleri"], ["Space · P", "Duraklat / devam"], ["Esc", "Ayarları aç (vakadan çıkış da orada) · açık pencereyi kapat"],
+      var ks = [["1 – 5", "Öykü ve geçmiş, Muayene, Tetkik, Müdahale, Tanı · büyük pencere açılır, aynı tuş ya da Esc kapatır"], ["Z · Ctrl+Z", "Son müdahaleden ya da tetkik isteminden vazgeç (30 sn içinde; yalnız Pratik mod)"], ["N", "e-Nabız"], ["O", "Vaka akışı (bütün olaylar) · ya da zaman şeridine / vaka saatine tıkla"], ["E", "Ercan Abi: eski mesajlar ve danış · ya da sağ alttaki Ercan Abi'ye tıkla"], ["M", "Masa: iğnelediğin cevap, sonuç ve Ercan Abi'nin sözleri"], ["Space · P", "Duraklat / devam (yalnız Pratik mod)"], ["Esc", "Ayarları aç (vakadan çıkış da orada) · açık pencereyi kapat"],
                 ["1 – 3", "Girişte triyaj alanı (kırmızı, sarı, yeşil)"], ["1 – 4", "Hasta yakınına cevap"], ["Enter", "Rehberde ilerle"]];
       return '<table class="kisayol"><tbody>' + ks.map(function (k) { return "<tr><td><kbd>" + k[0] + "</kbd></td><td>" + k[1] + "</td></tr>"; }).join("") + "</tbody></table>";
     }
@@ -2041,11 +2080,25 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       "<li><b>Yazı tipleri:</b> Libre Baskerville, Barlow Condensed (SIL Open Font License).</li>" +
       "<li><b>Tıbbi içerik:</b> hekim onayı bekliyor; kaynaklar her vakanın kılavuz kartında.</li></ul></div>";
   }
+  // Pratik / Gerçekçi seçici. yer: "giris" (data-act ile, app tıklaması) ya da "ayar" (data-mod ile, ayar penceresi tıklaması)
+  var MOD_ACIK = {
+    pratik: "Düşünmek bedava: duraklatabilir, masa ve olaylar açıkken saati durdurursun. Son müdahaleden 30 sn içinde vazgeçer, Ercan Abi'ye danışırsın. Rehber açık.",
+    gercekci: "Saat hiç durmaz: duraklatma yok, masa, olaylar, ayarlar ve hasta yakını açıkken de akar. Vazgeçme, danışma ve rehber yok. Skorun ayrı tutulur."
+  };
+  function modSeciciHTML(yer) {
+    return '<div class="mod-sec" role="radiogroup" aria-label="Oyun modu">' + ["pratik", "gercekci"].map(function (m) {
+      var sec = ui.modSecim === m;
+      return '<button type="button" role="radio" class="mod-dugme mod-' + m + '" aria-checked="' + sec + '" ' +
+        (yer === "ayar" ? 'data-mod="' + m + '"' : 'data-act="mod" data-id="' + m + '"') + ' data-k="mod-' + m + (yer === "ayar" ? "-ayar" : "") + '">' +
+        '<b>' + MOD_AD[m] + (m === "pratik" ? " · kolay" : " · zor") + "</b><span>" + MOD_ACIK[m] + "</span></button>";
+    }).join("") + "</div>";
+  }
   function ayarCiz() {
     var el = $("ayar"); if (!el) return;
     var sek = el.getAttribute("data-sekme") || "ses";
     var vakada = ui.ekran === "vaka" && ui.s && !ui.s.bitti, cik = vakada && el.getAttribute("data-cik") === "1";
     el.innerHTML = '<div class="ayar-kutu" role="dialog" aria-modal="true" aria-label="Ayarlar"><div class="ayar-bas"><h2>Ayarlar</h2>' +
+      (vakada && gercekci() ? '<span class="ayar-mod-not">Gerçekçi mod: saat akıyor</span>' : "") +
       (vakada ? '<button type="button" class="ayar-cik" data-ak="cik" data-k="ayar-cik">✕ Vakadan çık</button>' : "") +
       '<button type="button" class="ayar-kapat" data-ak="kapat" aria-label="Kapat">× Esc</button></div>' +
       (cik ? '<div class="ayar-cik-onay"><span>Vaka yarıda kalır, puan verilmez.</span><button type="button" class="btn tehlike kucuk" data-ak="cik-evet" data-k="ayar-cik-evet">Evet, vakalara dön</button>' +
@@ -2057,11 +2110,13 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     if ($("ayar")) return;
     var el = document.createElement("div"); el.id = "ayar"; el.className = "ayar-perde"; el.setAttribute("data-sekme", sek || "ses");
     document.body.appendChild(el);
-    if (ui.ekran === "vaka" && ui.s && !ui.s.bitti && !ui.duraklat) { ui.duraklat = true; ui.ayarDuraklatti = true; render(); }
+    if (ui.ekran === "vaka" && ui.s && !ui.s.bitti && !ui.duraklat && !gercekci()) { ui.duraklat = true; ui.ayarDuraklatti = true; render(); }
     ayarCiz();
     el.addEventListener("click", function (e) {
       if (e.target === el || (e.target.closest && e.target.closest('[data-ak="kapat"]'))) { ayarKapat(); return; }
       var ak = e.target.closest && e.target.closest("[data-ak]"), akd = ak && ak.getAttribute("data-ak");
+      var mb = e.target.closest && e.target.closest("[data-mod]");
+      if (mb) { EYLEM_SES.sekme(); modYaz(mb.getAttribute("data-mod")); ayarCiz(); if (ui.ekran === "giris") girisYenile(); return; }
       if (akd === "cik") { EYLEM_SES.sekme(); el.setAttribute("data-cik", "1"); ayarCiz(); var ev = el.querySelector('[data-k="ayar-cik-evet"]'); if (ev) ev.focus(); return; }
       if (akd === "cik-hayir") { el.removeAttribute("data-cik"); ayarCiz(); return; }
       if (akd === "cik-evet") { ayarKapat(); vakalaraDon(); return; }
@@ -2120,13 +2175,13 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   ];
   function girisHTML() {
     var kartlar = V.map(function (v) {
-      var e = enIyiOku(v.id), b = (v.durumlar && v.durumlar.baslangic) || {};
+      var e = enIyiOku(v.id, ui.modSecim), b = (v.durumlar && v.durumlar.baslangic) || {};
       var resim = (b.gorsel && !basarisizGorsel[b.gorsel]) ? '<img src="' + esc(b.gorsel) + '" alt="" decoding="async">' : "";
       return '<button class="vkart" type="button" data-act="baslat" data-id="' + esc(v.id) + '" data-k="baslat-' + esc(v.id) + '">' +
         '<span class="vk-gorsel">' + siluet(b.ton) + resim + (v.id === gununVakasi() ? '<span class="vk-demo gunun">Günün vakası</span>' : '<span class="vk-demo" aria-hidden="true">Demo</span>') +
-          '<span class="vk-skor' + (e == null ? " bos" : "") + '" aria-hidden="true">' + (e == null ? "—" : e) + "</span></span>" +
+          '<span class="vk-skor' + (e == null ? " bos" : "") + (ui.modSecim === "gercekci" ? " vk-g" : "") + '" aria-hidden="true">' + (e == null ? "—" : e) + "</span></span>" +
         '<span class="vk-yazi"><span class="vk-ad">' + esc(v.baslik) + '</span><span class="vk-alt">' + esc(v.hasta.cinsiyet) + " · " + esc(v.hasta.yas) + " yaş</span></span>" +
-        '<span class="sr">' + (e == null ? "Henüz oynanmadı." : "En iyi skor " + e + " / 1000.") + " Vakayı başlat.</span>" +
+        '<span class="sr">' + (e == null ? MOD_AD[ui.modSecim] + " modda henüz oynanmadı." : MOD_AD[ui.modSecim] + " modda en iyi skor " + e + " / 1000.") + " Vakayı başlat.</span>" +
         "</button>";
     }).join("");
     var sesler = GIRIS_SESLER.map(function (x) {
@@ -2143,12 +2198,19 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<svg class="ecg" viewBox="0 0 900 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 H150 L165 30 L172 22 L180 30 H230 L240 34 L250 4 L262 42 L272 30 H330 L350 22 L372 30 H520 L535 30 L542 22 L550 30 H600 L610 34 L620 4 L632 42 L642 30 H700 L720 22 L742 30 H900"/></svg>' +
       "</header>" +
       duelloHTML() +
+      '<section class="giris-mod" aria-labelledby="h-mod"><div class="bolum-bas"><h2 id="h-mod">Mod</h2><small>vaka başında seçilir</small></div>' + modSeciciHTML("giris") + "</section>" +
       '<section aria-labelledby="h-vakalar"><div class="bolum-bas"><h2 id="h-vakalar">Bir hasta seç</h2><small>' + V.length + " vaka</small></div>" +
         '<div class="kartlar">' + kartlar + "</div>" +
-        '<p class="ipucu">Köşedeki sayı en iyi skorun. Vakalar hekim onayı bekliyor.</p></section>' +
+        '<p class="ipucu">Köşedeki sayı ' + MOD_AD[ui.modSecim] + ' moddaki en iyi skorun. Vakalar hekim onayı bekliyor.</p></section>' +
       '<section class="kart nasil" data-etiket="Triyaj · 01A07 · nasıl oynanır" aria-labelledby="h-nasil"><div class="kart-bas"><h2 id="h-nasil">Nasıl oynanır</h2></div>' +
         '<div class="diyalog">' + sesler + "</div></section>" + kutuphaneHTML() +
     "</main>";
+  }
+  // Giriş ekranını yerinde yeniden çizer (mod değişince skorlar ve seçici güncellensin)
+  function girisYenile() {
+    if (ui.ekran !== "giris") return;
+    var y = window.scrollY; app.innerHTML = girisHTML(); window.scrollTo(0, y);
+    var f = app.querySelector('[data-k="mod-' + ui.modSecim + '"]'); if (f) f.focus({ preventScroll: true });
   }
   function girise() {
     sinemaTemizle(); yakinKapat(); rehberBitir(false); ui.intro = false;
@@ -2174,6 +2236,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     ui.dolap = { acik: {}, yer: [], yeni: 0 };
     ui.olaylar = { acik: false, filtre: "onemli" }; ui.olaylarDuraklatti = false;
     ui.hmsAcik = false; ui.hmsBalon = null; ui.hmsSoruGizle = null; ui.pencere = false; ui.geri = null;
+    ui.mod = ui.modSecim || "pratik"; // bu vakanın modu: vaka sürerken değişmez
     ui.mudGrup = null; ui.tetkikSayfa = "istem"; // müdahale penceresinde seçili grup, tetkik penceresinde İstem / Sonuçlar
     ui.masa = { kart: [], acik: false }; ui.masaDuraklatti = false;
     ui.duraklat = false; ui.duraklatSay = 0; ui.sesBakilan = 0; ui.yeniRozet = null; ui.rehberAdim = null;
@@ -2195,7 +2258,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<div class="olcu"><span class="k">Maliyet</span><span class="v" id="maliyet">0 ₺</span></div>' +
         '<div class="olcu bek" id="bekKutu" hidden><span class="k">Bekleyen</span><span class="v" id="bekleyen">0</span></div>' +
         '<div class="uyarilar" id="uyarilar" aria-live="polite"></div>' +
-        '<button class="ust-btn" type="button" id="duraklatBtn" data-act="duraklat" data-k="duraklat" aria-pressed="false" title="Duraklat (Space / P)">❚❚</button>' +
+        (gercekci() ? '<span class="mod-etiket" title="Gerçekçi mod: saat hiç durmaz, vazgeçme ve danışma yok">Gerçekçi</span>'
+          : '<button class="ust-btn" type="button" id="duraklatBtn" data-act="duraklat" data-k="duraklat" aria-pressed="false" title="Duraklat (Space / P)">❚❚</button>') +
         '<button class="ust-btn masa-ust" type="button" data-act="masa-ac" data-k="masa-ust" title="Masa: iğnelediklerin (M)">▤ Masa<span class="masa-ust-say" id="masaUstSay"></span></button>' +
         '<button class="ust-btn" type="button" id="sesBtn" data-act="ses" data-k="ses" aria-pressed="' + SES.acik + '" title="Sesi aç / kapat">' + (SES.acik ? "♪ Ses" : "♪ Kapalı") + "</button>" +
         '<button class="ust-btn" type="button" data-act="ayar" data-k="ayar" title="Ayarlar, nasıl oynanır, kısayollar (Esc)">⚙ Ayarlar · Esc</button>' +
@@ -2352,7 +2416,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       o.secenekler.map(function (c, i) {
         return '<button class="islem" type="button" data-yakin="' + i + '"><span class="ad">' + esc(c.ad) + '</span><span class="sure">' + M.sureYaz(c.sureSn || 20) + "</span></button>";
       }).join("") + '<button class="islem gormezden" type="button" data-yakin="g"><span class="ad">Görmezden gel</span></button></div>' +
-      '<p class="yakin-not">Saat duruyor. Cevabın vaka saatinden zaman yer.</p></div>';
+      '<p class="yakin-not">' + (gercekci() ? "Gerçekçi mod: saat akıyor. Cevabın da vaka saatinden zaman yer." : "Saat duruyor. Cevabın vaka saatinden zaman yer.") + "</p></div>";
     document.body.appendChild(el);
     el.addEventListener("click", function (e) { var b = e.target.closest("[data-yakin]"); if (b) yakinCevap(b.getAttribute("data-yakin")); });
     var ilk = el.querySelector("[data-yakin]"); if (ilk) ilk.focus({ preventScroll: true });
@@ -2418,9 +2482,10 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   }
   function geriKaydet(g, r) {
     var s = ui.s;
+    if (gercekci()) { ui.geri = null; return; } // Gerçekçi modda vazgeçme yok
     if (r && r.ok && !r.reddedildi && !r.zaten && !s.bitti) { g.t1 = s.t; ui.geri = g; } else ui.geri = null;
   }
-  function geriKalan(s) { return ui.geri && s && !s.bitti ? GERI_SN - (s.t - ui.geri.t1) : 0; }
+  function geriKalan(s) { return ui.geri && s && !s.bitti && !gercekci() ? GERI_SN - (s.t - ui.geri.t1) : 0; }
   function geriAl() {
     var s = ui.s, g = ui.geri;
     if (!g || geriKalan(s) <= 0) { ui.geri = null; render(); return; }
@@ -2874,7 +2939,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       return '<button type="button" role="tab" class="alt-sekme" aria-selected="' + (g === sec) + '" data-act="mud-grup" data-id="' + esc(g) + '" data-k="mud-grup-' + i + '">' +
         esc(g) + ' <span class="sayi">' + kalan(g).length + "</span></button>";
     }).join("") + "</div>";
-    h += '<p class="ipucu pen-aciklama">İlaç, damar yolu, oksijen ve pozisyon 1 dk; konsültasyon ve aktivasyon 2 dk. Fikrini değiştirirsen son müdahaleden 30 sn içinde vazgeçebilirsin: Ercan Abi daha uygulamamıştır, ama geçen süre geri gelmez.</p>';
+    h += '<p class="ipucu pen-aciklama">İlaç, damar yolu, oksijen ve pozisyon 1 dk; konsültasyon ve aktivasyon 2 dk. ' + (gercekci() ? "Gerçekçi mod: verdiğin ilaç ve istediğin tetkik geri alınmaz." : "Fikrini değiştirirsen son müdahaleden 30 sn içinde vazgeçebilirsin: Ercan Abi daha uygulamamıştır, ama geçen süre geri gelmez.") + '</p>';
     [sec].forEach(function (g) {
       if (!kalan(g).length) { h += '<p class="ipucu">Bu gruptaki işlemlerin hepsi yapıldı. Yapılanlar aşağıda.</p>'; return; }
       h += '<div class="liste">';
@@ -3085,7 +3150,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     if (!ui.masa || !ui.masa.acik) return "";
     var K = ui.masa.kart;
     return '<div class="masa-perde" data-act="masa-dis"><div class="masa-kutu" role="dialog" aria-modal="true" aria-labelledby="h-masa">' +
-      '<div class="masa-bas"><h2 id="h-masa">Masa</h2><span class="masa-ozet">' + K.length + " kart · " + M.saatYaz(s.t) + " · saat duruyor</span>" +
+      '<div class="masa-bas"><h2 id="h-masa">Masa</h2><span class="masa-ozet">' + K.length + " kart · " + (gercekci() ? "saat akıyor" : M.saatYaz(s.t) + " · saat duruyor") + "</span>" +
       '<button type="button" class="masa-kapat" data-act="masa-kapat" data-k="masa-kapat">× Esc</button></div>' +
       '<div class="masa-govde">' +
       '<section class="masa-kartlar" aria-label="Masadakiler"><h3 class="grup-bas">Masadakiler · ' + K.length + "</h3>" +
@@ -3096,7 +3161,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function masaAc() {
     if (!ui.s || ui.s.bitti || !ui.masa || ui.intro || ui.yakinAcik || ui.rehberAdim != null) return;
     ui.masa.acik = true; ui.hmsAcik = false;
-    if (!ui.duraklat) { ui.duraklat = true; ui.masaDuraklatti = true; }
+    if (!ui.duraklat && !gercekci()) { ui.duraklat = true; ui.masaDuraklatti = true; } // Gerçekçi modda masa açıkken saat akar
     render();
     var k = app.querySelector('[data-k="masa-kapat"]'); if (k) k.focus({ preventScroll: true });
   }
@@ -3125,7 +3190,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       satirlar += '<li class="olay o-' + tr[1] + '"><span class="olay-t">' + M.saatYaz(g.t) + '</span><span class="olay-tur">' + tr[0] + '</span><span class="olay-m">' + gunlukSatir(g) + "</span></li>";
     }
     return '<div class="olay-perde" data-act="olay-dis"><div class="olay-kutu" role="dialog" aria-modal="true" aria-labelledby="h-olay">' +
-      '<div class="olay-bas"><h2 id="h-olay">Vaka akışı</h2><span class="olay-saat">' + M.saatYaz(s.t) + " · " + M.tl(s.maliyet) + " · saat duruyor</span>" +
+      '<div class="olay-bas"><h2 id="h-olay">Vaka akışı</h2><span class="olay-saat">' + (gercekci() ? M.tl(s.maliyet) + " · saat akıyor" : M.saatYaz(s.t) + " · " + M.tl(s.maliyet) + " · saat duruyor") + "</span>" +
       '<div class="filtre" role="group" aria-label="Olay filtresi"><button type="button" data-act="olay-filtre" data-id="onemli" aria-pressed="' + !tumu + '">Özet</button>' +
       '<button type="button" data-act="olay-filtre" data-id="tumu" aria-pressed="' + tumu + '">Tümü</button></div>' +
       '<button type="button" class="olay-kapat" data-act="olaylar-kapat" data-k="olaylar-kapat">× Esc</button></div>' +
@@ -3136,7 +3201,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function olaylarAc() {
     if (!ui.s || ui.s.bitti || !ui.olaylar || ui.intro || ui.yakinAcik || ui.rehberAdim != null) return;
     ui.olaylar.acik = true;
-    if (!ui.duraklat) { ui.duraklat = true; ui.olaylarDuraklatti = true; }
+    if (!ui.duraklat && !gercekci()) { ui.duraklat = true; ui.olaylarDuraklatti = true; } // Gerçekçi modda olaylar açıkken saat akar
     render();
     var k = app.querySelector('[data-k="olaylar-kapat"]'); if (k) k.focus({ preventScroll: true });
   }
@@ -3336,9 +3401,10 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
           return '<p class="replik"><span class="zaman">' + M.saatYaz(g.t) + "</span> " + tx(g.metin) + masaPin(ercanAnahtar(g.metin), "ercan", "", g.metin) + "</p>";
         }).join("") : '<p class="hms-not">Henüz bir şey demedi.</p>') + "</div>" +
         '<div class="eg-alt">' + (b.soru ? '<p class="replik"><span class="kim hms-k">Soruyor</span> – ' + tx(b.soru.soru) + "</p>" + secenek : "") +
-        '<button class="btn ikincil kucuk hms-danis" type="button" data-act="hms-danis" data-k="hms-danis"' + (bitti ? " disabled" : "") + ">" +
+        (gercekci() ? '<p class="hms-not">Gerçekçi mod: Ercan Abi ipucu vermez; yine kızar, onaylar, soru sorar.</p></div></div>'
+          : '<button class="btn ikincil kucuk hms-danis" type="button" data-act="hms-danis" data-k="hms-danis"' + (bitti ? " disabled" : "") + ">" +
         (bitti ? "İpucu kalmadı" : "Ercan Abi'ye danış · " + (b.danis + 1) + "/" + l.length) + "</button>" +
-        '<p class="hms-not">Danışmak puan ve süre yemez.</p></div></div>';
+        '<p class="hms-not">Danışmak puan ve süre yemez.</p></div></div>');
     } else if (b.soru && !soruGizli) {
       ust = '<div class="ercan-balon soru"><button type="button" class="balon-kapat" data-act="hms-gizle" title="Sonra cevapla" aria-label="Sonra cevapla">×</button>' +
         '<p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + tx(b.soru.soru) + "</p>" + secenek + "</div>";
@@ -3375,14 +3441,18 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     setHTML($("uyarilar"), uyariHTML(s));
     setHTML($("pEnabiz"), enabizHTML(s));
     setHTML($("pMasa"), masaSeritHTML(s));
-    setHTML($("pMasaBuyuk"), masaBuyukHTML(s));
+    var mbEl = $("pMasaBuyuk"), mbG = mbEl && mbEl.querySelector(".masa-govde"), mbSt = mbG ? mbG.scrollTop : 0;
+    setHTML(mbEl, masaBuyukHTML(s)); mbG = mbEl && mbEl.querySelector(".masa-govde"); if (mbG && mbSt) mbG.scrollTop = mbSt;
     var mus = $("masaUstSay"); if (mus) mus.textContent = masaSayi() ? " · " + masaSayi() : "";
     setHTML($("altEylem"), altEylemHTML(s));
     setHTML($("pSekme"), panelHTML(s));
     setHTML($("sekmeListe"), navHTML(s));
     sonucIkonCiz(s);
     var oEl = $("pOlaylar"), oHtml = olaylarHTML(s);
-    if (oEl && oEl.__html !== oHtml) { setHTML(oEl, oHtml); var oOl = oEl.querySelector(".olay-liste"); if (oOl) oOl.scrollTop = oOl.scrollHeight; }
+    if (oEl && oEl.__html !== oHtml) {
+      var oEski = oEl.querySelector(".olay-liste"), oAlt = !oEski || oEski.scrollHeight - oEski.scrollTop - oEski.clientHeight < 40, oSt = oEski ? oEski.scrollTop : 0;
+      setHTML(oEl, oHtml); var oOl = oEl.querySelector(".olay-liste"); if (oOl) oOl.scrollTop = oAlt ? oOl.scrollHeight : oSt;
+    }
     sesOlaylar(s);
     var dbn = $("duraklatBant"); if (dbn) dbn.hidden = !ui.duraklat || ui.rehberAdim != null || (ui.olaylar && ui.olaylar.acik) || (ui.masa && ui.masa.acik);
     var dbt = $("duraklatBtn"); if (dbt) { dbt.setAttribute("aria-pressed", !!ui.duraklat); dbt.textContent = ui.duraklat ? "▶" : "❚❚"; }
@@ -3421,7 +3491,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     ui.ekran = "sonuc";
     document.body.classList.remove("vaka-modu");
     ui.p = M.puanla(s);
-    enIyiYaz(ui.vaka.id, ui.p.toplam);
+    enIyiYaz(ui.vaka.id, ui.p.toplam, ui.mod);
     try { localStorage.setItem("triyaj-kilavuz-" + ui.vaka.id, "1"); } catch (e) { /* yok say */ }
     ui.yeniRozet = rozetHesapla(s, ui.p);
     ui.duraklat = false; sesKis(false); sesSahne("sonuc");
@@ -3479,14 +3549,15 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       hukum = "Vaka kaybedildi · " + M.saatYaz(s.kayipT) + " · " + (kd.mesaj || ""); hukumSinif = "kotu";
     } else if (p.tani.ok) { hukum = "Doğru tanı: " + dogru.ad; hukumSinif = "ok"; }
     else { hukum = (p.tani.secilen ? "Yanlış tanı: " + p.tani.secilen.ad : "Tanı konmadı") + (s.bitis === "taburcu" ? " · hasta taburcu edildi" : ""); hukumSinif = "kotu"; }
-    var e = enIyiOku(v.id);
+    var e = enIyiOku(v.id, ui.mod);
 
     var h = '<main class="wrap sonuc">' +
-      '<header class="skor-bas"><div class="eyebrow">Vaka sonu · ' + esc(v.baslik) + "</div>" +
+      '<header class="skor-bas"><div class="eyebrow">Vaka sonu · ' + esc(v.baslik) + ' · <span class="mod-yazi mod-' + (ui.mod || "pratik") + '">' + MOD_AD[ui.mod || "pratik"] + " mod</span></div>" +
       '<h1 id="h-sonuc" tabindex="-1" class="skor"><span class="v">' + p.toplam + '</span><span class="m">/ 1000 puan</span></h1>' +
       '<p class="hukum ' + hukumSinif + '">' + esc(hukum) + "</p>" +
       (DUELLO && DUELLO.id === v.id ? '<p class="duello-sonuc ' + (p.toplam > DUELLO.skor ? "ok" : p.toplam === DUELLO.skor ? "esit" : "kotu") + '">Meydan okuma: ' +
-        (p.toplam > DUELLO.skor ? "kazandın" : p.toplam === DUELLO.skor ? "berabere" : "kaybettin") + " · " + p.toplam + " – " + DUELLO.skor + "</p>" : "") +
+        (p.toplam > DUELLO.skor ? "kazandın" : p.toplam === DUELLO.skor ? "berabere" : "kaybettin") + " · " + p.toplam + " – " + DUELLO.skor +
+        (DUELLO.mod !== (ui.mod || "pratik") ? " (arkadaşın " + MOD_AD[DUELLO.mod] + ", sen " + MOD_AD[ui.mod || "pratik"] + " mod)" : "") + "</p>" : "") +
       hemsireSonHTML(s, p) +
       (p.kayip ? '<p class="muted">Vaka kaybedildiğinde skor en fazla 150 olur.</p>' : "") +
       '<div class="nitelik" role="list" aria-label="Puan kırılımı">' + p.bolumler.slice(0, 4).map(function (b, i) {
@@ -3497,7 +3568,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<div><span class="k">Vaka saati</span><span class="v">' + M.saatYaz(s.t) + "</span></div>" +
         '<div><span class="k">Maliyet</span><span class="v">' + M.tl(s.maliyet) + "</span></div>" +
         '<div><span class="k">Cezalar</span><span class="v">' + M.sayi(p.bolumler[4].puan) + "</span></div>" +
-        '<div><span class="k">En iyi skor</span><span class="v">' + (e == null ? "—" : e) + "</span></div>" +
+        '<div><span class="k">En iyi · ' + MOD_AD[ui.mod || "pratik"] + '</span><span class="v">' + (e == null ? "—" : e) + "</span></div>" +
       "</div>" + (p.kayip && p.ham > 150 ? '<p class="muted">Kayıp tavanı: ham puan ' + Math.round(p.ham) + ", skor 150 ile sınırlandı.</p>" : "") + "</header>";
 
 
@@ -3568,7 +3639,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 
     // Paylaşım
     h += '<section class="kart paylas" data-etiket="vaka sonu · paylaş" aria-labelledby="h-paylas"><div class="kart-bas"><h2 id="h-paylas">Paylaş</h2><small>tanıyı vermez</small></div>' +
-      '<pre id="paylasMetin">' + esc(M.paylasimMetni(s, p)) + "</pre>" +
+      '<pre id="paylasMetin">' + esc(paylasMetni(s, p)) + "</pre>" +
       '<div class="btns"><button class="btn" type="button" data-act="kopyala" id="kopyalaBtn">Sonucu kopyala</button>' +
       '<button class="btn ikincil" type="button" data-act="meydan" id="meydanBtn">Meydan oku · bağlantı paylaş</button></div></section>';
 
@@ -3600,6 +3671,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       case "ses": sesDegistir(); var sg = app.querySelector('[data-k="ses-giris"]'); if (sg) sg.textContent = sesEtiket(); return;
       case "kut": ui.kut = id; var ks = app.querySelector(".kutuphane"); if (ks) ks.outerHTML = kutuphaneHTML(); return;
       case "baslat": baslat(id); return;
+      case "mod": modYaz(id); girisYenile(); return;
+      case "duello-kabul": if (DUELLO) modYaz(DUELLO.mod); baslat(id); return;
       case "tekrar": baslat(ui.vaka.id); return;
       case "don": case "cik": girise(); return;
       case "kopyala": kopyala(); return;
@@ -3639,7 +3712,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       case "masa-kapat": masaKapat(); return;
       case "masa-dis": masaKapat(); return;
       case "masa-kaldir": if (ui.masa) { ui.masa.kart = ui.masa.kart.filter(function (x) { return x.k !== id; }); render(); } return;
-      case "hms-danis": hemsireDanis(s); render(); return;
+      case "hms-danis": if (!gercekci()) hemsireDanis(s); render(); return;
       case "hms-sec":
         var hs = hemsireCevap(s, +id);
         if (!s.bitti && hs) { hemsireKontrol(s, simdi()); sekmeSec(hs); return; }
@@ -3722,7 +3795,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function rehberIstekOku() { try { return localStorage.getItem("triyaj-rehber") !== "bitti"; } catch (e) { return true; } }
   ui.rehberIste = rehberIstekOku();
   function rehberBaslat() {
-    if (!ui.s || ui.s.bitti || ui.ekran !== "vaka") return;
+    if (!ui.s || ui.s.bitti || ui.ekran !== "vaka" || gercekci()) return; // Gerçekçi modda rehber yok
     if ($("ayar") || ui.yakinAcik || (ui.olaylar && ui.olaylar.acik)) { setTimeout(rehberBaslat, 800); return; } // ayarlar, hasta yakını ya da vaka akışı açıkken bekler
     ui.rehberAdim = 0; ui.duraklat = true; render(); rehberCiz();
   }
@@ -3773,7 +3846,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 
   // Duraklatma (Paradox oyunlarındaki gibi): saat durur; işlemler yine kendi süresini yer.
   function duraklatDegistir() {
-    if (!ui.s || ui.s.bitti || ui.intro || ui.yakinAcik || ui.rehberAdim != null) return;
+    if (!ui.s || ui.s.bitti || ui.intro || ui.yakinAcik || ui.rehberAdim != null || gercekci()) return; // Gerçekçi modda duraklatma yok
     ui.duraklat = !ui.duraklat; if (ui.duraklat) ui.duraklatSay++;
     ui.sonTick = simdi(); ui.sonEylem = ui.sonTick; render();
   }
@@ -3814,7 +3887,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       if (e.key === "Escape" || e.key === "m" || e.key === "M") { masaKapat(); e.preventDefault(); }
       return;
     }
-    if (geriTus) { if (ui.geri) { geriAl(); e.preventDefault(); } return; }
+    if (geriTus) { if (ui.geri && !gercekci()) { geriAl(); e.preventDefault(); } return; }
     if ((e.key === "Enter" || e.key === " ") && t && t.tagName === "DIV" && t.getAttribute("role") === "button" && t.hasAttribute("data-act")) { t.click(); e.preventDefault(); return; }
     if (e.key === "Escape") {
       if (ui.hmsAcik) { ui.hmsAcik = false; render(); }
@@ -3849,7 +3922,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     monitorBip();
     if (ui.hmsBalon && simdi() >= ui.hmsBalon.bitis) { ui.hmsBalon = null; render(); }
     if (ui.geri && geriKalan(ui.s) <= 0) { ui.geri = null; ui.gorulen = -1; }
-    if (ui.intro || ui.yakinAcik || ui.duraklat) { ui.sonTick = simdi(); return; } // sinematik, hasta yakını ve duraklatmada vaka saati durur
+    if (ui.intro || (ui.yakinAcik && !gercekci()) || ui.duraklat) { ui.sonTick = simdi(); return; } // sinematik, hasta yakını (Pratik) ve duraklatmada vaka saati durur
     var now = simdi(), dt = Math.min(5, (now - ui.sonTick) / 1000);
     ui.sonTick = now;
     M.ilerlet(ui.s, dt);
