@@ -815,7 +815,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 <body>
 <div id="app" aria-live="off"></div>
 <div id="duyuru" class="sr" aria-live="polite"></div>
-<p class="uyari"><strong>Eğitim amaçlı demo.</strong> Tıbbi tavsiye değildir. Vakalar hekim onayı bekliyor. · Hasta yakını efekti: “Shrieking Jump Scare Blast”, BudgetPixel AI, CC BY 4.0 · Diğer emeği geçenler: Ayarlar.</p>
+<p class="uyari"><strong>Eğitim amaçlı demo.</strong> Tıbbi tavsiye değildir. Vakalar hekim onayı bekliyor. · Hasta yakını efekti: “Orchestral Shock Hit”, BudgetPixel AI, CC BY 4.0 · Diğer emeği geçenler: Ayarlar.</p>
 <noscript><p class="wrap">Triyaj'ı oynamak için JavaScript açık olmalı.</p></noscript>
 
 <script src="vakalar.js" charset="utf-8"></script>
@@ -1563,7 +1563,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
                   "enabiz-ac": "klavye", "enabiz-giris": "klavye", "enabiz-bolum": "klavye", bitir: "damga", taburcu: "damga", "hms-danis": "danis",
                   "dus-koy": "dusunce", "dus-cikar": "sekme", baslat: "sekme", tekrar: "sekme", bilgi: "sekme" };
   function uiSes(act) { (EYLEM_SES[ACT_SES[act]] || EYLEM_SES.tik)(); }
-  // Hasta yakını baskını: ani sessizlik → hazır çığlık efekti (BudgetPixel, CC BY 4.0) + kodla tiz uyumsuz katman → kalp atışı
+  // Hasta yakını baskını: ani sessizlik → ani orkestra vuruşu (BudgetPixel "Orchestral Shock Hit", CC BY 4.0) → kalp atışı. Çığlık yok.
   var kalpZaman = null;
   function kalpAtisi(ac) {
     clearInterval(kalpZaman); kalpZaman = null;
@@ -1578,8 +1578,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     SES.kisik = true;
     if (SES.ayar.efekt) {
       sesCtx();
-      var a = new Audio("ses/korku.mp3"); a.volume = Math.min(1, SES.ana); var p = a.play(); if (p && p.catch) p.catch(function () {});
-      ton(880, .9, "sawtooth", .05, 0, 1320); ton(932, .9, "sawtooth", .045, 0, 1400); hisirti(.45, .3, 1800);
+      var a = new Audio("ses/korku.mp3"); a.volume = Math.min(1, SES.ana * .9); var p = a.play(); if (p && p.catch) p.catch(function () {});
     }
     setTimeout(function () { if (ui.yakinAcik) { sesSahne(); kalpAtisi(true); } }, 1500);
   }
@@ -1754,7 +1753,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<label class="ayar-satir"><span><b>Ana ses</b><small>' + Math.round(SES.ana * 100) + '%</small></span><input type="range" min="0" max="100" step="5" value="' + Math.round(SES.ana * 100) + '" data-ayar="ana" aria-label="Ana ses"></label>' +
         anahtar("muzik", "Müzik", SES.ayar.muzik, "Melankolik nöbet müziği") +
         anahtar("ortam", "Ortam sesi", SES.ayar.ortam, "Acil servis uğultusu, yağmurlu kapı") +
-        anahtar("efekt", "Efektler", SES.ayar.efekt, "Düğme sesleri, alarm, zil, hasta yakını baskını") +
+        anahtar("efekt", "Efektler", SES.ayar.efekt, "Düğme sesleri, alarm, zil, hasta yakını vuruşu") +
         anahtar("monitor", "Monitör bipi", SES.ayar.monitor, "Kalp hızına göre çalar, saturasyon düştükçe kalınlaşır") +
         anahtar("ercan", "Ercan Abi'nin sesi", SES.ayar.ercan, "Replikleri sesli okur") +
         '<div class="ayar-dene"><button type="button" class="btn kucuk ikincil" data-dene="soru">Düğme sesi</button><button type="button" class="btn kucuk ikincil" data-dene="alarm">Alarm</button><button type="button" class="btn kucuk ikincil" data-dene="korku">Hasta yakını</button></div>';
@@ -1776,7 +1775,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         "<h3>Ercan Abi ve hasta yakını</h3><p>Ercan Abi kızar, onaylar, soru sorar; danışmak puan kırmaz. Hasta yakını bir anda gelir: dürüst ve net bilgi vermek en iyisidir, görmezden gelirsen geri döner.</p></div>";
     }
     if (sek === "kisayol") {
-      var ks = [["1 – 6", "Öykü, Geçmiş, Muayene, Tetkik, Müdahale, Tanı"], ["N", "e-Nabız"], ["Space · P", "Duraklat / devam"], ["Esc", "Pencereyi kapat"],
+      var ks = [["1 – 6", "Öykü, Geçmiş, Muayene, Tetkik, Müdahale, Tanı"], ["N", "e-Nabız"], ["Space · P", "Duraklat / devam"], ["Esc", "Ayarları aç · açık pencereyi kapat"],
                 ["1 – 3", "Girişte triyaj alanı (kırmızı, sarı, yeşil)"], ["1 – 4", "Hasta yakınına cevap"], ["Enter", "Rehberde ilerle"]];
       return '<table class="kisayol"><tbody>' + ks.map(function (k) { return "<tr><td><kbd>" + k[0] + "</kbd></td><td>" + k[1] + "</td></tr>"; }).join("") + "</tbody></table>";
     }
@@ -1785,7 +1784,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       "<li><b>Görseller:</b> Higgsfield (GPT Image 2.5) ile üretildi; görsel dil Disco Elysium'dan esinlenildi.</li>" +
       "<li><b>Müzik ve ortam sesi:</b> Higgsfield (Sonilo, Seed Audio) ile üretildi.</li>" +
       "<li><b>Ercan Abi'nin sesi:</b> Microsoft Edge sinir ağı sesi (tr-TR-AhmetNeural, edge-tts); demo amaçlı.</li>" +
-      '<li><b>Hasta yakını efekti:</b> “Shrieking Jump Scare Blast”, BudgetPixel AI (<a href="https://budgetpixel.com/sfx/shrieking-jump-scare-blast-258d1f28" target="_blank" rel="noopener">budgetpixel.com</a>), CC BY 4.0.</li>' +
+      '<li><b>Hasta yakını efekti:</b> “Orchestral Shock Hit”, BudgetPixel AI (<a href="https://budgetpixel.com/sfx/orchestral-shock-hit-e9ddbc31" target="_blank" rel="noopener">budgetpixel.com</a>), CC BY 4.0.</li>' +
       "<li><b>Monitör, alarm ve düğme sesleri:</b> WebAudio ile kodla üretildi.</li>" +
       "<li><b>Yazı tipleri:</b> Libre Baskerville, Barlow Condensed (SIL Open Font License).</li>" +
       "<li><b>Tıbbi içerik:</b> hekim onayı bekliyor; kaynaklar her vakanın kılavuz kartında.</li></ul></div>";
@@ -1838,6 +1837,11 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     if (ui.ayarDuraklatti) { ui.ayarDuraklatti = false; ui.duraklat = false; ui.sonTick = simdi(); if (ui.s && !ui.s.bitti && ui.ekran === "vaka") render(); }
     if (ui.ekran === "giris") { var sg = app.querySelector('[data-k="ses-giris"]'); if (sg) sg.textContent = sesEtiket(); }
   }
+  // Girişte ve sonuç ekranında Esc ayarları açar
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape" || ui.ekran === "vaka" || $("ayar") || $("sinema") || document.querySelector(".ipucu-kutu")) return;
+    ayarAc("ses"); e.preventDefault();
+  });
   document.addEventListener("keydown", function (e) {
     if (!$("ayar")) return;
     if (e.key === "Escape") { ayarKapat(); e.preventDefault(); }
@@ -1874,7 +1878,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<p class="tez">Pilotlar simülatörde prova eder. Tıp öğrencisinin provası Triyaj.</p>' +
         '<p class="meta">Hasta kapıdan girer, gerisi senin kararın.</p>' +
         '<div class="giris-ayar"><button class="btn ikincil kucuk ses-ac" type="button" data-act="ses" data-k="ses-giris">' + sesEtiket() + "</button>" +
-        '<button class="btn ikincil kucuk" type="button" data-act="ayar" data-k="ayar-giris">⚙ Ayarlar · nasıl oynanır</button></div>' +
+        '<button class="btn ikincil kucuk" type="button" data-act="ayar" data-k="ayar-giris">⚙ Ayarlar · nasıl oynanır (Esc)</button></div>' +
         '<svg class="ecg" viewBox="0 0 900 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 H150 L165 30 L172 22 L180 30 H230 L240 34 L250 4 L262 42 L272 30 H330 L350 22 L372 30 H520 L535 30 L542 22 L550 30 H600 L610 34 L620 4 L632 42 L642 30 H700 L720 22 L742 30 H900"/></svg>' +
       "</header>" +
       duelloHTML() +
@@ -1928,7 +1932,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<div class="uyarilar" id="uyarilar" aria-live="polite"></div>' +
         '<button class="ust-btn" type="button" id="duraklatBtn" data-act="duraklat" data-k="duraklat" aria-pressed="false" title="Duraklat (Space / P)">❚❚</button>' +
         '<button class="ust-btn" type="button" id="sesBtn" data-act="ses" data-k="ses" aria-pressed="' + SES.acik + '" title="Sesi aç / kapat">' + (SES.acik ? "♪ Ses" : "♪ Kapalı") + "</button>" +
-        '<button class="ust-btn" type="button" data-act="ayar" data-k="ayar" title="Ayarlar, nasıl oynanır, kısayollar">⚙ Ayarlar</button>' +
+        '<button class="ust-btn" type="button" data-act="ayar" data-k="ayar" title="Ayarlar, nasıl oynanır, kısayollar (Esc)">⚙ Ayarlar · Esc</button>' +
         '<button class="cik-btn" type="button" data-act="cik-sor" data-k="cik-sor" aria-label="Vakadan çık">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
         '<div class="ust-uyari" id="ustUyari"></div>' +
@@ -3273,7 +3277,11 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     }
     var t = e.target;
     if (t && (t.tagName === "TEXTAREA" || (t.tagName === "INPUT" && t.type !== "radio"))) return;
-    if (e.key === "Escape") { if (ui.enabiz.acik) { ui.enabiz.acik = false; render(); e.preventDefault(); } return; }
+    if (e.key === "Escape") {
+      if (ui.enabiz.acik) { ui.enabiz.acik = false; render(); }
+      else if (!document.querySelector(".ipucu-kutu")) ayarAc("ses");
+      e.preventDefault(); return;
+    }
     if (e.key === "p" || e.key === "P" || (e.key === " " && !(t && /^(BUTTON|INPUT|SUMMARY|SELECT|A)$/.test(t.tagName)))) { duraklatDegistir(); e.preventDefault(); return; }
     if (ui.enabiz.acik) return;
     var hedef = null;
