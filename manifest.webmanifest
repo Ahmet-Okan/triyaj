@@ -1,0 +1,19 @@
+{
+  "name": "Triyaj — Acil Servis Vaka Oyunu",
+  "short_name": "Triyaj",
+  "description": "Tıp öğrencileri için acil servis vaka oyunu. Eğitim amaçlı demo.",
+  "lang": "tr",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef3f3",
+  "theme_color": "#0d6b67",
+  "categories": ["education", "medical", "games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
