@@ -173,5 +173,6 @@ window.ERCAN_SES = {
 "Üst çubuk dikkat isteyen her şeyi gösterir: kötüleşme, gelen sonuç, bekleyen tetkik. Tıklayınca oraya gidersin. Space ile duraklatırsın.": "ses/ercan/e170.mp3",
 "Ben buradayım. Takılırsan bana danış, puanını kırmam ama cevabı da vermem. Arada ben de sana soru sorarım.": "ses/ercan/e171.mp3",
 "Tetkik sonuçları arka planda gelir. Sonucu bekle düğmesi saati ileri sarar, alttaki şerit neyin ne zaman geleceğini gösterir.": "ses/ercan/e172.mp3",
-"Bulgu topladıkça düşünceler açılır. Tanı sekmesindeki dolaba en fazla üçünü koy, kanıt geldikçe güçlenir ya da zayıflar. Hazırsan saat şimdi başlıyor.": "ses/ercan/e173.mp3"
+"Bulgu topladıkça düşünceler açılır. Tanı sekmesindeki dolaba en fazla üçünü koy, kanıt geldikçe güçlenir ya da zayıflar. Hazırsan saat şimdi başlıyor.": "ses/ercan/e173.mp3",
+"Hocam.": "ses/ercan/e174.mp3"
 };

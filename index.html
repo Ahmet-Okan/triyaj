@@ -768,6 +768,44 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 .duello-sonuc{font:700 18px var(--f-baslik);letter-spacing:.1em;text-transform:uppercase}
 .duello-sonuc.ok{color:var(--iyi)} .duello-sonuc.kotu{color:var(--kotu)} .duello-sonuc.esit{color:var(--uyari)}
 
+/* ===== Ayarlar ===== */
+.ayar-perde{position:fixed;inset:0;z-index:88;display:grid;place-items:center;padding:16px;background:rgba(5,5,4,.78)}
+.ayar-kutu{width:min(900px,100%);height:min(640px,100%);display:grid;grid-template-rows:auto minmax(0,1fr);background:linear-gradient(180deg,#1b1a18,#121110);border:1px solid var(--cizgi-2);box-shadow:0 30px 80px rgba(0,0,0,.8)}
+.ayar-bas{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--cizgi)}
+.ayar-bas h2{display:inline-block;background:var(--beyaz);color:var(--siyah);padding:5px 12px 3px;font-size:22px}
+.ayar-kapat{border:1px solid var(--cizgi-2);background:transparent;color:var(--soluk);font:600 13px var(--f-baslik);letter-spacing:.12em;text-transform:uppercase;padding:7px 12px 6px;min-height:40px;cursor:pointer}
+.ayar-govde{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:0}
+.ayar-menu{display:grid;align-content:start;border-right:1px solid var(--cizgi);padding:8px 0}
+.ayar-menu button{min-height:46px;padding:10px 18px;border:0;border-left:3px solid transparent;background:none;text-align:left;font:600 15px var(--f-baslik);letter-spacing:.08em;text-transform:uppercase;color:var(--soluk);cursor:pointer}
+.ayar-menu button[aria-current="true"]{color:var(--beyaz);border-left-color:var(--secim);background:rgba(239,233,220,.05)}
+.ayar-icerik{padding:16px 20px 20px;overflow:auto;display:grid;align-content:start;gap:4px}
+.ayar-icerik .kutuphane{border:0;background:none;padding:0}
+.ayar-icerik .kutuphane::before,.ayar-icerik .kutuphane::after{display:none}
+.ayar-satir{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:58px;padding:8px 0;border-bottom:1px solid var(--cizgi);cursor:pointer}
+.ayar-satir span{display:grid;gap:1px}
+.ayar-satir b{font:600 16px var(--f-baslik);letter-spacing:.06em;text-transform:uppercase;color:var(--beyaz)}
+.ayar-satir small{font:italic 13px var(--f-govde);color:var(--soluk)}
+.ayar-satir input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px}
+.ayar-satir i{flex:none;position:relative;width:52px;height:28px;border:1px solid var(--cizgi-2);background:#0b0a09;transition:background .2s}
+.ayar-satir i::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--soluk);transition:transform .2s,background .2s}
+.ayar-satir input:checked + i{background:#1f5357;border-color:var(--iyi)}
+.ayar-satir input:checked + i::after{transform:translateX(24px);background:var(--beyaz)}
+.ayar-satir input:focus-visible + i{outline:2px solid var(--beyaz);outline-offset:2px}
+.ayar-satir input[type=range]{width:min(260px,45%);accent-color:var(--secim)}
+.ayar-dene{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.ayar-metin h3{font:600 16px var(--f-baslik);letter-spacing:.14em;text-transform:uppercase;color:var(--kehribar);margin:14px 0 4px}
+.ayar-metin h3:first-child{margin-top:0}
+.ayar-metin p,.ayar-metin li{font-size:15px}
+.ayar-metin ol,.ayar-metin ul{margin:0;padding-left:20px;display:grid;gap:6px}
+.ayar-metin a{color:var(--zeka)}
+.kisayol{width:100%;border-collapse:collapse}
+.kisayol td{padding:10px 8px;border-bottom:1px solid var(--cizgi);font-size:15px}
+.kisayol kbd{display:inline-block;min-width:72px;text-align:center;font:600 14px var(--f-baslik);letter-spacing:.08em;color:var(--beyaz);border:1px solid var(--cizgi-2);padding:4px 8px 3px;background:#0b0a09}
+@media (max-width:700px){ .ayar-govde{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)} .ayar-menu{display:flex;overflow-x:auto;border-right:0;border-bottom:1px solid var(--cizgi);padding:0} .ayar-menu button{flex:none;border-left:0;border-bottom:3px solid transparent} .ayar-menu button[aria-current="true"]{border-bottom-color:var(--secim)} }
+/* Hasta yakını: ani beyaz parlama */
+.yakin::after{content:"";position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;animation:yakin-flas .4s ease-out}
+@keyframes yakin-flas{0%{opacity:.6}100%{opacity:0}}
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .ecg path{stroke-dashoffset:0}
@@ -777,7 +815,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 <body>
 <div id="app" aria-live="off"></div>
 <div id="duyuru" class="sr" aria-live="polite"></div>
-<p class="uyari"><strong>Eğitim amaçlı demo.</strong> Tıbbi tavsiye değildir. Vakalar hekim onayı bekliyor.</p>
+<p class="uyari"><strong>Eğitim amaçlı demo.</strong> Tıbbi tavsiye değildir. Vakalar hekim onayı bekliyor. · Hasta yakını efekti: “Shrieking Jump Scare Blast”, BudgetPixel AI, CC BY 4.0 · Diğer emeği geçenler: Ayarlar.</p>
 <noscript><p class="wrap">Triyaj'ı oynamak için JavaScript açık olmalı.</p></noscript>
 
 <script src="vakalar.js" charset="utf-8"></script>
@@ -1420,8 +1458,14 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   /* ---------- Ses: müzik, ortam, kodla sentezlenen efektler ----------
      Müzik ve ortam sesi Higgsfield ile üretildi (ses/); monitör bipi, alarm, tık, daktilo ve yakın baskını WebAudio ile anında üretilir.
      Monitör bipi gerçek cihazlardaki gibi saturasyon düştükçe kalınlaşır. */
-  var SES = { acik: true, ctx: null, sahne: "", sonrakiBip: 0, kisik: false };
-  try { SES.acik = localStorage.getItem("triyaj-ses") !== "0"; } catch (e) { /* yok say */ }
+  var SES = { acik: true, ctx: null, sahne: "", sonrakiBip: 0, kisik: false, ana: 1,
+              ayar: { muzik: true, ortam: true, efekt: true, monitor: true, ercan: true } };
+  try {
+    SES.acik = localStorage.getItem("triyaj-ses") !== "0";
+    var sa = JSON.parse(localStorage.getItem("triyaj-ses-ayar") || "null");
+    if (sa) { for (var sk in SES.ayar) if (typeof sa[sk] === "boolean") SES.ayar[sk] = sa[sk]; if (typeof sa.ana === "number") SES.ana = Math.max(0, Math.min(1, sa.ana)); }
+  } catch (e) { /* yok say */ }
+  function sesAyarKaydet() { try { var o = {}; for (var k in SES.ayar) o[k] = SES.ayar[k]; o.ana = SES.ana; localStorage.setItem("triyaj-ses-ayar", JSON.stringify(o)); } catch (e) { /* yok say */ } }
   var SES_DOSYA = { muzik: ["ses/muzik-nobet.mp3", true], ortam: ["ses/ortam-acil.mp3", true], kapi: ["ses/ortam-kapi.mp3", false] };
   function sesCtx() {
     if (!SES.ctx) { var C = window.AudioContext || window.webkitAudioContext; if (!C) return null; SES.ctx = new C(); }
@@ -1445,15 +1489,15 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function sesSahne(ad) {
     SES.sahne = ad || SES.sahne;
     var t = SAHNE_SES[SES.sahne]; if (!t) return;
-    Object.keys(t).forEach(function (k) { var h = SES.acik ? t[k] * (SES.kisik ? (k === "ortam" ? .45 : .35) : SES.konusma ? (k === "muzik" ? .45 : .75) : 1) : 0; if (h > 0 || SES[k + "A"]) sesSeviye(k, h, ad ? 900 : 300); });
+    Object.keys(t).forEach(function (k) { var izin = k === "muzik" ? SES.ayar.muzik : SES.ayar.ortam; var h = SES.acik && izin ? t[k] * SES.ana * (SES.kisik ? (k === "ortam" ? .45 : .35) : SES.konusma ? (k === "muzik" ? .45 : .75) : 1) : 0; if (h > 0 || SES[k + "A"]) sesSeviye(k, h, ad ? 900 : 300); });
   }
   function sesKis(k) { SES.kisik = k; sesSahne(); }
   // Ercan Abi seslendirmesi (edge-tts, ses/ercan/): replik metni → mp3. Konuşurken müzik kısılır; üst üste gelirse sıraya girer.
   var ERCAN = window.ERCAN_SES || {}, ercanKuyruk = [], ercanCalan = null;
   function ercanSes(metin) {
-    if (!SES.acik || !metin || !ERCAN[metin]) return;
+    if (!SES.acik || !SES.ayar.ercan || !metin || !ERCAN[metin]) return;
     if (ercanCalan) { ercanKuyruk = [metin]; return; }
-    var a = new Audio(ERCAN[metin]); a.volume = 1; ercanCalan = a; SES.konusma = true; sesSahne();
+    var a = new Audio(ERCAN[metin]); a.volume = SES.ana; ercanCalan = a; SES.konusma = true; sesSahne();
     a.onended = a.onerror = function () { ercanCalan = null; if (ercanKuyruk.length) ercanSes(ercanKuyruk.shift()); else { SES.konusma = false; sesSahne(); } };
     var p = a.play(); if (p && p.catch) p.catch(function () { ercanCalan = null; SES.konusma = false; });
   }
@@ -1467,14 +1511,16 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function rehberEtiket() { return ui.rehberIste ? "Rehber: açık" : "Rehber: kapalı"; }
   function sesEtiket() { return SES.acik ? "♪ Ses açık" : "♪ Ses kapalı"; }
   function ton(f, sure, tip, vol, gec, f2) {
-    var c = SES.acik && sesCtx(); if (!c) return;
+    var c = SES.acik && SES.ayar.efekt && SES.ana > 0 && sesCtx(); if (!c) return;
+    vol = Math.max(0.0002, (vol || .08) * SES.ana);
     var t0 = c.currentTime + (gec || 0), o = c.createOscillator(), g = c.createGain();
     o.type = tip || "sine"; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + sure);
     g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol || .08, t0 + .012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + sure);
     o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0 + sure + .05);
   }
   function hisirti(sure, vol, frek, gec) {
-    var c = SES.acik && sesCtx(); if (!c) return;
+    var c = SES.acik && SES.ayar.efekt && SES.ana > 0 && sesCtx(); if (!c) return;
+    vol = (vol || .05) * SES.ana;
     var n = Math.floor(c.sampleRate * sure), b = c.createBuffer(1, n, c.sampleRate), d = b.getChannelData(0);
     for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
     var src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(), t0 = c.currentTime + (gec || 0);
@@ -1485,9 +1531,9 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     tik: function () { hisirti(.035, .05, 2600); },
     yaz: function () { hisirti(.018, .03, 3800); },
     bip: function (spo2, zaman) {
-      var c = SES.acik && sesCtx(); if (!c) return;
+      var c = SES.acik && SES.ayar.monitor && SES.ana > 0 && sesCtx(); if (!c) return;
       var f = 440 + Math.max(0, Math.min(100, spo2 == null ? 97 : spo2) - 80) * 22, o = c.createOscillator(), g = c.createGain(), t0 = zaman || c.currentTime;
-      o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(.05, t0 + .01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + .11);
+      o.type = "sine"; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(Math.max(0.0002, .05 * SES.ana), t0 + .01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + .11);
       o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0 + .14);
     },
     alarm: function () { [0, .22, .44, 1.1, 1.32, 1.54].forEach(function (d, i) { ton([988, 784, 988][i % 3], .17, "square", .045, d); }); },
@@ -1496,8 +1542,49 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     dusunce: function () { ton(523, .6, "sine", .04); ton(784, .7, "sine", .035, .18); ton(1046, .9, "sine", .03, .36); },
     korku: function () { ton(48, 1.4, "sawtooth", .16); ton(51, 1.4, "sawtooth", .12); hisirti(.7, .22, 700); ton(1250, .55, "sawtooth", .05, .05, 1900); }
   };
+  // Her eylemin kendi sesi: sekme kâğıt hışırtısı, soru iki nota, muayene steteskop, tetkik laboratuvar bipi, müdahale şırınga tıkı…
+  var EYLEM_SES = {
+    sekme: function () { hisirti(.09, .05, 1500); hisirti(.07, .035, 3200, .04); },
+    soru: function () { ton(523, .1, "triangle", .05); ton(659, .14, "triangle", .045, .07); },
+    muayene: function () { ton(150, .12, "sine", .14); hisirti(.05, .04, 500); ton(190, .1, "sine", .08, .16); },
+    tetkik: function () { ton(1180, .07, "square", .025); ton(1180, .07, "square", .025, .11); hisirti(.12, .02, 4200, .2); },
+    mudahale: function () { hisirti(.03, .07, 5200); ton(2350, .12, "triangle", .035, .02); ton(3100, .09, "triangle", .02, .06); },
+    vital: function () { ton(960, .08, "sine", .05); },
+    monitor: function () { ton(784, .09, "sine", .05); ton(988, .09, "sine", .05, .12); ton(1175, .12, "sine", .05, .24); },
+    bekle: function () { hisirti(.02, .06, 2600); hisirti(.02, .05, 1900, .45); },
+    klavye: function () { [0, .07, .13, .2].forEach(function (d) { hisirti(.02, .045, 3300 + Math.random() * 900, d); }); },
+    damga: function () { ton(95, .22, "sine", .2); hisirti(.08, .09, 900); },
+    danis: function () { ton(440, .12, "sine", .045); ton(554, .16, "sine", .04, .09); },
+    dusunce: function () { ton(784, .3, "sine", .03); ton(1046, .4, "sine", .025, .1); },
+    tik: function () { hisirti(.035, .05, 2600); }
+  };
+  var ACT_SES = { sekme: "sekme", kut: "sekme", "gunluk-filtre": "sekme", soru: "soru", "ss-sec": "soru", gecmis: "soru", "hms-sec": "soru", muayene: "muayene",
+                  tetkik: "tetkik", mudahale: "mudahale", vital: "vital", monitor: "monitor", "bekle-dk": "bekle", "bekle-sonuc": "bekle",
+                  "enabiz-ac": "klavye", "enabiz-giris": "klavye", "enabiz-bolum": "klavye", bitir: "damga", taburcu: "damga", "hms-danis": "danis",
+                  "dus-koy": "dusunce", "dus-cikar": "sekme", baslat: "sekme", tekrar: "sekme", bilgi: "sekme" };
+  function uiSes(act) { (EYLEM_SES[ACT_SES[act]] || EYLEM_SES.tik)(); }
+  // Hasta yakını baskını: ani sessizlik → hazır çığlık efekti (BudgetPixel, CC BY 4.0) + kodla tiz uyumsuz katman → kalp atışı
+  var kalpZaman = null;
+  function kalpAtisi(ac) {
+    clearInterval(kalpZaman); kalpZaman = null;
+    if (!ac || !SES.acik || !SES.ayar.efekt) return;
+    var vur = function () { ton(64, .17, "sine", .5); ton(128, .08, "triangle", .1); hisirti(.04, .07, 320); ton(56, .15, "sine", .36, .25); ton(112, .07, "triangle", .07, .25); };
+    vur(); kalpZaman = setInterval(vur, 760);
+  }
+  function korkuBaskini() {
+    if (!SES.acik) return;
+    ["muzikA", "ortamA", "kapiA"].forEach(function (k) { var a = SES[k]; if (a) { clearInterval(a.__fade); a.volume = 0; } });
+    if (ercanCalan) { try { ercanCalan.pause(); } catch (e) { /* yok say */ } ercanCalan = null; ercanKuyruk = []; SES.konusma = false; }
+    SES.kisik = true;
+    if (SES.ayar.efekt) {
+      sesCtx();
+      var a = new Audio("ses/korku.mp3"); a.volume = Math.min(1, SES.ana); var p = a.play(); if (p && p.catch) p.catch(function () {});
+      ton(880, .9, "sawtooth", .05, 0, 1320); ton(932, .9, "sawtooth", .045, 0, 1400); hisirti(.45, .3, 1800);
+    }
+    setTimeout(function () { if (ui.yakinAcik) { sesSahne(); kalpAtisi(true); } }, 1500);
+  }
   function monitorBip() {
-    var s = ui.s, c = SES.acik && SES.ctx;
+    var s = ui.s, c = SES.acik && SES.ayar.monitor && SES.ctx;
     if (!c || !s || ui.ekran !== "vaka" || s.monitor == null || ui.duraklat || ui.intro || ui.yakinAcik || s.bitti) { SES.sonrakiBip = 0; return; }
     var v = M.anlikVitaller(s), hr = v.nabiz; if (!hr) return;
     if (!SES.sonrakiBip || SES.sonrakiBip < c.currentTime - .5) SES.sonrakiBip = c.currentTime + .05;
@@ -1655,6 +1742,108 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(hepsi).then(function () { if (b) b.textContent = "Bağlantı kopyalandı"; });
     else if (b) b.textContent = url;
   }
+  /* ================= AYARLAR (ses, oyun, nasıl oynanır, kısayollar, kütüphane, emeği geçenler) =================
+     Girişte ve oyun içinde açılır; oyun içinde açıkken saat durur (Paradox oyunlarındaki menü gibi). */
+  var AYAR_SEKME = [["ses", "Ses"], ["oyun", "Oyun"], ["nasil", "Nasıl oynanır"], ["kisayol", "Kısayollar"], ["kut", "Kütüphane"], ["emek", "Emeği geçenler"]];
+  function anahtar(id, ad, acik, alt) {
+    return '<label class="ayar-satir"><span><b>' + ad + "</b>" + (alt ? "<small>" + alt + "</small>" : "") + '</span><input type="checkbox" data-ayar="' + id + '"' + (acik ? " checked" : "") + '><i aria-hidden="true"></i></label>';
+  }
+  function ayarIcerik(sek) {
+    if (sek === "ses") {
+      return anahtar("acik", "Bütün sesler", SES.acik, "Hepsini birden kapatır") +
+        '<label class="ayar-satir"><span><b>Ana ses</b><small>' + Math.round(SES.ana * 100) + '%</small></span><input type="range" min="0" max="100" step="5" value="' + Math.round(SES.ana * 100) + '" data-ayar="ana" aria-label="Ana ses"></label>' +
+        anahtar("muzik", "Müzik", SES.ayar.muzik, "Melankolik nöbet müziği") +
+        anahtar("ortam", "Ortam sesi", SES.ayar.ortam, "Acil servis uğultusu, yağmurlu kapı") +
+        anahtar("efekt", "Efektler", SES.ayar.efekt, "Düğme sesleri, alarm, zil, hasta yakını baskını") +
+        anahtar("monitor", "Monitör bipi", SES.ayar.monitor, "Kalp hızına göre çalar, saturasyon düştükçe kalınlaşır") +
+        anahtar("ercan", "Ercan Abi'nin sesi", SES.ayar.ercan, "Replikleri sesli okur") +
+        '<div class="ayar-dene"><button type="button" class="btn kucuk ikincil" data-dene="soru">Düğme sesi</button><button type="button" class="btn kucuk ikincil" data-dene="alarm">Alarm</button><button type="button" class="btn kucuk ikincil" data-dene="korku">Hasta yakını</button></div>';
+    }
+    if (sek === "oyun") {
+      return anahtar("rehber", "Rehberli ilk vaka", ui.rehberIste, "Ercan Abi ekranı adım adım gösterir; sonraki vakada yeniden açılır") +
+        (ui.ekran === "vaka" && ui.s && !ui.s.bitti ? '<div class="ayar-dene"><button type="button" class="btn kucuk ikincil" data-dene="rehber">Rehberi şimdi göster</button></div>' : "") +
+        '<p class="ipucu">Duraklatma (Space) puanı etkilemez; sonuç ekranında kaç kez duraklattığın yazar. Ercan Abi\'ye danışmak da puan kırmaz.</p>';
+    }
+    if (sek === "nasil") {
+      return '<div class="ayar-metin">' +
+        "<h3>Amaç</h3><p>Acil servise gelen hastayı doğru alana al, bilgi topla, doğru müdahaleleri zamanında yap ve tanını koy. Puan tanıdan, kritik müdahalelerden, hedef sürelerden ve verimlilikten gelir; gereksiz tetkik ve zararlı müdahale ceza alır.</p>" +
+        "<h3>Akış</h3><ol><li><b>Triyaj:</b> hasta kapıdan girer; kırmızı, sarı ya da yeşil alana alırsın. Yanlış alan hastayı bekletir.</li>" +
+        "<li><b>Bilgi topla:</b> öykü (yazarak da sorabilirsin), geçmiş, e-Nabız, muayene, vitaller, tetkikler. Her işlem vaka saatinden zaman yer.</li>" +
+        "<li><b>Karar ver:</b> müdahaleler geri alınamaz; geciken hasta kötüleşir.</li>" +
+        "<li><b>Düşün:</b> bulgular düşünce açar; en fazla üçünü dolaba koy, kanıt geldikçe güçlenir ya da zayıflar.</li>" +
+        "<li><b>Tanını koy:</b> sonuç ekranında puanın, ideal yolla karşılaştırman ve kılavuz kartı gelir.</li></ol>" +
+        "<h3>Ekran</h3><p>Solda karar menüsü ve açık panel, ortada hasta ve monitör, sağda Ercan Abi ve olaylar. Üst çubuk dikkat isteyen her şeyi gösterir. Altı çizili terimlerin üstüne gelince açıklaması açılır.</p>" +
+        "<h3>Ercan Abi ve hasta yakını</h3><p>Ercan Abi kızar, onaylar, soru sorar; danışmak puan kırmaz. Hasta yakını bir anda gelir: dürüst ve net bilgi vermek en iyisidir, görmezden gelirsen geri döner.</p></div>";
+    }
+    if (sek === "kisayol") {
+      var ks = [["1 – 6", "Öykü, Geçmiş, Muayene, Tetkik, Müdahale, Tanı"], ["N", "e-Nabız"], ["Space · P", "Duraklat / devam"], ["Esc", "Pencereyi kapat"],
+                ["1 – 3", "Girişte triyaj alanı (kırmızı, sarı, yeşil)"], ["1 – 4", "Hasta yakınına cevap"], ["Enter", "Rehberde ilerle"]];
+      return '<table class="kisayol"><tbody>' + ks.map(function (k) { return "<tr><td><kbd>" + k[0] + "</kbd></td><td>" + k[1] + "</td></tr>"; }).join("") + "</tbody></table>";
+    }
+    if (sek === "kut") return kutuphaneHTML();
+    return '<div class="ayar-metin"><h3>Emeği geçenler</h3><ul>' +
+      "<li><b>Görseller:</b> Higgsfield (GPT Image 2.5) ile üretildi; görsel dil Disco Elysium'dan esinlenildi.</li>" +
+      "<li><b>Müzik ve ortam sesi:</b> Higgsfield (Sonilo, Seed Audio) ile üretildi.</li>" +
+      "<li><b>Ercan Abi'nin sesi:</b> Microsoft Edge sinir ağı sesi (tr-TR-AhmetNeural, edge-tts); demo amaçlı.</li>" +
+      '<li><b>Hasta yakını efekti:</b> “Shrieking Jump Scare Blast”, BudgetPixel AI (<a href="https://budgetpixel.com/sfx/shrieking-jump-scare-blast-258d1f28" target="_blank" rel="noopener">budgetpixel.com</a>), CC BY 4.0.</li>' +
+      "<li><b>Monitör, alarm ve düğme sesleri:</b> WebAudio ile kodla üretildi.</li>" +
+      "<li><b>Yazı tipleri:</b> Libre Baskerville, Barlow Condensed (SIL Open Font License).</li>" +
+      "<li><b>Tıbbi içerik:</b> hekim onayı bekliyor; kaynaklar her vakanın kılavuz kartında.</li></ul></div>";
+  }
+  function ayarCiz() {
+    var el = $("ayar"); if (!el) return;
+    var sek = el.getAttribute("data-sekme") || "ses";
+    el.innerHTML = '<div class="ayar-kutu" role="dialog" aria-modal="true" aria-label="Ayarlar"><div class="ayar-bas"><h2>Ayarlar</h2><button type="button" class="ayar-kapat" data-ak="kapat" aria-label="Kapat">× Esc</button></div>' +
+      '<div class="ayar-govde"><nav class="ayar-menu">' + AYAR_SEKME.map(function (x) { return '<button type="button" data-as="' + x[0] + '" aria-current="' + (sek === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</nav>" +
+      '<section class="ayar-icerik">' + ayarIcerik(sek) + "</section></div></div>";
+  }
+  function ayarAc(sek) {
+    if ($("ayar")) return;
+    var el = document.createElement("div"); el.id = "ayar"; el.className = "ayar-perde"; el.setAttribute("data-sekme", sek || "ses");
+    document.body.appendChild(el);
+    if (ui.ekran === "vaka" && ui.s && !ui.s.bitti && !ui.duraklat) { ui.duraklat = true; ui.ayarDuraklatti = true; render(); }
+    ayarCiz();
+    el.addEventListener("click", function (e) {
+      if (e.target === el || (e.target.closest && e.target.closest('[data-ak="kapat"]'))) { ayarKapat(); return; }
+      var b = e.target.closest && e.target.closest("[data-as],[data-dene],[data-act]");
+      if (!b) return;
+      if (b.hasAttribute("data-as")) { EYLEM_SES.sekme(); el.setAttribute("data-sekme", b.getAttribute("data-as")); ayarCiz(); return; }
+      if (b.hasAttribute("data-dene")) {
+        var d = b.getAttribute("data-dene");
+        if (d === "soru") EYLEM_SES.soru(); else if (d === "alarm") EFEKT.alarm();
+        else if (d === "korku") { var ka = new Audio("ses/korku.mp3"); ka.volume = SES.ana; if (SES.acik && SES.ayar.efekt) ka.play().catch(function () {}); }
+        else if (d === "rehber") { ayarKapat(); rehberBaslat(); }
+        return;
+      }
+      if (b.getAttribute("data-act") === "kut") { EYLEM_SES.sekme(); ui.kut = b.getAttribute("data-id"); ayarCiz(); }
+    });
+    el.addEventListener("change", function (e) {
+      var k = e.target.getAttribute && e.target.getAttribute("data-ayar"); if (!k) return;
+      if (k === "acik") { if (SES.acik !== e.target.checked) sesDegistir(); }
+      else if (k === "rehber") { ui.rehberIste = e.target.checked; try { localStorage.setItem("triyaj-rehber", ui.rehberIste ? "acik" : "bitti"); } catch (x) { /* yok say */ } }
+      else if (k !== "ana") { SES.ayar[k] = e.target.checked; sesAyarKaydet(); if (k === "monitor") SES.sonrakiBip = 0; if (k === "ercan" && !SES.ayar.ercan && ercanCalan) { ercanCalan.pause(); ercanCalan = null; } sesSahne(); }
+      EYLEM_SES.tik();
+    });
+    el.addEventListener("input", function (e) {
+      if (e.target.getAttribute && e.target.getAttribute("data-ayar") === "ana") {
+        SES.ana = (+e.target.value) / 100; sesAyarKaydet(); sesSahne();
+        var sm = e.target.closest(".ayar-satir").querySelector("small"); if (sm) sm.textContent = e.target.value + "%";
+      }
+      if (e.target.id === "terimAra") { var q = trKucuk(e.target.value.trim()); el.querySelectorAll(".terim-satir").forEach(function (r) { r.hidden = !!q && r.getAttribute("data-ara").indexOf(q) < 0; }); }
+    });
+    var ilk = el.querySelector('[aria-current="true"]'); if (ilk) ilk.focus({ preventScroll: true });
+  }
+  function ayarKapat() {
+    var el = $("ayar"); if (el) el.remove();
+    if (ui.ayarDuraklatti) { ui.ayarDuraklatti = false; ui.duraklat = false; ui.sonTick = simdi(); if (ui.s && !ui.s.bitti && ui.ekran === "vaka") render(); }
+    if (ui.ekran === "giris") { var sg = app.querySelector('[data-k="ses-giris"]'); if (sg) sg.textContent = sesEtiket(); }
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!$("ayar")) return;
+    if (e.key === "Escape") { ayarKapat(); e.preventDefault(); }
+    e.stopPropagation();
+  }, true);
+
   function geceSaati() { var dk = 60 + Math.floor(Math.random() * 240); return "0" + Math.floor(dk / 60) + "." + ("0" + (dk % 60)).slice(-2); }
 
   var GIRIS_SESLER = [
@@ -1685,7 +1874,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<p class="tez">Pilotlar simülatörde prova eder. Tıp öğrencisinin provası Triyaj.</p>' +
         '<p class="meta">Hasta kapıdan girer, gerisi senin kararın.</p>' +
         '<div class="giris-ayar"><button class="btn ikincil kucuk ses-ac" type="button" data-act="ses" data-k="ses-giris">' + sesEtiket() + "</button>" +
-        '<button class="btn ikincil kucuk" type="button" data-act="rehber" data-k="rehber-giris">' + rehberEtiket() + "</button></div>" +
+        '<button class="btn ikincil kucuk" type="button" data-act="ayar" data-k="ayar-giris">⚙ Ayarlar · nasıl oynanır</button></div>' +
         '<svg class="ecg" viewBox="0 0 900 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 H150 L165 30 L172 22 L180 30 H230 L240 34 L250 4 L262 42 L272 30 H330 L350 22 L372 30 H520 L535 30 L542 22 L550 30 H600 L610 34 L620 4 L632 42 L642 30 H700 L720 22 L742 30 H900"/></svg>' +
       "</header>" +
       duelloHTML() +
@@ -1738,7 +1927,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<div class="olcu bek" id="bekKutu" hidden><span class="k">Bekleyen</span><span class="v" id="bekleyen">0</span></div>' +
         '<div class="uyarilar" id="uyarilar" aria-live="polite"></div>' +
         '<button class="ust-btn" type="button" id="duraklatBtn" data-act="duraklat" data-k="duraklat" aria-pressed="false" title="Duraklat (Space / P)">❚❚</button>' +
-        '<button class="ust-btn" type="button" id="sesBtn" data-act="ses" data-k="ses" aria-pressed="' + SES.acik + '" title="Ses">' + (SES.acik ? "♪ Ses" : "♪ Kapalı") + "</button>" +
+        '<button class="ust-btn" type="button" id="sesBtn" data-act="ses" data-k="ses" aria-pressed="' + SES.acik + '" title="Sesi aç / kapat">' + (SES.acik ? "♪ Ses" : "♪ Kapalı") + "</button>" +
+        '<button class="ust-btn" type="button" data-act="ayar" data-k="ayar" title="Ayarlar, nasıl oynanır, kısayollar">⚙ Ayarlar</button>' +
         '<button class="cik-btn" type="button" data-act="cik-sor" data-k="cik-sor" aria-label="Vakadan çık">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
         '<div class="ust-uyari" id="ustUyari"></div>' +
@@ -1878,7 +2068,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function yakinAc(o) {
     var Y = ui.vaka.yakin, d = ui.yakin[o.id];
     ui.yakinAcik = o;
-    EFEKT.korku(); sesKis(true);
+    korkuBaskini();
     var el = document.createElement("div");
     el.id = "yakin"; el.className = "yakin"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", Y.ad);
     el.innerHTML = '<div class="yakin-portre gorsel"><img src="' + esc(Y.portre) + '" alt=""></div><div class="yakin-metin"><div class="yakin-kim">' + esc(Y.ad) + "</div>" +
@@ -1891,7 +2081,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     el.addEventListener("click", function (e) { var b = e.target.closest("[data-yakin]"); if (b) yakinCevap(b.getAttribute("data-yakin")); });
     var ilk = el.querySelector("[data-yakin]"); if (ilk) ilk.focus({ preventScroll: true });
   }
-  function yakinKapat() { var el = $("yakin"); if (el) el.remove(); if (ui.yakinAcik) sesKis(false); ui.yakinAcik = null; }
+  function yakinKapat() { var el = $("yakin"); if (el) el.remove(); kalpAtisi(false); if (ui.yakinAcik) sesKis(false); ui.yakinAcik = null; }
   function yakinCevap(k) {
     var s = ui.s, o = ui.yakinAcik, Y = ui.vaka.yakin;
     if (!s || !o) return;
@@ -2155,7 +2345,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   }
   app.addEventListener("submit", function (e) {
     var f = e.target; if (!f.classList || !f.classList.contains("serbest")) return;
-    e.preventDefault(); serbestSor(f.querySelector("input").value);
+    e.preventDefault(); uiSes("soru"); serbestSor(f.querySelector("input").value);
   });
 
   function oykuHTML(s) {
@@ -2917,8 +3107,9 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     var b = e.target.closest ? e.target.closest("[data-act]") : null;
     if (!b || b.disabled) return;
     var act = b.getAttribute("data-act"), id = b.getAttribute("data-id"), s = ui.s;
-    EFEKT.tik();
+    uiSes(act);
     switch (act) {
+      case "ayar": ayarAc("ses"); return;
       case "ses": sesDegistir(); var sg = app.querySelector('[data-k="ses-giris"]'); if (sg) sg.textContent = sesEtiket(); return;
       case "kut": ui.kut = id; var ks = app.querySelector(".kutuphane"); if (ks) ks.outerHTML = kutuphaneHTML(); return;
       case "baslat": baslat(id); return;
@@ -3010,6 +3201,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   ui.rehberIste = rehberIstekOku();
   function rehberBaslat() {
     if (!ui.s || ui.s.bitti || ui.ekran !== "vaka") return;
+    if ($("ayar") || ui.yakinAcik) { setTimeout(rehberBaslat, 800); return; } // ayarlar ya da hasta yakını açıkken bekler
     ui.rehberAdim = 0; ui.duraklat = true; render(); rehberCiz();
   }
   function rehberCiz() {
