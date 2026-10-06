@@ -169,6 +169,10 @@ body.vaka-modu{padding-bottom:calc(var(--alt-h) + env(safe-area-inset-bottom))}
 .olcu.bek[hidden]{display:none}
 .cik-btn{width:44px;height:44px;flex:none;display:grid;place-items:center;border:1px solid var(--cizgi-2);border-radius:0;background:transparent;color:var(--soluk);cursor:pointer}
 .cik-btn svg{width:18px;height:18px}
+.ayar-cik{margin-left:auto;margin-right:8px;border:1px solid #6b3b30;background:transparent;color:#d9a597;font:600 13px var(--f-baslik);letter-spacing:.12em;text-transform:uppercase;padding:7px 12px 6px;min-height:40px;cursor:pointer}
+.ayar-cik:hover{border-color:var(--kotu);color:var(--kotu)}
+.ayar-cik-onay{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:10px 18px;border-bottom:1px solid var(--cizgi);background:rgba(239,95,67,.08);font:italic 14px var(--f-govde)}
+.ayar-cik-onay span{flex:1 1 220px}
 .cik-yazi{display:none;font:600 13px var(--f-baslik);letter-spacing:.1em;text-transform:uppercase}
 @media (min-width:1100px){ .cik-yazi{display:inline} }
 .ust-uyari{flex-basis:100%;display:grid;gap:6px}
@@ -980,11 +984,11 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   .masa-ust{display:none}
   .masa-sekme{display:grid!important;width:100%;border-top:1px solid var(--cizgi)!important;color:var(--kehribar)}
   .sekme .rozet.masa-say{background:#6b5640;color:var(--beyaz)}
-  /* dar masa şeridi: menünün sağında, sahnenin solunda; sekme penceresi (z 19) açılınca altında kalır */
-  #pMasa.masa-serit{display:block;position:absolute;z-index:15;top:0;bottom:0;left:var(--sol);width:var(--masa-w);grid-area:auto}
-  main[data-gorunum] .sahne{padding-left:calc(var(--masa-w) + 18px)}
-  .sol-kolon .alt-eylem{left:calc(var(--sol) + var(--masa-w) + (100% - var(--sol) - var(--masa-w) - var(--sag)) / 2)}
-  .masa-serit-ic{display:flex;flex-direction:column;gap:9px;width:100%;height:100%;padding:16px 14px 18px;border:0;border-right:1px solid #4d3d2d;
+  /* dar masa şeridi: ekranın sağında (altında Ercan Abi durur); sekme penceresi (z 19) açılınca altında kalır */
+  #pMasa.masa-serit{display:block;position:absolute;z-index:15;top:0;bottom:0;right:0;left:auto;width:var(--masa-w);grid-area:auto}
+  main[data-gorunum] .sahne{padding-right:calc(var(--masa-w) + 18px)}
+  .sol-kolon .alt-eylem{left:calc(var(--sol) + (100% - var(--sol) - var(--masa-w)) / 2)}
+  .masa-serit-ic{display:flex;flex-direction:column;gap:9px;width:100%;height:100%;padding:16px 14px 178px;border:0;border-left:1px solid #4d3d2d;
     background:linear-gradient(180deg,rgba(43,34,25,.95),rgba(24,19,14,.95));color:var(--metin);text-align:left;cursor:pointer;overflow:hidden;font:inherit}
   .masa-serit-ic:hover,.masa-serit-ic:focus-visible{background:linear-gradient(180deg,rgba(56,44,31,.96),rgba(30,24,17,.96))}
   .ms-bas{display:flex;justify-content:space-between;align-items:center;font:600 20px/1 var(--f-baslik);letter-spacing:.16em;text-transform:uppercase;color:var(--beyaz)}
@@ -1004,7 +1008,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   .ms-ac{margin-top:auto;font:600 12px var(--f-baslik);letter-spacing:.14em;text-transform:uppercase;color:var(--kehribar)}
   /* büyük masa: menünün sağından ekranın ~3/4'üne; sekme penceresi ve alt çubuğun üstünde, Ercan Abi köşede görünür */
   .masa-perde{position:absolute;inset:0;z-index:37;display:block;padding:0;background:rgba(5,5,4,.55)}
-  .masa-kutu{position:absolute;top:0;bottom:0;left:var(--sol);width:min(75vw,calc(100% - var(--sol) - 60px));border-left:0;border-top:0;border-bottom:0}
+  .masa-kutu{position:absolute;top:0;bottom:0;right:0;left:auto;width:min(75vw,calc(100% - var(--sol) - 60px));border-right:0;border-top:0;border-bottom:0;animation-name:masa-sagdan}
+  @keyframes masa-sagdan{from{opacity:0;transform:translateX(14px)}}
   .masa-govde{padding:20px 28px 60px}
   .masa-govde .dolap-yuva{max-width:900px}
 }
@@ -1999,7 +2004,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         "<h3>Ercan Abi ve hasta yakını</h3><p>Ercan Abi kızar, onaylar, soru sorar; danışmak puan kırmaz. Hasta yakını bir anda gelir: dürüst ve net bilgi vermek en iyisidir, görmezden gelirsen geri döner.</p></div>";
     }
     if (sek === "kisayol") {
-      var ks = [["1 – 5", "Öykü ve geçmiş, Muayene, Tetkik, Müdahale, Tanı · büyük pencere açılır, aynı tuş ya da Esc kapatır"], ["Z · Ctrl+Z", "Son müdahaleden ya da tetkik isteminden vazgeç (30 sn içinde)"], ["N", "e-Nabız"], ["O", "Vaka akışı (bütün olaylar) · ya da zaman şeridine / vaka saatine tıkla"], ["E", "Ercan Abi: eski mesajlar ve danış · ya da sağ alttaki Ercan Abi'ye tıkla"], ["M", "Masa: iğnelediklerin ve düşünce dolabı · raptiye ikonu bir bilgiyi masaya ekler"], ["Space · P", "Duraklat / devam"], ["Esc", "Ayarları aç · açık pencereyi kapat"],
+      var ks = [["1 – 5", "Öykü ve geçmiş, Muayene, Tetkik, Müdahale, Tanı · büyük pencere açılır, aynı tuş ya da Esc kapatır"], ["Z · Ctrl+Z", "Son müdahaleden ya da tetkik isteminden vazgeç (30 sn içinde)"], ["N", "e-Nabız"], ["O", "Vaka akışı (bütün olaylar) · ya da zaman şeridine / vaka saatine tıkla"], ["E", "Ercan Abi: eski mesajlar ve danış · ya da sağ alttaki Ercan Abi'ye tıkla"], ["M", "Masa: iğnelediklerin ve düşünce dolabı · raptiye ikonu bir bilgiyi masaya ekler"], ["Space · P", "Duraklat / devam"], ["Esc", "Ayarları aç (vakadan çıkış da orada) · açık pencereyi kapat"],
                 ["1 – 3", "Girişte triyaj alanı (kırmızı, sarı, yeşil)"], ["1 – 4", "Hasta yakınına cevap"], ["Enter", "Rehberde ilerle"]];
       return '<table class="kisayol"><tbody>' + ks.map(function (k) { return "<tr><td><kbd>" + k[0] + "</kbd></td><td>" + k[1] + "</td></tr>"; }).join("") + "</tbody></table>";
     }
@@ -2017,7 +2022,12 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function ayarCiz() {
     var el = $("ayar"); if (!el) return;
     var sek = el.getAttribute("data-sekme") || "ses";
-    el.innerHTML = '<div class="ayar-kutu" role="dialog" aria-modal="true" aria-label="Ayarlar"><div class="ayar-bas"><h2>Ayarlar</h2><button type="button" class="ayar-kapat" data-ak="kapat" aria-label="Kapat">× Esc</button></div>' +
+    var vakada = ui.ekran === "vaka" && ui.s && !ui.s.bitti, cik = vakada && el.getAttribute("data-cik") === "1";
+    el.innerHTML = '<div class="ayar-kutu" role="dialog" aria-modal="true" aria-label="Ayarlar"><div class="ayar-bas"><h2>Ayarlar</h2>' +
+      (vakada ? '<button type="button" class="ayar-cik" data-ak="cik" data-k="ayar-cik">✕ Vakadan çık</button>' : "") +
+      '<button type="button" class="ayar-kapat" data-ak="kapat" aria-label="Kapat">× Esc</button></div>' +
+      (cik ? '<div class="ayar-cik-onay"><span>Vaka yarıda kalır, puan verilmez.</span><button type="button" class="btn tehlike kucuk" data-ak="cik-evet" data-k="ayar-cik-evet">Evet, vakalara dön</button>' +
+        '<button type="button" class="btn ikincil kucuk" data-ak="cik-hayir">Vazgeç</button></div>' : "") +
       '<div class="ayar-govde"><nav class="ayar-menu">' + AYAR_SEKME.map(function (x) { return '<button type="button" data-as="' + x[0] + '" aria-current="' + (sek === x[0]) + '">' + x[1] + "</button>"; }).join("") + "</nav>" +
       '<section class="ayar-icerik">' + ayarIcerik(sek) + "</section></div></div>";
   }
@@ -2029,6 +2039,10 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     ayarCiz();
     el.addEventListener("click", function (e) {
       if (e.target === el || (e.target.closest && e.target.closest('[data-ak="kapat"]'))) { ayarKapat(); return; }
+      var ak = e.target.closest && e.target.closest("[data-ak]"), akd = ak && ak.getAttribute("data-ak");
+      if (akd === "cik") { EYLEM_SES.sekme(); el.setAttribute("data-cik", "1"); ayarCiz(); var ev = el.querySelector('[data-k="ayar-cik-evet"]'); if (ev) ev.focus(); return; }
+      if (akd === "cik-hayir") { el.removeAttribute("data-cik"); ayarCiz(); return; }
+      if (akd === "cik-evet") { ayarKapat(); vakalaraDon(); return; }
       var b = e.target.closest && e.target.closest("[data-as],[data-dene],[data-act]");
       if (!b) return;
       if (b.hasAttribute("data-as")) { EYLEM_SES.sekme(); el.setAttribute("data-sekme", b.getAttribute("data-as")); ayarCiz(); return; }
@@ -2163,8 +2177,6 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         '<button class="ust-btn masa-ust" type="button" data-act="masa-ac" data-k="masa-ust" title="Masa: iğnelediklerin ve düşünce dolabı (M)">▤ Masa<span class="masa-ust-say" id="masaUstSay"></span></button>' +
         '<button class="ust-btn" type="button" id="sesBtn" data-act="ses" data-k="ses" aria-pressed="' + SES.acik + '" title="Sesi aç / kapat">' + (SES.acik ? "♪ Ses" : "♪ Kapalı") + "</button>" +
         '<button class="ust-btn" type="button" data-act="ayar" data-k="ayar" title="Ayarlar, nasıl oynanır, kısayollar (Esc)">⚙ Ayarlar · Esc</button>' +
-        '<button class="cik-btn" type="button" data-act="cik-sor" data-k="cik-sor" aria-label="Vakadan çık" title="Vakadan çık (sonuç ekranına gitmeden)">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="cik-yazi">Vakadan çık</span></button>' +
         '<div class="ust-uyari" id="ustUyari"></div>' +
       "</div></header>" +
       '<main class="wrap vaka-ekran" id="vakaEkran">' +
