@@ -16,6 +16,8 @@ HASAT 2026 (Teknopark İstanbul) başvurusu için geliştirildi.
 - Kıdemli hemşire Ercan Abi: tepki, ipucu, etkileşimli sorular
 - Hasta yakını baskını: üç cevap ya da görmezden gelmek
 - Paradox oyunlarından öğrenilenler: iç içe terim ipuçları (tıbbi terimin üstüne gelince açıklama, açıklamanın içindeki terim de açılır), üst çubukta uyarılar, kısayollar (1-6, N, Space), duraklatma, kütüphane (terimler, kılavuz kartları), rozetler
+- Serbest soru: öğrenci hastaya istediğini yazar, sistem en uygun hazır (hekim onaylı) cevabı bulur; emin değilse "bunu mu demek istedin?" diye önerir (çevrimdışı, yapay zekâ yok)
+- Rehberli ilk vaka, Ercan Abi'nin seslendirilmiş replikleri, günün vakası ve meydan okuma (düello) bağlantısı
 - Ses: müzik ve acil servis ortam sesi (Higgsfield ile üretildi), saturasyona göre perdesi değişen monitör bipi ve alarmlar (WebAudio)
 - Ayırıcı tanı dolabı: bulgular "düşünce" olarak açılır, oyuncu en fazla 3'ünü dolaba koyar; kanıt geldikçe düşünce güçlenir ya da zayıflar (Disco Elysium'un düşünce dolabından esinlenildi)
 - Sonuç ekranı: puan kırılımı, senin yolun ile ideal yol, kılavuz kartı, paylaşım metni
@@ -23,6 +25,6 @@ HASAT 2026 (Teknopark İstanbul) başvurusu için geliştirildi.
 ## Gelecek özellikler (HASAT 2026 sonrası)
 - **Vaka editörü:** tıp fakültesi hocaları ve asistanlar kod yazmadan vaka ekler; her vaka hekim onay akışından geçer (kim onayladı, ne zaman). Fakülteler kendi vaka setini oluşturur.
 - **Türkiye'ye özgü yeni vakalar:** ilaç zehirlenmesi, deprem/ezilme, mantar zehirlenmesi, gece trafik travması.
-- **Günün vakası, düello ve paylaşım kartı:** herkes aynı vakayı oynar, sonuçlar tanıyı ele vermeden paylaşılır.
-- **Seslendirme ve acil servis ambiyansı.**
+- **Sıralama tablosu ve sınıf modu:** günün vakasında fakülte/sınıf sıralaması.
+- **Yapay zekâ destekli soru anlama:** serbest soruyu Claude ile anlama (cevaplar yine hazır ve onaylı metinlerden).
 - **Mobil ve masaüstü uygulama:** aynı kodla Android/iOS (Capacitor) ve masaüstü (Tauri) paketleri.
