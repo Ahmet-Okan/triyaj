@@ -17,6 +17,7 @@ HASAT 2026 (Teknopark İstanbul) başvurusu için geliştirildi.
 - Hasta yakını baskını: üç cevap ya da görmezden gelmek
 - Paradox oyunlarından öğrenilenler: iç içe terim ipuçları (tıbbi terimin üstüne gelince açıklama, açıklamanın içindeki terim de açılır), üst çubukta uyarılar, kısayollar (1-6, N, Space), duraklatma, kütüphane (terimler, kılavuz kartları), rozetler
 - Serbest soru: öğrenci hastaya istediğini yazar, sistem en uygun hazır (hekim onaylı) cevabı bulur; emin değilse "bunu mu demek istedin?" diye önerir (çevrimdışı, yapay zekâ yok)
+- Ayarlar: müzik, ortam sesi, efektler, monitör bipi ve Ercan Abi'nin sesi ayrı ayrı; nasıl oynanır, kısayollar, kütüphane
 - Rehberli ilk vaka, Ercan Abi'nin seslendirilmiş replikleri, günün vakası ve meydan okuma (düello) bağlantısı
 - Ses: müzik ve acil servis ortam sesi (Higgsfield ile üretildi), saturasyona göre perdesi değişen monitör bipi ve alarmlar (WebAudio)
 - Ayırıcı tanı dolabı: bulgular "düşünce" olarak açılır, oyuncu en fazla 3'ünü dolaba koyar; kanıt geldikçe düşünce güçlenir ya da zayıflar (Disco Elysium'un düşünce dolabından esinlenildi)
@@ -28,3 +29,10 @@ HASAT 2026 (Teknopark İstanbul) başvurusu için geliştirildi.
 - **Sıralama tablosu ve sınıf modu:** günün vakasında fakülte/sınıf sıralaması.
 - **Yapay zekâ destekli soru anlama:** serbest soruyu Claude ile anlama (cevaplar yine hazır ve onaylı metinlerden).
 - **Mobil ve masaüstü uygulama:** aynı kodla Android/iOS (Capacitor) ve masaüstü (Tauri) paketleri.
+
+## Emeği geçenler
+- Görseller, müzik ve ortam sesi: Higgsfield ile üretildi (görsel dil Disco Elysium'dan esinlenildi)
+- Ercan Abi'nin sesi: Microsoft Edge sinir ağı sesi (tr-TR-AhmetNeural, edge-tts), demo amaçlı
+- Hasta yakını efekti: "Shrieking Jump Scare Blast" by BudgetPixel AI (https://budgetpixel.com/sfx/shrieking-jump-scare-blast-258d1f28), CC BY 4.0
+- Monitör, alarm ve arayüz sesleri: WebAudio ile kodla üretildi
+- Yazı tipleri: Libre Baskerville, Barlow Condensed (SIL Open Font License)
