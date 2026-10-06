@@ -173,7 +173,7 @@ window.ERCAN_SES = {
 "Üst çubuk dikkat isteyen her şeyi gösterir: kötüleşme, gelen sonuç, bekleyen tetkik. Tıklayınca oraya gidersin. Space ile duraklatırsın.": "ses/ercan/e170.mp3",
 "Ben sağ alttayım. Bir şey dersem balon çıkar, arada soru da sorarım. Eski mesajlar ve danışmak için üstüme tıkla, puanını kırmam.": "ses/ercan/e171.mp3",
 "Tetkik sonuçları arka planda gelir. Sonucu bekle düğmesi saati ileri sarar. Alttaki zaman şeridine tıklarsan bütün olayları görürsün.": "ses/ercan/e172.mp3",
-"Bulgu topladıkça düşünceler açılır. Tanı sekmesindeki dolaba en fazla üçünü koy, kanıt geldikçe güçlenir ya da zayıflar. Hazırsan saat şimdi başlıyor.": "ses/ercan/e173.mp3",
+"Burası masan hocam. Cevapların, sonuçların yanındaki küçük raptiyeye basarsan masaya düşer, M tuşu açar. Düşünce dolabı da masada: en fazla üç düşünce koy. Hazırsan saat şimdi başlıyor.": "ses/ercan/e173.mp3",
 "Hocam.": "ses/ercan/e174.mp3",
 "Tamam hocam, vazgeçtik. Daha uygulamamıştım, geri koydum.": "ses/ercan/e175.mp3",
 "Tamam hocam, istemi iptal ettim.": "ses/ercan/e176.mp3"
