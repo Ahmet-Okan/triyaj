@@ -39,7 +39,7 @@
 *,*::before,*::after{box-sizing:border-box}
 /* Önce telefon (390 px). Masaüstü aynı düzenin genişlemiş hâli (min-width: 920px). */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;background:var(--zemin)}
-body{margin:0;background:var(--zemin);color:var(--metin);font:15.5px/1.62 var(--f-govde);overflow-x:hidden;overscroll-behavior-y:none;position:relative;min-height:100vh}
+body{margin:0;background:transparent;color:var(--metin);font:15.5px/1.62 var(--f-govde);overflow-x:hidden;overscroll-behavior-y:none;position:relative;min-height:100vh}
 /* Boya dokusu: ince gren + yatay fırça izi + sıcak/soğuk ışık + kenar kararması */
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
@@ -183,7 +183,7 @@ main[data-gorunum="hasta"] #pSekme,main[data-gorunum="hasta"] #pMini{display:non
 .alt-eylem{display:flex;gap:8px;padding:8px max(12px,env(safe-area-inset-right)) 4px max(12px,env(safe-area-inset-left))}
 .alt-eylem .btn{flex:1 1 0;min-height:44px;padding-inline:10px;min-width:0}
 .alt-eylem .btn.ikincil{flex:0 0 auto}
-.sekme-liste{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding-inline:max(4px,env(safe-area-inset-left)) max(4px,env(safe-area-inset-right))}
+.sekme-liste{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding-inline:max(4px,env(safe-area-inset-left)) max(4px,env(safe-area-inset-right))}
 .sekme{position:relative;min-height:58px;border:0;background:none;display:grid;justify-items:center;align-content:center;gap:4px;font:600 12px/1 var(--f-baslik);letter-spacing:.08em;text-transform:uppercase;color:var(--soluk);cursor:pointer;padding:6px 0 5px}
 .sekme svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .sekme > span:not(.rozet){padding:2px 4px 1px}
@@ -233,7 +233,7 @@ main[data-gorunum="hasta"] #pSekme,main[data-gorunum="hasta"] #pMini{display:non
   .alt-cubuk{position:static;border:1px solid var(--cizgi);box-shadow:none;padding:0;overflow:hidden;background:rgba(9,9,8,.92)}
   .alt-eylem{padding:10px 12px 6px;justify-content:flex-end}
   .alt-eylem .btn{flex:0 0 auto}
-  .sekme-liste{grid-template-columns:repeat(5,minmax(0,1fr));padding:0}
+  .sekme-liste{grid-template-columns:repeat(6,minmax(0,1fr));padding:0}
   .sekme[data-id="hasta"]{display:none}
   .sekme{grid-auto-flow:column;justify-content:center;align-items:center;gap:8px;font-size:15px;min-height:52px}
   .sekme .rozet{position:static}
@@ -243,7 +243,9 @@ main[data-gorunum="hasta"] #pSekme,main[data-gorunum="hasta"] #pMini{display:non
 
 /* Hasta: Disco'daki konuşan portresi gibi çerçeveli boyalı resim */
 .hasta{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-items:start}
-#pHasta .gorsel{width:min(220px,64vw);justify-self:center}
+#pHasta .gorsel{width:min(240px,64vw);justify-self:center;aspect-ratio:3/4}
+.mini .gorsel img{object-position:50% 12%}
+.vk-gorsel img{object-position:50% 20%}
 .gorsel{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;background:#141210;border:1px solid #5a534a;outline:3px solid #0a0908;box-shadow:0 10px 26px rgba(0,0,0,.55)}
 .mini .gorsel{outline:0;box-shadow:none;border-color:var(--cizgi-2)}
 .gorsel svg,.gorsel img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
@@ -403,6 +405,61 @@ body.vaka-modu .uyari{padding-bottom:16px}
 .hata{padding-block:40px;display:grid;gap:12px}
 .hata h1{font-size:40px;color:var(--beyaz)}
 
+
+/* ===== Ercan Abi (kıdemli acil hemşiresi) ===== */
+.hms{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:start}
+.hms .gorsel{aspect-ratio:3/4;transition:border-color .3s,box-shadow .3s}
+.hms.kizgin .gorsel{border-color:var(--kotu);box-shadow:0 0 0 1px var(--kotu),0 0 22px rgba(239,95,67,.35)}
+.hms-metin{display:grid;gap:8px;min-width:0}
+.hms-metin .kim-bas{font:600 20px/1 var(--f-baslik);letter-spacing:.06em;text-transform:uppercase;color:var(--beyaz)}
+.hms-unvan{font:italic 12.5px/1.3 var(--f-govde);color:var(--soluk);margin-top:-4px}
+.kim.hms-k{color:#8fd3c7}
+.hms .liste .islem{min-height:42px;padding-block:7px 6px}
+.hms-danis{justify-self:start}
+.hms-not{font:italic 12px/1.4 var(--f-govde);color:#7b7467}
+.hms.son{margin-top:6px;grid-template-columns:90px minmax(0,1fr)}
+.bildirim.hms{border-left-color:#8fd3c7} .bildirim.hms b{color:#8fd3c7}
+.bildirim.hms span{font-style:italic}
+#pHemsire{grid-area:hemsire}
+.vaka-ekran{grid-template-areas:"mini" "hasta" "vital" "hemsire" "sekme" "gunluk"}
+main[data-gorunum="islem"] #pHemsire{display:none}
+.sahne,.metin-panel{display:contents}
+/* Giriş: arka planda triyaj girişi */
+body.giris-modu::before{background:
+  linear-gradient(180deg,rgba(14,13,12,.45),rgba(14,13,12,.86) 55%,rgba(14,13,12,.97)),
+  url("img/ai/bg-triaj-girisi.webp") center top/cover no-repeat,#0e0d0c}
+@media (min-width:920px){
+  .vaka-ekran{grid-template-rows:auto auto auto auto 1fr;grid-template-areas:"hasta nav" "hasta sekme" "vital sekme" "hemsire sekme" "gunluk sekme"}
+  main[data-gorunum] #pHemsire{display:block}
+}
+/* ===== PC sürümü (≥1100 px): solda sahne, sağda metin paneli (Disco Elysium düzeni) ===== */
+@media (min-width:1100px){
+  body.vaka-modu{overflow:hidden}
+  body.vaka-modu #app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+  body.vaka-modu .uyari{display:none}
+  .ust .ust-ic{max-width:none;padding-inline:26px}
+  .vaka-ekran{flex:1 1 auto;min-height:0;max-width:none;margin:0;padding:0;gap:0;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(480px,1fr);grid-template-rows:minmax(0,1fr);grid-template-areas:none;align-items:stretch}
+  .sahne{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-areas:"hasta hasta" "vital hemsire";align-content:start;gap:14px;min-height:0;overflow:auto;padding:22px 26px 26px;
+    background:linear-gradient(90deg,rgba(10,9,8,.25),rgba(10,9,8,.62) 75%,rgba(10,9,8,.85)),var(--sahne-bg,none) center/cover no-repeat,#0e0d0c}
+  .sahne .kart{background:rgba(14,13,12,.8);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+  #pHasta .hasta{grid-template-columns:minmax(200px,250px) minmax(0,1fr);gap:20px}
+  #pHasta .gorsel{width:100%}
+  .hasta-bilgi .kim-bas{font-size:26px}
+  .sikayet{font-size:17.5px}
+  .metin-panel{display:grid;grid-template-rows:minmax(0,1fr) minmax(0,1.3fr) auto;min-height:0;border-left:1px solid var(--cizgi-2);background:rgba(12,11,10,.97)}
+  #pGunluk{grid-area:1/1/2/2} #pSekme{grid-area:2/1/3/2} #pNav{grid-area:3/1/4/2}
+  .metin-panel .kart{border:0;background:none}
+  main[data-gorunum] #pGunluk{min-height:0;display:flex;flex-direction:column;border-bottom:1px solid var(--cizgi)}
+  #pGunluk ol{flex:1 1 auto;max-height:none;min-height:0}
+  #pSekme{min-height:0;overflow:auto}
+  #pNav{border:0;border-top:1px solid var(--cizgi-2)}
+  .hms{grid-template-columns:96px minmax(0,1fr)}
+}
+@media (min-width:1100px) and (max-height:820px){
+  #pHasta .hasta{grid-template-columns:minmax(160px,190px) minmax(0,1fr)}
+  .sahne{padding-top:14px;gap:10px}
+  .vhucre{min-height:60px}
+}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .ecg path{stroke-dashoffset:0}
@@ -416,6 +473,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
 <noscript><p class="wrap">Triyaj'ı oynamak için JavaScript açık olmalı.</p></noscript>
 
 <script src="vakalar.js" charset="utf-8"></script>
+<script src="hemsire.js" charset="utf-8"></script>
 
 <!-- =====================================================================
      MOTOR · oyun mantığı. Saf fonksiyonlar, DOM yok.
@@ -569,7 +627,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
     var s = {
       vaka: vaka, ayar: ayar, t: 0, maliyet: 0, surum: 0,
       durum: "baslangic", gorulenDurumlar: ["baslangic"],
-      olcum: {}, monitor: null, sorulan: {}, muayene: {}, tetkik: {},
+      olcum: {}, monitor: null, sorulan: {}, gecmis: {}, muayene: {}, tetkik: {},
       yapilan: {}, yapilanDurum: {}, sira: [], gunluk: [],
       bitti: false, kayip: false, kayipT: null, tani: null, bitis: null
     };
@@ -610,6 +668,22 @@ body.vaka-modu .uyari{padding-bottom:16px}
     s.sorulan[id] = { t: s.t, cevap: c, cevapsiz: !!d.oykuCevabi };
     s.sira.push("oyku");
     kayit(s, "oyku", q.soru + " → " + c);
+    return { ok: true };
+  }
+  // Hasta geçmişi: hastaya ya da yakınına sorulur, ya da e-Nabız'dan bakılır. Puanı etkilemez, sadece süre yer.
+  var KAYNAK_AD = { hasta: "Hasta", yakin: "Yakını", enabiz: "e-Nabız" };
+  function gecmisBak(s, id) {
+    if (s.bitti) return BITTI;
+    var g = bul(s.vaka.gecmis, id); if (!g) return { ok: false, neden: "yok" };
+    if (s.gecmis[id] && !s.gecmis[id].cevapsiz) return { ok: false, neden: "zaten" };
+    ilerlet(s, (s.ayar.gecmisSn || {})[g.kaynak] || s.ayar.oykuSn); if (s.bitti) return BITTI;
+    var d = s.vaka.durumlar[s.durum] || {};
+    var cevapsiz = g.kaynak === "hasta" && !!d.oykuCevabi;
+    var c = cevapsiz ? d.oykuCevabi : metinSec(g.cevap, s.durum);
+    s.gecmis[id] = { t: s.t, cevap: c, cevapsiz: cevapsiz };
+    s.sira.push("gecmis");
+    kayit(s, "gecmis", g.ad + ": " + c);
+    s.gunluk[s.gunluk.length - 1].kaynak = g.kaynak;
     return { ok: true };
   }
   function muayeneEt(s, id) {
@@ -794,6 +868,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
       if (p[0] === "vital") e = p[1] === "ates" ? "🌡️" : "💓";
       else if (p[0] === "monitor") e = "🖥️";
       else if (p[0] === "oyku") e = "💬";
+      else if (p[0] === "gecmis") e = "📁";
       else if (p[0] === "muayene") e = "🩺";
       else if (p[0] === "tetkik") e = EMOJI_TETKIK[p[1]] || "🧪";
       else if (p[0] === "mudahale") e = EMOJI_MUD[p[1]] || "💉";
@@ -816,7 +891,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
 
   root.TriyajMotor = {
     yeniOyun: yeniOyun, ilerlet: ilerlet, vitalOlc: vitalOlc, monitoreBagla: monitoreBagla,
-    soruSor: soruSor, muayeneEt: muayeneEt, tetkikIste: tetkikIste, mudahaleYap: mudahaleYap,
+    soruSor: soruSor, gecmisBak: gecmisBak, KAYNAK_AD: KAYNAK_AD, muayeneEt: muayeneEt, tetkikIste: tetkikIste, mudahaleYap: mudahaleYap,
     taburcuEt: taburcuEt, bekleSonuc: bekleSonuc, bekle: bekle, bitir: bitir, puanla: puanla,
     paylasimMetni: paylasimMetni, durumAt: durumAt, sonrakiDegisim: sonrakiDegisim,
     anlikVitaller: anlikVitaller, bekleyenler: bekleyenler, tetkikBilgisi: tetkikBilgisi,
@@ -853,10 +928,11 @@ body.vaka-modu .uyari{padding-bottom:16px}
     muayene: '<path d="M6 3v5a5 5 0 0 0 10 0V3"/><path d="M11 13v2.5a4.5 4.5 0 0 0 9 0V13"/><circle cx="20" cy="11" r="2"/>',
     tetkik: '<path d="M9 3h6M10 3v6.5L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-8.5V3"/><path d="M7.5 15h9"/>',
     mudahale: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M7.5 12h9"/>',
+    gecmis: '<path d="M3 6.5h6.5l2 2.2H21V19H3z"/><path d="M12 11.5v3.2l2.2 1.4"/>',
     tani: '<path d="M9 3.5h6v3H9z"/><path d="M7 5H5v16h14V5h-2"/><path d="M8.5 13.5l2.5 2.5 4.5-4.5"/>'
   };
   var SEKMELER = [
-    { id: "hasta", ad: "Hasta" }, { id: "oyku", ad: "Öykü" }, { id: "muayene", ad: "Muayene" }, { id: "tetkik", ad: "Tetkik" },
+    { id: "hasta", ad: "Hasta" }, { id: "oyku", ad: "Öykü" }, { id: "gecmis", ad: "Geçmiş" }, { id: "muayene", ad: "Muayene" }, { id: "tetkik", ad: "Tetkik" },
     { id: "mudahale", ad: "Müdahale" }, { id: "tani", ad: "Tanı" }
   ];
   var genisMQ = window.matchMedia ? window.matchMedia("(min-width: 920px)") : { matches: false };
@@ -934,10 +1010,10 @@ body.vaka-modu .uyari{padding-bottom:16px}
   // Giriş: Disco'nun yetenek kartları gibi resimli vaka kartları + iç seslerle "nasıl oynanır"
   var GIRIS_SESLER = [
     ["sistem", "Acil servis", "Gece 03.12. Floresanlardan biri titriyor. Otomatik kapı açılıyor, biri içeri giriyor."],
-    ["motor", "İç saat", "Burada her şeyin bir süresi var. Ölçmek, sormak, muayene etmek, tetkik istemek: hepsi vaka saatinden yer. Sen düşünürken de saat işler."],
-    ["zeka", "Mantık", "Vitaller kapalı. Ölçmediğin şeyi bilemezsin. Tetkik sonuçları arka planda gelir; beklemek de bir karardır."],
-    ["beden", "Panik", "Kritik müdahaleyi geciktirirsen hasta kötüleşir. Bazen geri dönüşü olmaz."],
-    ["ruh", "Soğukkanlılık", "Tanını koy, yönetimi bitir. Sonunda puanın, kaçırdıkların ve kılavuz kartı seni bekliyor."]
+    ["hms-k", "Ercan Abi", "Hoş geldin hocam. Yirmi bir yıldır bu kapıdan giriyorum: burada her şeyin bir süresi var. Ölçmek, sormak, tetkik istemek, hepsi saatten yer."],
+    ["hms-k", "Ercan Abi", "Vitaller kapalı; ölçmediğin şeyi bilemezsin. Sonuçlar arka planda gelir, beklemek de bir karardır."],
+    ["hms-k", "Ercan Abi", "Geç kalırsan hasta kötüleşir, ben de kızarım. Takılırsan bana danış: puanını kırmam, ama cevabı da vermem."],
+    ["sistem", "Acil servis", "Hastanın geçmişi de bir bulgu: hastaya, yakınına sor ya da e-Nabız kaydını aç."]
   ];
   function girisHTML() {
     var kartlar = V.map(function (v) {
@@ -970,6 +1046,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
   }
   function girise() {
     ui.ekran = "giris"; ui.s = null;
+    document.body.classList.add("giris-modu");
     document.body.classList.remove("vaka-modu");
     app.innerHTML = girisHTML();
     window.scrollTo(0, 0);
@@ -984,9 +1061,11 @@ body.vaka-modu .uyari{padding-bottom:16px}
     ui.sekme = "hasta"; ui.tani = null; ui.onay = null; ui.cikis = false;
     ui.sonGorunus = null; ui.flashBitis = 0; ui.gorulen = -1; ui.gorulenSonuc = {}; ui.sonGunluk = 0;
     ui.bildirim = null; ui.bildirimBitis = 0;
-    ui.ses = { bakilan: 0, kotu: 0, iyi: 0, tetkik: {}, vital: false, kritik: {}, gecSay: 0, bosSay: 0 };
-    sesEkle(ui.s, "ruh", "Soğukkanlılık", "Nefes al. Saat işliyor ama panik daha hızlı işler. Önce hastaya bak.");
-    ui.ses.bakilan = ui.s.gunluk.length;
+    ui.hms = { bakilan: 0, say: {}, tohum: Math.floor(Math.random() * 6), tetkik: {}, sonuc: {}, yapilan: {}, kritik: {}, etk: {},
+               vital: false, gecSay: 0, bosSay: 0, danis: 0, soru: null, son: null, sonT: null, ruh: "sakin" };
+    hSoyle(ui.s, "karsilama", null, "sakin", true);
+    ui.hms.bakilan = ui.s.gunluk.length;
+    document.body.classList.remove("giris-modu");
     ui.ekran = "vaka"; ui.sonTick = simdi(); ui.sonEylem = ui.sonTick;
     document.title = "Triyaj · " + v.baslik;
     document.body.classList.add("vaka-modu");
@@ -1002,11 +1081,17 @@ body.vaka-modu .uyari{padding-bottom:16px}
       "</div></header>" +
       '<main class="wrap vaka-ekran" id="vakaEkran">' +
         '<div id="pMini"></div>' +
-        '<section class="kart" id="pHasta" data-etiket="01A08 · hasta" aria-label="Hasta"></section>' +
-        '<section class="kart" id="pVital" data-etiket="01A09 · vital" aria-labelledby="h-vital"></section>' +
-        '<nav class="alt-cubuk" id="pNav" aria-label="Vaka işlemleri"><div class="alt-eylem" id="altEylem"></div><div id="sekmeListe"></div></nav>' +
-        '<section class="kart sekmeler" id="pSekme" data-etiket="01A10 · karar"></section>' +
-        '<section class="kart gunluk" id="pGunluk" data-etiket="01A11 · günlük" aria-labelledby="h-gunluk"></section>' +
+        // PC'de solda sahne (arka plan + hasta + monitör + Ercan Abi), sağda metin paneli; telefonda bu kaplar görünmez (display: contents).
+        '<div class="sahne" id="pSahne"' + (v.sahne ? ' style="--sahne-bg:url(\'' + esc(v.sahne) + '\')"' : "") + ">" +
+          '<section class="kart" id="pHasta" data-etiket="01A08 · hasta" aria-label="Hasta"></section>' +
+          '<section class="kart" id="pVital" data-etiket="01A09 · vital" aria-labelledby="h-vital"></section>' +
+          '<section class="kart" id="pHemsire" data-etiket="01A12 · hemşire" aria-label="Kıdemli hemşire" aria-live="polite"></section>' +
+        "</div>" +
+        '<div class="metin-panel">' +
+          '<section class="kart gunluk" id="pGunluk" data-etiket="01A11 · günlük" aria-labelledby="h-gunluk"></section>' +
+          '<section class="kart sekmeler" id="pSekme" data-etiket="01A10 · karar"></section>' +
+          '<nav class="alt-cubuk" id="pNav" aria-label="Vaka işlemleri"><div class="alt-eylem" id="altEylem"></div><div id="sekmeListe"></div></nav>' +
+        "</div>" +
       "</main>" +
       '<button class="bildirim" type="button" id="bildirim" data-act="bildirim" hidden></button>';
     render();
@@ -1131,12 +1216,12 @@ body.vaka-modu .uyari{padding-bottom:16px}
     if (aktif === "hasta") return "";
     if (aktif === "tetkik") for (var id in s.tetkik) if (s.tetkik[id].geldi && !ui.gorulenSonuc[id]) ui.gorulenSonuc[id] = "yeni";
     return '<div class="sekme-ic" id="sekmeIcerik" role="tabpanel" tabindex="-1" aria-labelledby="sekme-' + aktif + '">' +
-      ({ oyku: oykuHTML, muayene: muayeneHTML, tetkik: tetkikHTML, mudahale: mudahaleHTML, tani: taniHTML })[aktif](s) + "</div>";
+      ({ oyku: oykuHTML, gecmis: gecmisHTML, muayene: muayeneHTML, tetkik: tetkikHTML, mudahale: mudahaleHTML, tani: taniHTML })[aktif](s) + "</div>";
   }
 
   // Yeni olay (sonuç geldi, durum değişti) için kısa bildirim
   var BILDIRIM = { durum: { c: "kotu", e: "Durum", h: "hasta", o: 3 }, iyi: { c: "iyi", e: "Düzeliyor", h: "hasta", o: 3 },
-                   sonuc: { c: "sonuc", e: "Sonuç", h: "tetkik", o: 2 }, ses: { o: 1 } };
+                   sonuc: { c: "sonuc", e: "Sonuç", h: "tetkik", o: 2 }, hemsire: { o: 2.5 } };
   // Aynı anda birden çok olay varsa önce durum değişimi, sonra sonuç, sonra iç ses gösterilir.
   function bildirimYakala(s) {
     var sec = null;
@@ -1144,13 +1229,14 @@ body.vaka-modu .uyari{padding-bottom:16px}
       var g = s.gunluk[i], tip = BILDIRIM[g.tur];
       if (!tip) continue;
       if (tip.h && tip.h === etkinSekme()) continue; // zaten o ekrandaysa gerek yok
+      if (g.tur === "hemsire" && (genis() || etkinSekme() === "hasta")) continue; // Ercan Abi'nin paneli zaten görünüyor
       if (!sec || tip.o >= sec.o) sec = { o: tip.o, g: g, tip: tip };
     }
     if (!sec) return;
-    var ses = sec.g.tur === "ses";
-    ui.bildirim = ses ? { c: "ses-" + sec.g.renk, e: sec.g.kim, metin: sec.g.metin, hedef: null }
+    var hms = sec.g.tur === "hemsire";
+    ui.bildirim = hms ? { c: "hms", e: H ? H.hitap : "Hemşire", metin: sec.g.metin, hedef: ui.hms && ui.hms.soru ? "hasta" : null }
                       : { c: sec.tip.c, e: sec.tip.e, metin: sec.g.metin, hedef: sec.tip.h };
-    ui.bildirimBitis = simdi() + (ses ? 6500 : 4500);
+    ui.bildirimBitis = simdi() + (hms ? 6500 : 4500);
   }
   function bildirimCiz() {
     var el = $("bildirim"); if (!el) return;
@@ -1185,6 +1271,43 @@ body.vaka-modu .uyari{padding-bottom:16px}
         esc(q.soru) + "”" + (c ? " (tekrar sor)" : "") + '</span><span class="sure">' + M.sureYaz(T.oykuSn) + "</span></button>";
     });
     return h + "</div>";
+  }
+
+  // Hasta geçmişi: düğme etiketi nötr (cevabı vermez); cevap hasta/yakın/e-Nabız ağzından gelir.
+  var GECMIS_GRUP = [["hasta", "Hastaya sor"], ["yakin", "Yakınına sor"], ["enabiz", "e-Nabız kaydına bak"]];
+  function gecmisKim(g, cevap) {
+    if (g.kaynak === "enabiz") return { kim: '<span class="kim snc">e-Nabız</span>', metin: esc(cevap) };
+    var m = g.kaynak === "yakin" && /^\(([^)]+)\)\s*/.exec(cevap);
+    if (m) return { kim: '<span class="kim hst">' + esc(m[1]) + "</span>", metin: "“" + esc(cevap.slice(m[0].length)) + "”" };
+    return { kim: '<span class="kim hst">' + (g.kaynak === "yakin" ? "Yakını" : "Hasta") + "</span>", metin: "“" + esc(cevap) + "”" };
+  }
+  function gecmisHTML(s) {
+    var gl = ui.vaka.gecmis || [], h = "";
+    if (!gl.length) return '<p class="ipucu">Bu vakada geçmiş kaydı yok.</p>';
+    var bakilan = gl.filter(function (g) { return s.gecmis[g.id]; }).sort(function (a, b) { return s.gecmis[a.id].t - s.gecmis[b.id].t; });
+    if (bakilan.length) {
+      h += '<div class="diyalog">';
+      bakilan.forEach(function (g) {
+        var r = s.gecmis[g.id], k = gecmisKim(g, r.cevap);
+        h += '<p class="replik">' + k.kim + ' <span class="kontrol">[' + esc(g.ad) + "]</span> – " + k.metin + ' <span class="zaman">' + M.saatYaz(r.t) + "</span></p>";
+      });
+      h += "</div>";
+    } else {
+      h += '<p class="ipucu">Özgeçmiş, aile, ilaçlar, alerjiler, önceki başvurular. Hastaya ya da yakınına sorabilir, e-Nabız kaydına bakabilirsin. Puanı etkilemez, sadece süre yer.</p>';
+    }
+    GECMIS_GRUP.forEach(function (gr) {
+      var l = gl.filter(function (g) { return g.kaynak === gr[0]; });
+      if (!l.length) return;
+      h += '<h3 class="grup-bas">' + gr[1] + '</h3><div class="liste">';
+      l.forEach(function (g) {
+        var r = s.gecmis[g.id], sure = M.sureYaz((T.gecmisSn || {})[g.kaynak] || T.oykuSn);
+        if (r && !r.cevapsiz) h += '<div class="islem yapildi"><span class="ad">' + esc(g.ad) + '</span><span class="sure">✓ ' + M.saatYaz(r.t) + "</span></div>";
+        else h += '<button class="islem' + (r ? " beyaz" : "") + '" type="button" data-act="gecmis" data-id="' + esc(g.id) + '" data-k="gecmis-' + esc(g.id) + '"><span class="ad">' +
+          esc(g.ad) + (r ? " (tekrar)" : "") + '</span><span class="sure">' + sure + "</span></button>";
+      });
+      h += "</div>";
+    });
+    return h;
   }
 
   function muayeneHTML(s) {
@@ -1290,10 +1413,14 @@ body.vaka-modu .uyari{padding-bottom:16px}
   }
 
   // Günlük Disco'nun sağ paneli gibi okunur: KONUŞAN – metin. Öykü satırı soru ve cevap olarak ikiye ayrılır.
-  var KONUSAN = { sistem: ["sistem", "Acil"], vital: ["zeka", "Ölçüm"], muayene: ["sen", "Muayene"], tetkik: ["sistem", "İstem"],
+  var KONUSAN = { sen: ["sen", "Sen"], sistem: ["sistem", "Acil"], vital: ["zeka", "Ölçüm"], muayene: ["sen", "Muayene"], tetkik: ["sistem", "İstem"],
                   sonuc: ["snc", "Sonuç"], mudahale: ["sen", "Sen"], durum: ["kotu", "Hasta"], iyi: ["iyi", "Hasta"] };
   function gunlukSatir(g) {
-    if (g.tur === "ses") return '<span class="kim ' + esc(g.renk) + '">' + esc(g.kim) + "</span> – " + esc(g.metin);
+    if (g.tur === "hemsire") return '<span class="kim hms-k">' + esc(H ? H.hitap : "Hemşire") + "</span> – " + esc(g.metin);
+    if (g.tur === "gecmis" && g.kaynak) {
+      var gi = g.metin.indexOf(": "), gk = gecmisKim({ kaynak: g.kaynak }, gi > 0 ? g.metin.slice(gi + 2) : g.metin);
+      return gk.kim + (gi > 0 ? ' <span class="kontrol">[' + esc(g.metin.slice(0, gi)) + "]</span>" : "") + " – " + gk.metin;
+    }
     if (g.tur === "oyku") {
       var i = g.metin.indexOf(" → ");
       if (i > 0) return '<span class="kim sen">Sen</span> – “' + esc(g.metin.slice(0, i)) + '”<span class="satir2"><span class="kim hst">Hasta</span> – “' + esc(g.metin.slice(i + 3)) + "”</span>";
@@ -1310,41 +1437,154 @@ body.vaka-modu .uyari{padding-bottom:16px}
     return h + "</ol>";
   }
 
-  /* ---------- iç sesler (Disco Elysium'daki beceri sesleri gibi) ----------
-     Sadece arayüz katmanı: puanı etkilemez, tanıyı ve kritik işin adını söylemez. */
-  function sesEkle(s, renk, kim, metin) { s.gunluk.push({ t: s.t, tur: "ses", renk: renk, kim: kim, metin: metin }); s.surum++; }
-  var SES = {
-    kotu: ["Midende bir şey düğümlendi. Bu hasta kötüye gidiyor.", "Ellerin terledi. Ne yapacaksan şimdi yap.", "Bir şeyi kaçırıyorsun. Hasta bunu senden önce fark etti."],
-    iyi: ["Omuzların biraz gevşedi. Doğru yoldasın.", "Hastanın nefesi değişti. Bu sefer iyi yönde."],
-    gec: ["Kılavuzun saati seninkinden hızlı işliyor. Bir şeyi geciktiriyorsun.", "Bu kadar beklemek bir karar mıydı, yoksa unuttun mu?"],
-    bos: ["Düşünmek de zaman. Hasta seni bekliyor.", "Sessizlik uzadı. Monitör senin yerine karar vermeyecek."]
-  };
-  function icSesler(s, gercekSimdi) {
-    var b = ui.ses;
-    if (!b || s.bitti) return;
+  /* ---------- Ercan Abi: kıdemli acil hemşiresi (veri: hemsire.js) ----------
+     İç seslerin yerini aldı. Kızar, onaylar, soru sorar; danışmak puan ve süre yemez. Tanı adını söylemez. */
+  var H = window.HEMSIRE || null;
+  function hListe(alan, anahtar) {
+    var a = H && H[alan]; if (!a) return null;
+    if (Array.isArray(a)) return a;
+    return (anahtar && a[anahtar]) || a[ui.vaka.id] || a.genel || null;
+  }
+  function hKonus(s, metin, ruh, zorunlu) {
+    if (!metin) return false;
+    if (!zorunlu && ui.hms.sonT != null && s.t - ui.hms.sonT < 20) return false; // art arda konuşup ekranı boğmasın
+    s.gunluk.push({ t: s.t, tur: "hemsire", metin: metin }); s.surum++;
+    ui.hms.sonT = s.t; ui.hms.son = metin; ui.hms.ruh = ruh || "sakin";
+    return true;
+  }
+  function hSoyle(s, alan, anahtar, ruh, zorunlu) {
+    var l = hListe(alan, anahtar); if (!l || !l.length) return false;
+    var k = alan + ":" + (anahtar || ""), n = ui.hms.say[k] = (ui.hms.say[k] || 0) + 1;
+    return hKonus(s, l[(n - 1 + ui.hms.tohum) % l.length], ruh, zorunlu);
+  }
+  function isYapildi(s, x) {
+    var p = x.split(":"), id = p[1];
+    switch (p[0]) {
+      case "monitor": return s.monitor != null;
+      case "tetkik": return !!s.tetkik[id];
+      case "mudahale": return s.yapilan[id] != null;
+      case "muayene": return !!s.muayene[id];
+      case "vital": return !!s.olcum[id];
+      case "gecmis": return !!s.gecmis[id];
+      case "soru": return !!s.sorulan[id];
+    }
+    return false;
+  }
+  function isYap(s, x) {
+    var p = x.split(":"), id = p[1];
+    if (p[0] === "sekme") return { ok: true, sekme: id };
+    if (isYapildi(s, x)) return { ok: true };
+    switch (p[0]) {
+      case "monitor": return M.monitoreBagla(s);
+      case "tetkik": return M.tetkikIste(s, id);
+      case "mudahale": return M.mudahaleYap(s, id);
+      case "muayene": return M.muayeneEt(s, id);
+      case "vital": return M.vitalOlc(s, id);
+    }
+    return { ok: false };
+  }
+  function hemsireKontrol(s, gercekSimdi) {
+    var b = ui.hms;
+    if (!H || !b || s.bitti) return;
+    var kritik = {};
+    ((ui.vaka.puanlama || {}).kritikler || []).forEach(function (k) { kritik[k.id] = k; });
     var son = s.gunluk.length;
     for (var i = b.bakilan; i < son; i++) {
       var g = s.gunluk[i];
-      if (g.tur === "durum") sesEkle(s, "beden", "Panik", SES.kotu[b.kotu++ % SES.kotu.length]);
-      else if (g.tur === "iyi") sesEkle(s, "ruh", "Soğukkanlılık", SES.iyi[b.iyi++ % SES.iyi.length]);
+      if (g.tur === "durum") hSoyle(s, "kotulesti", null, "kizgin", true);
+      else if (g.tur === "iyi") hSoyle(s, "duzeldi", null, "sakin", true);
     }
     for (var id in s.tetkik) {
       if (b.tetkik[id]) continue;
-      b.tetkik[id] = true;
-      var tb = M.tetkikBilgisi(s, id);
-      if (tb && tb.sinif === "gereksiz") sesEkle(s, "zeka", "Mantık", "Bu sonuç kararını değiştirecek mi, yoksa sadece içini mi rahatlatacak?");
+      b.tetkik[id] = 1;
+      var tb = M.tetkikBilgisi(s, id), k1 = kritik[id];
+      if (tb && tb.sinif === "gereksiz") hSoyle(s, "gereksizTetkik", id, "kizgin", false);
+      else if (k1 && (k1.hedefDk == null || s.tetkik[id].istek <= k1.hedefDk * 60)) hSoyle(s, "onay", id, "sakin", false);
     }
-    if (!b.vital && s.t >= 90 && s.monitor == null && !Object.keys(s.olcum).length) {
-      b.vital = true; sesEkle(s, "motor", "İç saat", "Bir buçuk dakika geçti ve hâlâ tek bir vitalini bilmiyorsun.");
+    for (var id2 in s.tetkik) {
+      var pt = s.tetkik[id2];
+      if (!pt.geldi || b.sonuc[id2]) continue;
+      b.sonuc[id2] = 1;
+      var tb2 = M.tetkikBilgisi(s, id2);
+      if (tb2 && tb2.sinif !== "gereksiz" && !/^normal\.?$/i.test(String(pt.sonuc).trim())) hSoyle(s, "anormalSonuc", id2, "sakin", false);
     }
-    ((ui.vaka.puanlama || {}).kritikler || []).forEach(function (k) {
-      if (k.hedefDk == null || b.kritik[k.id] || s.t <= k.hedefDk * 60) return;
-      b.kritik[k.id] = true;
-      var yapildi = s.yapilan[k.id] != null || !!s.tetkik[k.id];
-      if (!yapildi && b.gecSay < 2) sesEkle(s, "motor", "İç saat", SES.gec[b.gecSay++]);
+    Object.keys(s.yapilan).forEach(function (id3) {
+      if (b.yapilan[id3]) return;
+      b.yapilan[id3] = 1;
+      var m = M.mudahaleBilgisi(s, id3);
+      var zararli = m && (m.sinif === "zararli" || (m.zararliDurumlar && m.zararliDurumlar.indexOf(s.yapilanDurum[id3]) >= 0));
+      if (zararli) { hSoyle(s, "zararli", id3, "kizgin", true); return; }
+      var k = kritik[id3];
+      if (k && (k.hedefDk == null || s.yapilan[id3] <= k.hedefDk * 60)) hSoyle(s, "onay", id3, "sakin", false);
     });
-    if (gercekSimdi - ui.sonEylem > 45000 && b.bosSay < 2) { ui.sonEylem = gercekSimdi; sesEkle(s, "motor", "İç saat", SES.bos[b.bosSay++]); }
+    if (!b.vital && s.t >= 90 && s.monitor == null && !Object.keys(s.olcum).length) { b.vital = true; hSoyle(s, "vitalYok90", null, "kizgin", true); }
+    Object.keys(kritik).forEach(function (kid) {
+      var k = kritik[kid];
+      if (k.hedefDk == null || b.kritik[kid] || s.t <= k.hedefDk * 60) return;
+      b.kritik[kid] = 1;
+      if (s.yapilan[kid] == null && !s.tetkik[kid] && b.gecSay < 2) { b.gecSay++; hSoyle(s, "hedefGecti", null, "kizgin", true); }
+    });
+    if (gercekSimdi - ui.sonEylem > 45000 && b.bosSay < 2 && !b.soru) { ui.sonEylem = gercekSimdi; b.bosSay++; hSoyle(s, "hareketsiz", null, "sakin", true); }
+    // Etkileşim: Ercan Abi bir şey sorar, oyuncu seçer
+    if (b.soru && b.soru.yoksa && isYapildi(s, b.soru.yoksa)) { (b.etk[b.soru.id] = b.etk[b.soru.id] || {}).bitti = true; b.soru = null; }
+    if (!b.soru) {
+      var liste = (H.etkilesim || {})[ui.vaka.id] || [];
+      for (var j = 0; j < liste.length; j++) {
+        var e = liste[j], dd = b.etk[e.id] = b.etk[e.id] || {};
+        if (dd.bitti) continue;
+        if (e.yoksa && isYapildi(s, e.yoksa)) { dd.bitti = true; continue; }
+        if (e.varsa && !isYapildi(s, e.varsa)) continue;
+        if (s.t < (dd.sonra != null ? dd.sonra : (e.sonraSn || 0))) continue;
+        b.soru = e;
+        hKonus(s, e.soru, "sakin", true);
+        break;
+      }
+    }
     b.bakilan = s.gunluk.length;
+  }
+  // Oyuncu Ercan Abi'nin sorusuna cevap verdi; açılması gereken sekme varsa döner.
+  function hemsireCevap(s, i) {
+    var b = ui.hms, e = b.soru, c = e && e.secenekler[i];
+    if (!c) return null;
+    b.soru = null;
+    var dd = b.etk[e.id] = b.etk[e.id] || {}, sekme = null;
+    s.gunluk.push({ t: s.t, tur: "sen", metin: c.ad }); s.surum++;
+    hKonus(s, c.hemsire, "sakin", true);
+    [].concat(c.eylem == null ? [] : c.eylem).forEach(function (x) {
+      if (s.bitti) return;
+      var r = isYap(s, x);
+      if (r && r.sekme) sekme = r.sekme;
+    });
+    if (e.yoksa && isYapildi(s, e.yoksa)) dd.bitti = true;
+    else if (e.tekrarSn) dd.sonra = s.t + e.tekrarSn;
+    else dd.bitti = true;
+    b.bakilan = s.gunluk.length;
+    return sekme;
+  }
+  function hemsireDanis(s) {
+    var b = ui.hms, l = ((H && H.ipucu) || {})[ui.vaka.id] || [];
+    if (b.danis < l.length) hKonus(s, l[b.danis++], "sakin", true);
+    else hKonus(s, H.ipucuBitti, "sakin", true);
+    b.bakilan = s.gunluk.length;
+  }
+  function hemsireHTML(s) {
+    if (!H) return "";
+    var b = ui.hms, kizgin = b.ruh === "kizgin" && b.sonT != null && s.t - b.sonT < 90;
+    var portre = kizgin ? H.portre.replace(/\.webp$/, "-kizgin.webp") : H.portre;
+    var l = (H.ipucu || {})[ui.vaka.id] || [];
+    var h = '<div class="hms' + (kizgin ? " kizgin" : "") + '"><div class="gorsel hms-portre"><img src="' + esc(portre) + '" alt="" decoding="async"></div>' +
+      '<div class="hms-metin"><div class="kim-bas">' + esc(H.hitap) + '</div><div class="hms-unvan">' + esc(H.ad) + " · " + esc(H.unvan) + "</div>" +
+      (b.son ? '<p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + esc(b.son) + "</p>" : "");
+    if (b.soru) {
+      h += '<div class="liste">' + b.soru.secenekler.map(function (c, i) {
+        return '<button class="islem" type="button" data-act="hms-sec" data-id="' + i + '" data-k="hms-sec-' + i + '"><span class="ad">' + esc(c.ad) + "</span></button>";
+      }).join("") + "</div>";
+    }
+    var bitti = b.danis >= l.length;
+    h += '<button class="btn ikincil kucuk hms-danis" type="button" data-act="hms-danis" data-k="hms-danis"' + (bitti ? " disabled" : "") + ">" +
+      (bitti ? "İpucu kalmadı" : "Ercan Abi'ye danış · " + (b.danis + 1) + "/" + l.length) + "</button>" +
+      '<p class="hms-not">Danışmak puan ve süre yemez.</p></div></div>';
+    return h;
   }
 
   function render() {
@@ -1359,6 +1599,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
     setHTML($("pHasta"), hastaHTML(s));
     setHTML($("pMini"), miniHTML(s));
     setHTML($("pVital"), vitalHTML(s));
+    setHTML($("pHemsire"), hemsireHTML(s));
     setHTML($("altEylem"), altEylemHTML(s));
     setHTML($("pSekme"), panelHTML(s));
     setHTML($("sekmeListe"), navHTML(s));
@@ -1384,7 +1625,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
     for (var j = 0; j < o.length; j++) o[j].textContent = onceYaz(s.t - +o[j].getAttribute("data-once"));
   }
 
-  function sonra() { if (ui.s.bitti) { sonucaGec(); return; } icSesler(ui.s, simdi()); render(); }
+  function sonra() { if (ui.s.bitti) { sonucaGec(); return; } hemsireKontrol(ui.s, simdi()); render(); }
 
   /* ================= SONUÇ ================= */
   function sonucaGec() {
@@ -1399,6 +1640,17 @@ body.vaka-modu .uyari{padding-bottom:16px}
   }
 
   var NITELIK = [{ ad: "Tanı", c: "var(--zeka)" }, { ad: "Kritik", c: "var(--beden)" }, { ad: "Süre", c: "var(--motor)" }, { ad: "Verim", c: "var(--ruh)" }];
+  function hemsireSonHTML(s, p) {
+    if (!H || !H.vakaSonu) return "";
+    var tur = s.kayip ? "kayip" : (p.toplam >= 700 ? "iyi" : "kotu"), g = H.vakaSonu[tur] || {};
+    var l = (g[ui.vaka.id] || []).concat(g.genel || []);
+    if (!l.length) return "";
+    var m = l[(ui.hms ? ui.hms.tohum : 0) % l.length], dn = ui.hms ? ui.hms.danis : 0;
+    return '<div class="hms son"><div class="gorsel hms-portre"><img src="' + esc(H.portre) + '" alt="" decoding="async"></div><div class="hms-metin">' +
+      '<p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + esc(m) + "</p>" +
+      (dn ? '<p class="hms-not">Ercan Abi\'ye ' + dn + " kez danıştın; puanın etkilenmedi.</p>" : "") + "</div></div>";
+  }
+  function temizNot(x) { return String(x || "").replace(/\s*(\[K\d+\])+/g, ""); }
   function sonucHTML(s, p) {
     var v = ui.vaka, dogru = p.tani.dogru, hukum, hukumSinif;
     if (s.kayip) {
@@ -1411,7 +1663,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
     var h = '<main class="wrap sonuc">' +
       '<header class="skor-bas"><div class="eyebrow">Vaka sonu · ' + esc(v.baslik) + "</div>" +
       '<h1 id="h-sonuc" tabindex="-1" class="skor"><span class="v">' + p.toplam + '</span><span class="m">/ 1000 puan</span></h1>' +
-      '<p class="hukum ' + hukumSinif + '">' + esc(hukum) + "</p>" +
+      '<p class="hukum ' + hukumSinif + '">' + esc(hukum) + "</p>" + hemsireSonHTML(s, p) +
       (p.kayip ? '<p class="muted">Vaka kaybedildiğinde skor en fazla 150 olur.</p>' : "") +
       '<div class="nitelik" role="list" aria-label="Puan kırılımı">' + p.bolumler.slice(0, 4).map(function (b, i) {
         return '<div role="listitem" style="--c:' + NITELIK[i].c + '"><span class="v' + (b.puan > 0 ? " dolu" : "") + '">' + b.puan + '</span><span class="mx">/ ' + b.max +
@@ -1466,6 +1718,20 @@ body.vaka-modu .uyari{padding-bottom:16px}
     });
     h += "</ul></section>";
 
+    // Hasta geçmişi: kaç kayda bakıldı, hangi ipuçları kaçtı (puanı etkilemez)
+    var gl = v.gecmis || [];
+    if (gl.length) {
+      var bak = gl.filter(function (g) { return s.gecmis[g.id]; }).length;
+      var kacan = gl.filter(function (g) { return g.onem === "ipucu" && !s.gecmis[g.id]; });
+      h += '<section class="kart" data-etiket="vaka sonu · geçmiş" aria-labelledby="h-gecmis"><div class="kart-bas"><h2 id="h-gecmis">Hasta geçmişi</h2><small>' + bak + " / " + gl.length + " kayda bakıldı · puanı etkilemez</small></div><ul class=\"maddeler\">";
+      if (!kacan.length) h += '<li><span class="pill ok">tamam</span><span>Tanıyı destekleyen geçmiş kayıtlarının hepsine baktın.</span><span class="n"></span></li>';
+      kacan.forEach(function (g) {
+        h += '<li><span class="pill bilgi">kaçtı</span><span>' + esc(g.ozet || g.ad) + ' <span class="z">' + esc(M.KAYNAK_AD[g.kaynak] || "") + '</span></span><span class="n"></span>' +
+          (g.not ? '<span class="ac">' + esc(temizNot(g.not)) + "</span>" : "") + "</li>";
+      });
+      h += "</ul></section>";
+    }
+
     // Kılavuz kartı
     var kl = v.kilavuz;
     h += '<section class="qrh" aria-labelledby="h-qrh"><div class="qrh-bas"><span>Kılavuz kartı</span><span>' + esc((v.onay && v.onay.durum) || "") + "</span></div>" +
@@ -1511,6 +1777,12 @@ body.vaka-modu .uyari{padding-bottom:16px}
       case "vital": M.vitalOlc(s, id); break;
       case "monitor": M.monitoreBagla(s); break;
       case "soru": M.soruSor(s, id); break;
+      case "gecmis": M.gecmisBak(s, id); break;
+      case "hms-danis": hemsireDanis(s); render(); return;
+      case "hms-sec":
+        var hs = hemsireCevap(s, +id);
+        if (!s.bitti && hs) { hemsireKontrol(s, simdi()); sekmeSec(hs); return; }
+        break;
       case "muayene": M.muayeneEt(s, id); break;
       case "tetkik": M.tetkikIste(s, id); break;
       case "mudahale": M.mudahaleYap(s, id); break;
@@ -1568,7 +1840,7 @@ body.vaka-modu .uyari{padding-bottom:16px}
     ui.sonTick = now;
     M.ilerlet(ui.s, dt);
     if (ui.s.bitti) { sonucaGec(); return; }
-    icSesler(ui.s, now);
+    hemsireKontrol(ui.s, now);
     if (ui.s.surum !== ui.gorulen || (ui.flashBitis && now >= ui.flashBitis) || (ui.bildirimBitis && now >= ui.bildirimBitis)) render(); else canliGuncelle();
   }, 250);
   document.addEventListener("visibilitychange", function () { ui.sonTick = simdi(); });

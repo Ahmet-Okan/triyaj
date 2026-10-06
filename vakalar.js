@@ -42,6 +42,8 @@ window.ISLEM_TABLOSU = {
   muayeneSn: 45,       // her sistem muayenesi
   tetkikIstekSn: 30,   // tetkik istemek (sonuç arka planda gelir)
   monitorSn: 120,      // monitöre bağlamak: sonra nabız, SpO₂, TA, ritim sürekli görünür
+  // Hasta geçmişi: hastaya ya da yakınına sormak 20 sn, e-Nabız'dan bir kaydı açmak 30 sn
+  gecmisSn: { hasta: 20, yakin: 20, enabiz: 30 },
 
   // Vital ölçümleri: sadece zaman, para yok. "gosterir" = ölçümün açtığı değerler.
   vitaller: [
@@ -115,6 +117,7 @@ window.VAKALAR = [
   {
     id: "gogus-agrisi",
     baslik: "Göğüs ağrısı",                 // giriş kartında görünür, tanıyı vermez
+    sahne: "img/ai/bg-kirmizi-alan.webp",                 // PC sürümünde sahnenin arka planı
     onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
     hasta: { yas: 58, cinsiyet: "Erkek" },
     sikayet: "Yarım saattir göğsümün ortasında bir baskı var, sol koluma vuruyor.",
@@ -123,13 +126,13 @@ window.VAKALAR = [
     // gorsel: img/ içindeki resim (yoksa yer tutucu görünür). gri: true → görsel gri tonlu.
     durumlar: {
       baslangic: {
-        gorsel: "img/gogus-1.svg",
+        gorsel: "img/ai/gogus-1.webp",
         ton: ["soluk", "terli"],
         gorunus: "Terli ve soluk. Yumruğunu göğsünün ortasına bastırıyor, endişeli görünüyor.",
         vitaller: { ta: "150/90", nabiz: 104, spo2: 95, solunum: 22, ates: 36.7, seker: 142, gks: 15, ritim: "Sinüs taşikardisi" }
       },
       sok: {
-        gorsel: "img/gogus-2.svg",
+        gorsel: "img/ai/gogus-2.webp",
         ton: ["gri", "terli"],
         gorunus: "Daha da soldu, alnında soğuk ter var. Halsiz, sedyede kıpırdamadan yatıyor.",
         mesaj: "Hastanın durumu kötüleşiyor: daha soluk, soğuk terli.",
@@ -137,7 +140,7 @@ window.VAKALAR = [
         ceza: { puan: 100, ad: "Kardiyojenik şok başladı (reperfüzyon gecikti)" }
       },
       vf: {
-        gorsel: "img/gogus-2.svg",
+        gorsel: "img/ai/gogus-2.webp",
         gri: true,
         ton: ["gri"],
         gorunus: "Hasta aniden yanıtsızlaştı. Monitörde ventriküler fibrilasyon.",
@@ -165,6 +168,20 @@ window.VAKALAR = [
       { id: "sigara",    soru: "Sigara içiyor musunuz?",                             cevap: "İçiyorum. Gençlikten beri günde bir paket." },
       { id: "emboli",    soru: "Son zamanda uzun yolculuk, ameliyat ya da bacakta şişlik oldu mu?", cevap: "Hayır, hiçbiri olmadı." },
       { id: "alerji",    soru: "İlaç alerjiniz var mı?",                             cevap: "Bildiğim bir alerjim yok." }
+    ],
+
+    // Hasta geçmişi (kaynak: arastirma/hasta-gecmisi-ve-gorsel-ipuclari.md). kaynak: hasta | yakin | enabiz.
+    // onem: ipucu | notr | celdirici (oyunda gösterilmez; sonuç ekranında kaçırılan ipuçları için).
+    gecmis: [
+      { id: "ozgecmis_hipertansiyon", kategori: "Özgeçmiş", ad: "Kronik hastalıkları var mı?", ozet: "Yüksek tansiyon", kaynak: "hasta", cevap: "Altı yıl önce tansiyonum çıktı, hap başlandı. Ama kendimi iyi hissedince içmiyorum, sık sık atlıyorum.", onem: "ipucu", not: "Hipertansiyon majör koroner risk faktörüdür [K1][K2]. Düzensiz ilaç = kontrolsüz TA; hasta 150/90 ile geldi." },
+      { id: "ozgecmis_dislipidemi", kategori: "e-Nabız", ad: "Tahlil ve reçete geçmişi", ozet: "Yüksek kolesterol (3 yıl önce) ve yarım bırakılmış statin", kaynak: "enabiz", cevap: "3 yıl önce aile hekimi: LDL 172 mg/dL, atorvastatin 20 mg reçete edilmiş. Eczaneden yalnızca 2 kutu çekilmiş, yenilenmemiş. (Hastaya sorulursa: \"Kolesterol yüksekti, hastalık saymadım, bıraktım.\")", onem: "ipucu", not: "LDL yüksekliği ve tedaviye uyumsuzluk aterosklerotik risk faktörüdür; yüksek riskte LDL hedefi çok daha düşüktür [K4]. Hasta öyküde 'başka hastalığım yok' demişti; e-Nabız bunu çürütür." },
+      { id: "soygecmis_kalp", kategori: "Soygeçmiş", ad: "Ailede kalp hastalığı var mı?", ozet: "Ailede kalp hastalığı", kaynak: "hasta", cevap: "Babam 52 yaşında kalp krizi geçirdi, bypass oldu. Abim de stent taktırmıştı.", onem: "ipucu", not: "Birinci derece yakında erken KAH (erkekte <55 yaş) ESC risk faktörü [K2]. Baba 52 = eşik altı; abinin yaşı belirtilmedi (hekim onayı gerekli: kardeş için de aynı eşik)." },
+      { id: "ilac_amlodipin", kategori: "Kullandığı ilaçlar", ad: "Düzenli kullandığı ilaçlar", ozet: "Tansiyon ilacı (amlodipin 5 mg)", kaynak: "yakin", cevap: "(Eşi) Amlodipin kullanıyor ama kutular dolu duruyor, haftada iki üç gün içiyor. Aspirin ya da kan sulandırıcı kullanmıyor.", onem: "notr", not: "Beta bloker/antikoagülan yok: aspirin yüklemesi ve PKG öncesi kanama riski için güvenlik bilgisi. Düzensiz kullanım hipertansiyon kontrolsüzlüğünü açıklar." },
+      { id: "ilac_pde5", kategori: "Kullandığı ilaçlar", ad: "Son iki günde cinsel güç ilacı aldı mı?", ozet: "Sildenafil/tadalafil kullanımı", kaynak: "hasta", cevap: "Hayır, öyle bir hap kullanmıyorum.", onem: "notr", not: "Son 24 saatte (sildenafil) / 48 saatte (tadalafil) PDE5 inhibitörü alınmışsa nitrat verilmez [K1][K5]. Burada yok; nitrat güvenliğini sorgulatan bir öğretici kayıt. Süreler için hekim onayı gerekli." },
+      { id: "sosyal_sigara", kategori: "Sosyal öykü", ad: "Sigara içiyor mu?", ozet: "Sigara (≈40 paket-yıl)", kaynak: "hasta", cevap: "Yirmi yaşından beri günde bir paket. Bırakmayı denedim, tutmadı.", onem: "ipucu", not: "Aktif sigara MI riskini belirgin artırır (INTERHEART) [K3]; ESC risk faktörü [K1][K2]. Paket-yıl: 20 yaşında başlamış, günde 1 paket, 38 yıl ≈ 38 paket-yıl." },
+      { id: "ozgecmis_reflu", kategori: "Özgeçmiş", ad: "Mide şikâyetleri var mı?", ozet: "Mide yanması / reflü", kaynak: "hasta", cevap: "Arada akşam yemeğinden sonra mide yanmam olur, antiasit içerim. Bugün de ilk onu düşündüm, bir kaşık içtim, geçmedi.", onem: "celdirici", not: "Antiasit tuzağı: reflü öyküsü AKS'yi dışlamaz; tipik iskemik ağrı + EKG belirleyicidir [K1]. Oyundaki `antiasit` müdahalesiyle uyumlu ('ağrı değişmedi'). Hekim onayı gerekli: ESC metninde 'antiasite yanıt tanısal değildir' ifadesi doğrudan geçmiyor, klinik öğretim." },
+      { id: "enabiz_acil", kategori: "e-Nabız", ad: "Önceki acil başvuruları", ozet: "8 ay önce acil: eforla göğüs sıkışması", kaynak: "enabiz", cevap: "8 ay önce acil: yokuş çıkarken göğüste sıkışma. EKG normal, troponin negatif, taburcu; kardiyoloji poliklinik önerisi. Sonraki kardiyoloji muayene kaydı yok.", onem: "ipucu", not: "Olası stabil angina belirtisi atlanmış. Aynı zamanda eski EKG 'normal' = baz çizgi: bugünkü V1-V4 ST elevasyonunun yeni olduğunu gösterir (ESC: önceki EKG ile karşılaştır, hekim onayı gerekli: atıf maddesi). Önceki negatif tetkik ise yanlış güven verir." },
+      { id: "sosyal_yasam", kategori: "Sosyal öykü", ad: "Meslek, yaşam tarzı, alkol", ozet: "Meslek, yaşam tarzı, alkol", kaynak: "hasta", cevap: "Emekli muhasebeciyim, eşimle oturuyoruz. Alkol içmem. Yürüyüş yapmıyorum, günüm koltukta geçiyor.", onem: "notr", not: "Hareketsizlik ve emeklilik gevşek bir risk modifiye edicisi; tek başına tanı yönlendirmez. Alkol yok: ayırıcıda pankreatit/gastrit olasılığını yormaz." }
     ],
 
     // Muayene: sistem → bulgu. Her sistem 45 sn.
@@ -279,19 +296,20 @@ window.VAKALAR = [
   {
     id: "karin-agrisi",
     baslik: "Karın ağrısı",
+    sahne: "img/ai/bg-sari-alan.webp",                 // PC sürümünde sahnenin arka planı
     onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
     hasta: { yas: 28, cinsiyet: "Erkek" },
     sikayet: "Dünden beri karnım ağrıyor, şimdi sağ tarafıma vurdu.",
 
     durumlar: {
       baslangic: {
-        gorsel: "img/karin-1.svg",
+        gorsel: "img/ai/karin-1.webp",
         ton: ["agri"],
         gorunus: "Hafif öne eğik yürüyor, eli sağ alt karnında. Yüzünde ağrı ifadesi var.",
         vitaller: { ta: "124/78", nabiz: 98, spo2: 98, solunum: 18, ates: 37.9, seker: 96, gks: 15, ritim: "Sinüs ritmi" }
       },
       rahatladi: {
-        gorsel: "img/karin-1.svg",
+        gorsel: "img/ai/karin-1.webp",
         ton: [],
         gorunus: "Ağrısı biraz hafiflemiş, sedyede daha rahat yatıyor. Eli hâlâ sağ alt karnında.",
         mesaj: "Analjezi sonrası hastanın ağrısı hafifledi.",
@@ -299,7 +317,7 @@ window.VAKALAR = [
         vitaller: { nabiz: 88 }
       },
       perforasyon: {
-        gorsel: "img/karin-2.svg",
+        gorsel: "img/ai/karin-2.webp",
         ton: ["terli", "agri"],
         gorunus: "Dizlerini karnına çekmiş, kıpırdamadan yatıyor. Terli ve ateşli; karnına dokunulmasına izin vermiyor.",
         mesaj: "Hastanın durumu kötüleşiyor: ateş yükseldi, karın her yerde ağrıyor.",
@@ -326,6 +344,20 @@ window.VAKALAR = [
       { id: "ishal",     soru: "İshal ya da kabızlık var mı? Çevrenizde benzer şikâyeti olan var mı?", cevap: "İshal olmadım, tuvaletim normal. Evde herkes iyi." },
       { id: "ozgecmis",  soru: "Daha önce ameliyat oldunuz mu? Hastalığınız, ilacınız var mı?", cevap: "Hiç ameliyat olmadım. Hastalığım yok, ilaç kullanmıyorum." },
       { id: "son-yemek", soru: "En son ne zaman yediniz, içtiniz?",                   cevap: "Dün öğlen yemek yedim. Sabah birkaç yudum su içtim, o kadar." }
+    ],
+
+    // Hasta geçmişi (kaynak: arastirma/hasta-gecmisi-ve-gorsel-ipuclari.md). kaynak: hasta | yakin | enabiz.
+    // onem: ipucu | notr | celdirici (oyunda gösterilmez; sonuç ekranında kaçırılan ipuçları için).
+    gecmis: [
+      { id: "ozgecmis_ameliyat", kategori: "Özgeçmiş", ad: "Geçirilmiş ameliyatlar", ozet: "Geçirilmiş ameliyatlar", kaynak: "hasta", cevap: "Hiç ameliyat olmadım. Apandisitim de alınmadı, o yüzden bu sefer korkuyorum.", onem: "ipucu", not: "Apendektomi öyküsü yok = apendiks yerinde, tanı mümkün. Karın ameliyatı/yapışıklık da yok." },
+      { id: "ozgecmis_gastrit", kategori: "e-Nabız", ad: "Poliklinik başvuruları", ozet: "1 yıl önce poliklinik: dispepsi", kaynak: "enabiz", cevap: "1 yıl önce aile hekimi: üst karın yanması, 2 hafta PPI. Endoskopi yapılmamış. (Hastaya sorulursa: \"Mide yanmam olmuştu, geçti.\")", onem: "celdirici", not: "Eski dispepsi 'mide ağrısı' yanılgısını besler; ama mevcut ağrı göbekten sağ alt kadrana göç etti, üst karın değil [K6]. Çeldirici." },
+      { id: "soygecmis_apandisit", kategori: "Soygeçmiş", ad: "Ailede karın ameliyatı olan var mı?", ozet: "Ailede apandisit", kaynak: "hasta", cevap: "Kardeşim 15 yaşındayken apandisit ameliyatı oldu.", onem: "notr", not: "Aile öyküsü riski hafif artırır ama AIR/Alvarado/AAS içinde yoktur ve tanıyı koydurmaz [K6][K7][K8]. Tanıya katkısı sınırlı: bu yüzden ipucu değil nötr (hekim onayı gerekli: ilişki büyüklüğü)." },
+      { id: "soygecmis_crohn", kategori: "Soygeçmiş", ad: "Ailede bağırsak hastalığı var mı?", ozet: "Ailede bağırsak hastalığı", kaynak: "hasta", cevap: "Dayım Crohn hastası, sık hastaneye yatardı.", onem: "celdirici", not: "Crohn terminal ileiti sağ alt kadran ağrısı ve CRP yüksekliği yapabilir. Ama kronik/tekrarlayan seyir, ishal ve kilo kaybı beklenir; bu hastada akut başlangıç, göç eden ağrı, iştahsızlık ve USG'de 9 mm apendiks var. İkinci derece akraba, risk artışı küçük. Klinik bilgi, kılavuz maddesi yok (hekim onayı gerekli)." },
+      { id: "ilac_analjezik", kategori: "Kullandığı ilaçlar", ad: "Gelmeden önce ilaç aldı mı?", ozet: "Dün gece ağrı kesici", kaynak: "yakin", cevap: "(Ev arkadaşı) Dün gece 500 mg parasetamol içti, ağrısı biraz azaldı, sabaha doğru geri geldi. Düzenli ilacı yok.", onem: "notr", not: "Oral analjezik ağrıyı bastırabilir ama tanıyı maskelemez; analjezi tanı hatasını artırmaz [K9]. Bu yüzden analjezi vermekten kaçınılmaz." },
+      { id: "alerji_ilac", kategori: "Alerjiler", ad: "İlaç ve lateks alerjisi", ozet: "İlaç ve lateks alerjisi", kaynak: "hasta", cevap: "Yok. Penisilin de dahil, hiçbir ilaca alerjim olmadı.", onem: "notr", not: "Ameliyat öncesi tek doz geniş spektrumlu antibiyotik için güvenlik bilgisi (WSES Rec 7.1) [K6]." },
+      { id: "sosyal_yemek", kategori: "Sosyal öykü", ad: "Dün ne yedi, çevrede hasta var mı?", ozet: "Dün ne yedi, kimlerle", kaynak: "yakin", cevap: "(Ev arkadaşı) Dün öğlen beraber dışarıda tavuk dürüm yedik, ben gayet iyiyim. Evde de kimse hasta değil. Sigara içmez, alkolü ara sıra içer; üniversitede mühendislik okuyor.", onem: "ipucu", not: "Aynı yemeği yiyen kişide belirti yok, çevrede ishal/kusma yok: gıda zehirlenmesi/gastroenterit olasılığını azaltır; apandisit lehine dolaylı ipucu. Klinik mantık, kılavuz maddesi yok (hekim onayı gerekli)." },
+      { id: "enabiz_bobrek_tasi", kategori: "e-Nabız", ad: "Önceki acil başvuruları", ozet: "4 yıl önce acil: böbrek taşı", kaynak: "enabiz", cevap: "4 yıl önce acil: sağ böğürde dalga dalga ağrı, idrarda kan. BT'de 4 mm sağ üreter taşı, kendiliğinden düştü, taburcu. (Hastaya sorulursa: \"Taş düşürmüştüm ama o ağrı çok başkaydı.\")", onem: "celdirici", not: "Üreter taşı ayırıcı tanıdır; ama kolik tarzı (dalga dalga, kasığa yayılan), hematüri ve normal iştah beklenir. Bu hastada sürekli ağrı, idrar normal, iştahsızlık: taş öyküsü yanıltıcıdır [K6]." },
+      { id: "enabiz_tahlil", kategori: "e-Nabız", ad: "Eski tahlilleri", ozet: "6 ay önce check-up tahlili", kaynak: "enabiz", cevap: "6 ay önce işe giriş muayenesi: lökosit 6.800/µL, CRP 1 mg/L, hemoglobin 15,3 g/dL. Hepsi normal.", onem: "ipucu", not: "Kendi baz çizgisi normal: güncel lökosit 14.200/µL ve CRP 48 mg/L akut inflamasyonu gösterir. Kılavuz değil, klinik mantık (hekim onayı gerekli)." }
     ],
 
     muayene: {
@@ -432,19 +464,20 @@ window.VAKALAR = [
   {
     id: "nefes-darligi",
     baslik: "Nefes darlığı",
+    sahne: "img/ai/bg-kirmizi-alan.webp",                 // PC sürümünde sahnenin arka planı
     onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
     hasta: { yas: 24, cinsiyet: "Kadın" },
     sikayet: "Bahçede arı soktu, nefesim daralıyor, boğazım şişiyor gibi.",
 
     durumlar: {
       baslangic: {
-        gorsel: "img/nefes-1.svg",
+        gorsel: "img/ai/nefes-1.webp",
         ton: ["kizarik", "sis"],
         gorunus: "Dudakları ve göz kapakları şiş. Boynunda ve kollarında kızarık kabarıklar var. Hırıltılı soluyor. Elinin üstünde sokma izi.",
         vitaller: { ta: "85/50", nabiz: 128, spo2: 91, solunum: 28, ates: 36.9, seker: 98, gks: 15, ritim: "Sinüs taşikardisi" }
       },
       agir: {
-        gorsel: "img/nefes-2.svg",
+        gorsel: "img/ai/nefes-2.webp",
         ton: ["kizarik", "sis", "morarma"],
         gorunus: "Dudakları morarmış, konuşmakta çok zorlanıyor. Her nefeste hışırtılı bir ses (stridor) geliyor. Terli, huzursuz.",
         mesaj: "Hastanın durumu kötüleşiyor: dudaklarda morarma, stridor.",
@@ -453,7 +486,7 @@ window.VAKALAR = [
         ceza: { puan: 50, ad: "Hava yolu ve dolaşım ağırlaştı (adrenalin gecikti)" }
       },
       duzelme: {
-        gorsel: "img/nefes-3.svg",
+        gorsel: "img/ai/nefes-3.webp",
         ton: ["kizarik"],
         gorunus: "Nefesi rahatladı, hırıltısı azaldı. Dudaklarındaki şişlik geriliyor, konuşabiliyor.",
         mesaj: "Adrenalin etkisini gösterdi: nefesi rahatlıyor, tansiyon yükseliyor.",
@@ -461,7 +494,7 @@ window.VAKALAR = [
         vitaller: { ta: "105/65", nabiz: 105, spo2: 95, solunum: 22 }
       },
       arrest: {
-        gorsel: "img/nefes-2.svg",
+        gorsel: "img/ai/nefes-2.webp",
         gri: true,
         ton: ["morarma"],
         gorunus: "Solunumu durdu, yanıt vermiyor.",
@@ -481,13 +514,27 @@ window.VAKALAR = [
       { id: "ne-oldu",      soru: "Ne oldu, ne zaman oldu?",                              cevap: "Bahçede çiçekleri suluyordum, bir arı elimin üstünden soktu. On dakika falan oldu, sonra her şey hızlandı." },
       { id: "belirti",      soru: "Şu an neler hissediyorsunuz?",                         cevap: "Boğazım şişiyor gibi, yutkunamıyorum. Nefes alırken hırıltı geliyor. Her yerim kaşınıyor." },
       { id: "once",         soru: "Daha önce arı soktu mu, böyle bir şey oldu mu?",       cevap: "Çocukken bir kere soktu, sadece o yer şişmişti. Böyle bir şey hiç olmadı." },
-      { id: "astim",        soru: "Astımınız ya da başka bir alerjiniz var mı?",          cevap: "Astımım yok. Bildiğim bir alerjim de yoktu." },
-      { id: "ilac",         soru: "Düzenli kullandığınız bir ilaç var mı?",               cevap: "Hayır, hiç ilaç kullanmıyorum." },
+      { id: "astim",        soru: "Astımınız ya da başka bir alerjiniz var mı?",          cevap: "Astımım yok. İlaç ya da yiyecek alerjim yok." },
+      { id: "ilac",         soru: "Düzenli kullandığınız bir ilaç var mı?",               cevap: "Tansiyon ya da kalp ilacı kullanmıyorum, doğum kontrol hapı dışında bir şey yok." },
       { id: "bas-donmesi",  soru: "Başınız dönüyor mu, bayılacak gibi oluyor musunuz?",   cevap: "Evet, başım dönüyor, gözlerim kararıyor." },
       { id: "karin",        soru: "Karın ağrısı, bulantı ya da kusma var mı?",            cevap: "Midem bulanıyor, karnıma kramp giriyor." },
       { id: "panik",        soru: "Daha önce panik atak ya da benzer nöbetler yaşadınız mı?", cevap: "Hayır, hiç. Bu farklı, gerçekten nefes alamıyorum." },
       { id: "otoenjektor",  soru: "Yanınızda adrenalin kalemi (oto-enjektör) var mı?",    cevap: "Hayır, öyle bir şeyim yok. Hiç duymadım." },
       { id: "gebelik",      soru: "Hamilelik ihtimaliniz var mı?",                        cevap: "Hayır, yok." }
+    ],
+
+    // Hasta geçmişi (kaynak: arastirma/hasta-gecmisi-ve-gorsel-ipuclari.md). kaynak: hasta | yakin | enabiz.
+    // onem: ipucu | notr | celdirici (oyunda gösterilmez; sonuç ekranında kaçırılan ipuçları için).
+    gecmis: [
+      { id: "ozgecmis_onceki_sokma", kategori: "Özgeçmiş", ad: "Daha önce arı soktu mu?", ozet: "Daha önceki arı sokması", kaynak: "hasta", cevap: "Çocukken bir kere soktu, kolum bir gün şişmişti. Ondan sonra hiç sokulmadım.", onem: "ipucu", not: "Geniş lokal reaksiyon duyarlanma gösterir; sonraki sokmada sistemik reaksiyon olasılığı artar (JTF 2016, rakam için hekim onayı gerekli) [K10]." },
+      { id: "ozgecmis_atopi", kategori: "e-Nabız", ad: "Poliklinik kayıtları", ozet: "Alerjik rinit (2 yıl önce KBB)", kaynak: "enabiz", cevap: "2 yıl önce KBB poliklinik: mevsimsel alerjik rinit, loratadin yazılmış. Ek not: çocuklukta hafif egzama. (Hastaya sorulursa: \"Baharda burnum akar ama buna alerji demezdim.\")", onem: "notr", not: "Atopi arı venomu anafilaksisini belirgin artırmaz [K11]; 'alerjik zemin' tuzağına düşmemeli (hekim onayı gerekli). Bu kayıt astım olmadığını da netleştirir." },
+      { id: "ozgecmis_astim", kategori: "Özgeçmiş", ad: "Astım ya da kronik hastalık var mı?", ozet: "Astım ve kronik hastalık", kaynak: "hasta", cevap: "Astımım yok, hiç inhaler kullanmadım. Kalp, böbrek, tansiyon, şeker gibi bir hastalığım da yok.", onem: "notr", not: "Astım ağır anafilaksi için risk faktörüdür [K12][K13]; yokluğu hırıltıyı astım atağıyla açıklamayı zorlaştırır. Ürtiker, ödem ve hipotansiyon astımla açıklanmaz." },
+      { id: "ilac_yok", kategori: "Kullandığı ilaçlar", ad: "Düzenli kullandığı ilaçlar", ozet: "Tansiyon/kalp ilacı (beta bloker, ACE inhibitörü)", kaynak: "hasta", cevap: "Tansiyon ya da kalp ilacı kullanmıyorum. Doğum kontrol hapı dışında bir şey içmiyorum.", onem: "ipucu", not: "Beta bloker adrenalin yanıtını zayıflatır; ACE-i anjiyoödem/ağır anafilaksi riskini artırır [K12][K13][K14]. Bunlar yok: adrenalinden iyi yanıt beklenir, 'ACE-i anjiyoödemi' ayırıcısı elenir." },
+      { id: "ilac_oks", kategori: "e-Nabız", ad: "Reçete kayıtları", ozet: "Doğum kontrol hapı (OKS) reçetesi", kaynak: "enabiz", cevap: "8 ay önce kadın doğum poliklinik: kombine OKS yazılmış, 3 aylık yenilemeler düzenli.", onem: "celdirici", not: "OKS venöz tromboemboli riskini artırır: 'nefes darlığı + OKS' PE çeldiricisini besler. Ama ürtiker, dudak/göz kapağı ödemi, wheezing ve alerjen teması PE ile açıklanmaz [K12]. Risk artışı oranı için hekim onayı gerekli." },
+      { id: "alerji_yok", kategori: "Alerjiler", ad: "İlaç ve yiyecek alerjisi", ozet: "İlaç ve yiyecek alerjisi", kaynak: "hasta", cevap: "İlaç ya da yiyecek alerjim yok. Lateks, fındık, deniz ürünü dahil hiçbirinde sorun yaşamadım.", onem: "notr", not: "Tedavi güvenliği (steroid/antihistaminik/lateks eldiven) için gerekli; 'başka tetikleyici yok' = tek aday arı sokması [K12]." },
+      { id: "soygecmis_alerji", kategori: "Soygeçmiş", ad: "Ailede alerji ya da astım var mı?", ozet: "Ailede alerji ve astım", kaynak: "hasta", cevap: "Annem penisilinden alerjik olmuş. Kardeşim çocukken astım tedavisi gördü. Arıya alerjisi olan kimse yok.", onem: "notr", not: "Venom alerjisinde aile öyküsü zayıf bir belirleyicidir; tanıyı koydurmaz (kılavuz maddesi bulunamadı, hekim onayı gerekli)." },
+      { id: "sosyal_kovan", kategori: "Sosyal öykü", ad: "Ev, bahçe ve alışkanlıklar", ozet: "Bahçe ve arı maruziyeti", kaynak: "yakin", cevap: "(Annesi) Komşunun kovanları bahçe duvarının dibinde, yaz boyunca arılar bahçeye geliyor. Kızım çiçekleri sulamayı çok sever. Sigara ve alkol kullanmaz, üniversite öğrencisi.", onem: "ipucu", not: "Tekrarlayan venom maruziyeti ve temas ile reaksiyon arasındaki dakikalar anafilaksi tanısını destekler [K12][K13]. Alerjenin açık kaynağı: tanı kliniktir, tetkik beklenmez." },
+      { id: "enabiz_kayit_yok", kategori: "e-Nabız", ad: "Önceki acil başvuruları", ozet: "Önceki anafilaksi ve oto-enjektör kaydı", kaynak: "enabiz", cevap: "Önceki acil/yatış kaydı yok. Adrenalin oto-enjektör reçetesi yok. Alerji uzmanı muayenesi, venom testi ya da triptaz tetkiki yok.", onem: "notr", not: "İlk sistemik reaksiyon: oto-enjektör ve venom immünoterapisi yönlendirmesi taburculukta yapılmalı [K12][K13][K15]. İmmünoterapi atfı için hekim onayı gerekli." }
     ],
 
     muayene: {

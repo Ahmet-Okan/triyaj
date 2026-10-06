@@ -1,11 +1,13 @@
 // Triyaj servis çalışanı: oyunu çevrimdışı da çalıştırır (önce ağ, ağ yoksa önbellek).
 // Dosya eklenince ya da değişince SURUM'u artır ki telefonlar yeni sürümü alsın.
-var SURUM = "triyaj-20261006-135438";
+var SURUM = "triyaj-20261006-170708";
 var DOSYALAR = [
-  "./", "./index.html", "./vakalar.js", "./manifest.webmanifest",
+  "./", "./index.html", "./vakalar.js", "./hemsire.js", "./manifest.webmanifest",
   "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png",
-  "./img/gogus-1.svg", "./img/gogus-2.svg", "./img/karin-1.svg", "./img/karin-2.svg",
-  "./img/nefes-1.svg", "./img/nefes-2.svg", "./img/nefes-3.svg"
+  "./img/ai/gogus-1.webp", "./img/ai/gogus-2.webp", "./img/ai/karin-1.webp", "./img/ai/karin-2.webp",
+  "./img/ai/nefes-1.webp", "./img/ai/nefes-2.webp", "./img/ai/nefes-3.webp",
+  "./img/ai/hemsire.webp", "./img/ai/hemsire-kizgin.webp",
+  "./img/ai/bg-kirmizi-alan.webp", "./img/ai/bg-sari-alan.webp", "./img/ai/bg-triaj-girisi.webp"
 ];
 
 self.addEventListener("install", function (e) {
