@@ -167,14 +167,20 @@ window.ERCAN_SES = {
 "Sarı alan, tamam. Perdeli bölmeye alıyorum.": "ses/ercan/e164.mp3",
 "Hocam, bu hastayı kırmızıya aldık ama sarıda da olurdu. Kırmızıdaki yatak başka hastaya lazım olabilir.": "ses/ercan/e165.mp3",
 "Hocam, bu senin hastan. Portresine tıklayınca görünüşünü okursun. Üstündeki rozetler hastaya yaptıklarını gösterir.": "ses/ercan/e166.mp3",
-"Vitaller kapalı, ölçmeden göremezsin. Monitöre bağla ya da tek tek ölç. Her ölçüm vaka saatinden zaman yer.": "ses/ercan/e167.mp3",
+"Vitaller kapalı, ölçmeden göremezsin. Monitöre bağlamak 2 dakika ama sonra nabız, saturasyon, tansiyon hep ekranda. Tek tek ölçmek 5 saniyeyle 1 dakika arası.": "ses/ercan/e167.mp3",
 "Kararların solda: bir öykü ve geçmiş, iki muayene, üç tetkik, dört müdahale, beş tanı. Tıklayınca büyük pencere açılır, Esc kapatır. N tuşu e-Nabız'ı açar.": "ses/ercan/e168.mp3",
-"Hastaya istediğini yazarak sorabilirsin. Anlamazsa sana en yakın soruları önerir.": "ses/ercan/e169.mp3",
+"Öykü ve geçmiş burada. Listeden seç ya da istediğini yaz; anlamazsa sana en yakın soruları önerir. Cevap sorunun hemen altında çıkar.": "ses/ercan/e169.mp3",
 "Üst çubuk dikkat isteyen her şeyi gösterir: kötüleşme, gelen sonuç, bekleyen tetkik. Tıklayınca oraya gidersin. Space ile duraklatırsın.": "ses/ercan/e170.mp3",
 "Ben sağ alttayım. Bir şey dersem balon çıkar, arada soru da sorarım. Eski mesajlar ve danışmak için üstüme tıkla, puanını kırmam.": "ses/ercan/e171.mp3",
 "Tetkik sonuçları arka planda gelir. Sonucu bekle düğmesi saati ileri sarar. Alttaki zaman şeridine tıklarsan bütün olayları görürsün.": "ses/ercan/e172.mp3",
 "Burası masan hocam. Cevapların, sonuçların, benim söylediklerimin yanındaki küçük raptiyeye basarsan masaya düşer, M tuşu açar. Sonuç gelince sol altta kâğıt belirir. Hazırsan saat şimdi başlıyor.": "ses/ercan/e173.mp3",
 "Hocam.": "ses/ercan/e174.mp3",
 "Tamam hocam, vazgeçtik. Daha uygulamamıştım, geri koydum.": "ses/ercan/e175.mp3",
-"Tamam hocam, istemi iptal ettim.": "ses/ercan/e176.mp3"
+"Tamam hocam, istemi iptal ettim.": "ses/ercan/e176.mp3",
+"Hocam, hoş geldin. Amacımız belli: doğru tanıyı koy, kritik işleri zamanında yap, hastaya zarar verme, boşa tetkik isteme. Puanın bunlardan çıkar, en fazla bin.": "ses/ercan/e177.mp3",
+"Bu vaka saati. Burada bir saniye, gerçekte de bir saniye. Her iş süre yer: soru 20 saniye, muayene 45, tetkik istemek 30, ilaç ya da damar yolu 1 dakika, konsültasyon 2 dakika. Sen düşünürken hasta bekler, beklerse kötüleşir.": "ses/ercan/e178.mp3",
+"Bu da masraf hocam. Tetkiğin parası var: EKG 150 lira, troponin 350, BT 1800. Öykü, muayene, ölçüm ve e-Nabız bedava, sadece zaman yer. Gereksiz tetkik hem bütçeyi hem puanını yer.": "ses/ercan/e179.mp3",
+"Muayenede altı sistem var: genel durum, kalp, akciğer, batın, cilt, nörolojik. Her biri 45 saniye. Hepsine bakmak zorunda değilsin, şikâyete göre seç. Durum değişirse tekrar bakarsın.": "ses/ercan/e180.mp3",
+"Tetkik istemek 30 saniye, sonucu arka planda gelir: EKG 5 dakikada, troponin 1 saatte. İstem ve Sonuçlar ayrı sayfada. Sonuç gelince sol altta kâğıt belirir, tıklarsın, açılır.": "ses/ercan/e181.mp3",
+"Müdahaleler dört grupta: damar yolu ve sıvı, solunum ve pozisyon, ilaç, konsültasyon ve karar. Damardan ilaç için önce damar yolu açacaksın. Zararlı ilaç en ağır cezadır. Fikrini değiştirirsen 30 saniye içinde vazgeç, ama geçen süre geri gelmez.": "ses/ercan/e182.mp3"
 };
