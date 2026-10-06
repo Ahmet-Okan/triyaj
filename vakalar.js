@@ -213,16 +213,25 @@ window.VAKALAR = [
       ziyaretler: [
         { tarih: "8 ay önce", kurum: "Devlet Hastanesi · Acil Servis", tani: "Göğüs ağrısı, tanımlanmamış (R07.4)", not: "Yokuş çıkarken göğüste sıkışma. EKG normal sinüs ritmi, troponin negatif. Taburcu, kardiyoloji polikliniği önerildi. Sonraki kardiyoloji muayene kaydı yok.", gecmisId: "enabiz_acil" },
         { tarih: "3 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Saf hiperkolesterolemi (E78.0)", not: "Kolesterol yüksekliği, statin başlandı.", gecmisId: "ozgecmis_dislipidemi" },
-        { tarih: "6 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Esansiyel hipertansiyon (I10)", not: "Tansiyon yüksekliği, amlodipin başlandı.", gecmisId: "ozgecmis_hipertansiyon" }
+        { tarih: "6 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Esansiyel hipertansiyon (I10)", not: "Tansiyon yüksekliği, amlodipin başlandı.", gecmisId: "ozgecmis_hipertansiyon" },
+        { tarih: "Kasım 2020", kurum: "Aile Sağlığı Merkezi · filyasyon", tani: "COVID-19, virüs tanımlandı (U07.1)", not: "PCR pozitif. Ateş, öksürük, koku kaybı. 14 gün evde izolasyon; filyasyon ekibi ilacını eve bıraktı." }
       ],
       tahliller: [
         { tarih: "8 ay önce", test: "Troponin", sonuc: "Negatif", birim: "", referans: "Negatif", durum: "normal", gecmisId: "enabiz_acil" },
         { tarih: "3 yıl önce", test: "LDL kolesterol", sonuc: "172", birim: "mg/dL", referans: "< 130", durum: "yuksek", gecmisId: "ozgecmis_dislipidemi" },
-        { tarih: "3 yıl önce", test: "Açlık kan şekeri", sonuc: "98", birim: "mg/dL", referans: "70–100", durum: "normal" }
+        { tarih: "3 yıl önce", test: "Açlık kan şekeri", sonuc: "98", birim: "mg/dL", referans: "70–100", durum: "normal" },
+        { tarih: "Aralık 2020", test: "SARS-CoV-2 PCR", sonuc: "Negatif", birim: "", referans: "Negatif", durum: "normal" },
+        { tarih: "Kasım 2020", test: "SARS-CoV-2 PCR", sonuc: "Pozitif", birim: "", referans: "Negatif", durum: "yuksek" }
       ],
       receteler: [
         { tarih: "2 ay önce", ilac: "Amlodipin 5 mg", kullanim: "Günde 1", not: "Reçete düzenli yenileniyor." },
-        { tarih: "3 yıl önce", ilac: "Atorvastatin 20 mg", kullanim: "Günde 1", not: "2 kutu alınmış, yenilenmemiş.", gecmisId: "ozgecmis_dislipidemi" }
+        { tarih: "3 yıl önce", ilac: "Atorvastatin 20 mg", kullanim: "Günde 1", not: "2 kutu alınmış, yenilenmemiş.", gecmisId: "ozgecmis_dislipidemi" },
+        { tarih: "Kasım 2020", ilac: "Favipiravir 200 mg", kullanim: "5 gün", not: "COVID-19 tedavisi, filyasyon ekibi verdi." }
+      ],
+      asilar: [
+        { tarih: "Ağustos 2021", asi: "COVID-19 · BioNTech", doz: "3. doz (hatırlatma)", kurum: "Devlet Hastanesi aşı noktası" },
+        { tarih: "Mayıs 2021", asi: "COVID-19 · CoronaVac (Sinovac)", doz: "2. doz", kurum: "Aile Sağlığı Merkezi" },
+        { tarih: "Nisan 2021", asi: "COVID-19 · CoronaVac (Sinovac)", doz: "1. doz", kurum: "Aile Sağlığı Merkezi" }
       ],
       hastaliklar: [
         { tani: "Esansiyel hipertansiyon", kod: "I10", tarih: "6 yıl önce", gecmisId: "ozgecmis_hipertansiyon" },
@@ -457,15 +466,23 @@ window.VAKALAR = [
       ziyaretler: [
         { tarih: "6 ay önce", kurum: "İş yeri hekimliği", tani: "İşe giriş muayenesi (Z02.1)", not: "Muayene ve tahliller normal.", gecmisId: "enabiz_tahlil" },
         { tarih: "1 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Dispepsi (K30)", not: "Üst karında yanma. 2 hafta mide koruyucu verildi. Endoskopi yapılmamış.", gecmisId: "ozgecmis_gastrit" },
-        { tarih: "4 yıl önce", kurum: "Devlet Hastanesi · Acil Servis", tani: "Üreter taşı (N20.1)", not: "Sağ böğürde dalga dalga ağrı, idrarda kan. BT'de 4 mm sağ üreter taşı. Kendiliğinden düştü, taburcu.", gecmisId: "enabiz_bobrek_tasi" }
+        { tarih: "4 yıl önce", kurum: "Devlet Hastanesi · Acil Servis", tani: "Üreter taşı (N20.1)", not: "Sağ böğürde dalga dalga ağrı, idrarda kan. BT'de 4 mm sağ üreter taşı. Kendiliğinden düştü, taburcu.", gecmisId: "enabiz_bobrek_tasi" },
+        { tarih: "Ocak 2022", kurum: "Aile Sağlığı Merkezi", tani: "COVID-19, virüs tanımlandı (U07.1)", not: "Hafif seyir: boğaz ağrısı, halsizlik. 7 gün evde izolasyon." }
       ],
       tahliller: [
         { tarih: "6 ay önce", test: "Lökosit (WBC)", sonuc: "6,8", birim: "10³/µL", referans: "4,0–10,0", durum: "normal", gecmisId: "enabiz_tahlil" },
         { tarih: "6 ay önce", test: "CRP", sonuc: "1", birim: "mg/L", referans: "< 5", durum: "normal", gecmisId: "enabiz_tahlil" },
-        { tarih: "6 ay önce", test: "Hemoglobin", sonuc: "15,3", birim: "g/dL", referans: "13,5–17,5", durum: "normal", gecmisId: "enabiz_tahlil" }
+        { tarih: "6 ay önce", test: "Hemoglobin", sonuc: "15,3", birim: "g/dL", referans: "13,5–17,5", durum: "normal", gecmisId: "enabiz_tahlil" },
+        { tarih: "Ocak 2022", test: "SARS-CoV-2 PCR", sonuc: "Pozitif", birim: "", referans: "Negatif", durum: "yuksek" },
+        { tarih: "Temmuz 2021", test: "SARS-CoV-2 PCR", sonuc: "Negatif", birim: "", referans: "Negatif", durum: "normal" }
       ],
       receteler: [
         { tarih: "1 yıl önce", ilac: "Pantoprazol 40 mg", kullanim: "Günde 1, 14 gün", not: "", gecmisId: "ozgecmis_gastrit" }
+      ],
+      asilar: [
+        { tarih: "Ağustos 2021", asi: "COVID-19 · BioNTech", doz: "2. doz", kurum: "Aile Sağlığı Merkezi" },
+        { tarih: "Temmuz 2021", asi: "COVID-19 · BioNTech", doz: "1. doz", kurum: "Aile Sağlığı Merkezi" },
+        { tarih: "Mart 2019", asi: "Td (tetanoz-difteri)", doz: "Rapel", kurum: "Devlet Hastanesi · Acil Servis" }
       ],
       hastaliklar: [],
       alerjiler: [],
@@ -697,10 +714,16 @@ window.VAKALAR = [
         { tarih: "8 ay önce", kurum: "Kadın Hastalıkları ve Doğum Polikliniği", tani: "Kontrasepsiyon danışmanlığı", not: "Kombine oral kontraseptif başlandı, 3 aylık yenilemeler düzenli.", gecmisId: "ilac_oks" },
         { tarih: "2 yıl önce", kurum: "KBB Polikliniği", tani: "Mevsimsel alerjik rinit (J30.2)", not: "Baharda burun akıntısı ve hapşırık. Çocuklukta hafif egzama.", gecmisId: "ozgecmis_atopi" }
       ],
-      tahliller: [],
+      tahliller: [
+        { tarih: "Eylül 2021", test: "SARS-CoV-2 PCR", sonuc: "Negatif", birim: "", referans: "Negatif", durum: "normal" }
+      ],
       receteler: [
         { tarih: "1 ay önce", ilac: "Kombine oral kontraseptif", kullanim: "Günde 1", not: "3 aylık reçete.", gecmisId: "ilac_oks" },
         { tarih: "2 yıl önce", ilac: "Loratadin 10 mg", kullanim: "Günde 1, mevsimsel", not: "", gecmisId: "ozgecmis_atopi" }
+      ],
+      asilar: [
+        { tarih: "Ağustos 2021", asi: "COVID-19 · BioNTech", doz: "2. doz", kurum: "Aile Sağlığı Merkezi" },
+        { tarih: "Temmuz 2021", asi: "COVID-19 · BioNTech", doz: "1. doz", kurum: "Aile Sağlığı Merkezi" }
       ],
       hastaliklar: [
         { tani: "Mevsimsel alerjik rinit", kod: "J30.2", tarih: "2 yıl önce", gecmisId: "ozgecmis_atopi" }
@@ -925,11 +948,20 @@ window.VAKALAR = [
     enabiz: {
       ziyaretler: [
         { tarih: "Geçen ocak", kurum: "Devlet Hastanesi · Acil Servis", tani: "Baş ağrısı (R51)", not: "Gece baş ağrısı ve bulantı. Eşi ve küçük oğlu da aynı gece başvurmuş. Ağrı kesici verildi, taburcu.", gecmisId: "enabiz_onceki_kis" },
-        { tarih: "3 yıl önce", kurum: "Nöroloji Polikliniği", tani: "Aurasız migren (G43.0)", not: "Ayda 1-2 atak. Beyin MR normal.", gecmisId: "enabiz_migren" }
+        { tarih: "3 yıl önce", kurum: "Nöroloji Polikliniği", tani: "Aurasız migren (G43.0)", not: "Ayda 1-2 atak. Beyin MR normal.", gecmisId: "enabiz_migren" },
+        { tarih: "Aralık 2020", kurum: "Aile Sağlığı Merkezi · filyasyon", tani: "COVID-19, virüs tanımlandı (U07.1)", not: "PCR pozitif. Halsizlik, kas ağrısı. 14 gün evde izolasyon." }
       ],
-      tahliller: [],
+      tahliller: [
+        { tarih: "Aralık 2020", test: "SARS-CoV-2 PCR", sonuc: "Pozitif", birim: "", referans: "Negatif", durum: "yuksek" }
+      ],
       receteler: [
-        { tarih: "6 ay önce", ilac: "Naproksen sodyum 550 mg", kullanim: "Gerektiğinde", not: "Migren atakları için.", gecmisId: "enabiz_migren" }
+        { tarih: "6 ay önce", ilac: "Naproksen sodyum 550 mg", kullanim: "Gerektiğinde", not: "Migren atakları için.", gecmisId: "enabiz_migren" },
+        { tarih: "Aralık 2020", ilac: "Favipiravir 200 mg", kullanim: "5 gün", not: "COVID-19 tedavisi, filyasyon ekibi verdi." }
+      ],
+      asilar: [
+        { tarih: "Ekim 2021", asi: "COVID-19 · BioNTech", doz: "3. doz (hatırlatma)", kurum: "Aile Sağlığı Merkezi" },
+        { tarih: "Temmuz 2021", asi: "COVID-19 · CoronaVac (Sinovac)", doz: "2. doz", kurum: "Aile Sağlığı Merkezi" },
+        { tarih: "Haziran 2021", asi: "COVID-19 · CoronaVac (Sinovac)", doz: "1. doz", kurum: "Aile Sağlığı Merkezi" }
       ],
       hastaliklar: [
         { tani: "Aurasız migren", kod: "G43.0", tarih: "3 yıl önce", gecmisId: "enabiz_migren" }

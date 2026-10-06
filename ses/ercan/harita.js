@@ -168,11 +168,13 @@ window.ERCAN_SES = {
 "Hocam, bu hastayı kırmızıya aldık ama sarıda da olurdu. Kırmızıdaki yatak başka hastaya lazım olabilir.": "ses/ercan/e165.mp3",
 "Hocam, bu senin hastan. Portresine tıklayınca görünüşünü okursun. Üstündeki rozetler hastaya yaptıklarını gösterir.": "ses/ercan/e166.mp3",
 "Vitaller kapalı, ölçmeden göremezsin. Monitöre bağla ya da tek tek ölç. Her ölçüm vaka saatinden zaman yer.": "ses/ercan/e167.mp3",
-"Kararların burada: bir öykü, iki geçmiş, üç muayene, dört tetkik, beş müdahale, altı tanı. N tuşu e-Nabız'ı açar.": "ses/ercan/e168.mp3",
+"Kararların solda: bir öykü ve geçmiş, iki muayene, üç tetkik, dört müdahale, beş tanı. Tıklayınca büyük pencere açılır, Esc kapatır. N tuşu e-Nabız'ı açar.": "ses/ercan/e168.mp3",
 "Hastaya istediğini yazarak sorabilirsin. Anlamazsa sana en yakın soruları önerir.": "ses/ercan/e169.mp3",
 "Üst çubuk dikkat isteyen her şeyi gösterir: kötüleşme, gelen sonuç, bekleyen tetkik. Tıklayınca oraya gidersin. Space ile duraklatırsın.": "ses/ercan/e170.mp3",
-"Ben buradayım. Takılırsan bana danış, puanını kırmam ama cevabı da vermem. Arada ben de sana soru sorarım.": "ses/ercan/e171.mp3",
+"Ben sağ alttayım. Bir şey dersem balon çıkar, arada soru da sorarım. Eski mesajlar ve danışmak için üstüme tıkla, puanını kırmam.": "ses/ercan/e171.mp3",
 "Tetkik sonuçları arka planda gelir. Sonucu bekle düğmesi saati ileri sarar. Alttaki zaman şeridine tıklarsan bütün olayları görürsün.": "ses/ercan/e172.mp3",
 "Bulgu topladıkça düşünceler açılır. Tanı sekmesindeki dolaba en fazla üçünü koy, kanıt geldikçe güçlenir ya da zayıflar. Hazırsan saat şimdi başlıyor.": "ses/ercan/e173.mp3",
-"Hocam.": "ses/ercan/e174.mp3"
+"Hocam.": "ses/ercan/e174.mp3",
+"Tamam hocam, vazgeçtik. Daha uygulamamıştım, geri koydum.": "ses/ercan/e175.mp3",
+"Tamam hocam, istemi iptal ettim.": "ses/ercan/e176.mp3"
 };
