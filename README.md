@@ -33,6 +33,6 @@ HASAT 2026 (Teknopark İstanbul) başvurusu için geliştirildi.
 ## Emeği geçenler
 - Görseller, müzik ve ortam sesi: Higgsfield ile üretildi (görsel dil Disco Elysium'dan esinlenildi)
 - Ercan Abi'nin sesi: Microsoft Edge sinir ağı sesi (tr-TR-AhmetNeural, edge-tts), demo amaçlı
-- Hasta yakını efekti: "Shrieking Jump Scare Blast" by BudgetPixel AI (https://budgetpixel.com/sfx/shrieking-jump-scare-blast-258d1f28), CC BY 4.0
+- Hasta yakını efekti: "Orchestral Shock Hit" by BudgetPixel AI (https://budgetpixel.com/sfx/orchestral-shock-hit-e9ddbc31), CC BY 4.0
 - Monitör, alarm ve arayüz sesleri: WebAudio ile kodla üretildi
 - Yazı tipleri: Libre Baskerville, Barlow Condensed (SIL Open Font License)
