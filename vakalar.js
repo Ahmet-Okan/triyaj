@@ -44,6 +44,8 @@ window.ISLEM_TABLOSU = {
   monitorSn: 120,      // monitöre bağlamak: sonra nabız, SpO₂, TA, ritim sürekli görünür
   // Hasta geçmişi: hastaya ya da yakınına sormak 20 sn, e-Nabız'dan bir kaydı açmak 30 sn
   gecmisSn: { hasta: 20, yakin: 20, enabiz: 30 },
+  // e-Nabız: hastayı sorgulamak 30 sn, her bölümü ilk açış 10 sn (sonra serbest)
+  enabizSn: 30, enabizBolumSn: 10,
 
   // Vital ölçümleri: sadece zaman, para yok. "gosterir" = ölçümün açtığı değerler.
   vitaller: [
@@ -183,6 +185,32 @@ window.VAKALAR = [
       { id: "enabiz_acil", kategori: "e-Nabız", ad: "Önceki acil başvuruları", ozet: "8 ay önce acil: eforla göğüs sıkışması", kaynak: "enabiz", cevap: "8 ay önce acil: yokuş çıkarken göğüste sıkışma. EKG normal, troponin negatif, taburcu; kardiyoloji poliklinik önerisi. Sonraki kardiyoloji muayene kaydı yok.", onem: "ipucu", not: "Olası stabil angina belirtisi atlanmış. Aynı zamanda eski EKG 'normal' = baz çizgi: bugünkü V1-V4 ST elevasyonunun yeni olduğunu gösterir (ESC: önceki EKG ile karşılaştır, hekim onayı gerekli: atıf maddesi). Önceki negatif tetkik ise yanlış güven verir." },
       { id: "sosyal_yasam", kategori: "Sosyal öykü", ad: "Meslek, yaşam tarzı, alkol", ozet: "Meslek, yaşam tarzı, alkol", kaynak: "hasta", cevap: "Emekli muhasebeciyim, eşimle oturuyoruz. Alkol içmem. Yürüyüş yapmıyorum, günüm koltukta geçiyor.", onem: "notr", not: "Hareketsizlik ve emeklilik gevşek bir risk modifiye edicisi; tek başına tanı yönlendirmez. Alkol yok: ayırıcıda pankreatit/gastrit olasılığını yormaz." }
     ],
+
+    // e-Nabız (oyun içi temsilî kayıt). gecmisId: bu satırı görünce o geçmiş kaydı "bakıldı" sayılır.
+    enabiz: {
+      ziyaretler: [
+        { tarih: "8 ay önce", kurum: "Devlet Hastanesi · Acil Servis", tani: "Göğüs ağrısı, tanımlanmamış (R07.4)", not: "Yokuş çıkarken göğüste sıkışma. EKG normal sinüs ritmi, troponin negatif. Taburcu, kardiyoloji polikliniği önerildi. Sonraki kardiyoloji muayene kaydı yok.", gecmisId: "enabiz_acil" },
+        { tarih: "3 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Saf hiperkolesterolemi (E78.0)", not: "Kolesterol yüksekliği, statin başlandı.", gecmisId: "ozgecmis_dislipidemi" },
+        { tarih: "6 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Esansiyel hipertansiyon (I10)", not: "Tansiyon yüksekliği, amlodipin başlandı.", gecmisId: "ozgecmis_hipertansiyon" }
+      ],
+      tahliller: [
+        { tarih: "8 ay önce", test: "Troponin", sonuc: "Negatif", birim: "", referans: "Negatif", durum: "normal", gecmisId: "enabiz_acil" },
+        { tarih: "3 yıl önce", test: "LDL kolesterol", sonuc: "172", birim: "mg/dL", referans: "< 130", durum: "yuksek", gecmisId: "ozgecmis_dislipidemi" },
+        { tarih: "3 yıl önce", test: "Açlık kan şekeri", sonuc: "98", birim: "mg/dL", referans: "70–100", durum: "normal" }
+      ],
+      receteler: [
+        { tarih: "2 ay önce", ilac: "Amlodipin 5 mg", kullanim: "Günde 1", not: "Reçete düzenli yenileniyor." },
+        { tarih: "3 yıl önce", ilac: "Atorvastatin 20 mg", kullanim: "Günde 1", not: "2 kutu alınmış, yenilenmemiş.", gecmisId: "ozgecmis_dislipidemi" }
+      ],
+      hastaliklar: [
+        { tani: "Esansiyel hipertansiyon", kod: "I10", tarih: "6 yıl önce", gecmisId: "ozgecmis_hipertansiyon" },
+        { tani: "Saf hiperkolesterolemi", kod: "E78.0", tarih: "3 yıl önce", gecmisId: "ozgecmis_dislipidemi" }
+      ],
+      alerjiler: [],
+      radyoloji: [
+        { tarih: "8 ay önce", tetkik: "Akciğer grafisi (PA)", rapor: "Aktif akciğer patolojisi izlenmedi." }
+      ]
+    },
 
     // Muayene: sistem → bulgu. Her sistem 45 sn.
     muayene: {
@@ -360,6 +388,28 @@ window.VAKALAR = [
       { id: "enabiz_tahlil", kategori: "e-Nabız", ad: "Eski tahlilleri", ozet: "6 ay önce check-up tahlili", kaynak: "enabiz", cevap: "6 ay önce işe giriş muayenesi: lökosit 6.800/µL, CRP 1 mg/L, hemoglobin 15,3 g/dL. Hepsi normal.", onem: "ipucu", not: "Kendi baz çizgisi normal: güncel lökosit 14.200/µL ve CRP 48 mg/L akut inflamasyonu gösterir. Kılavuz değil, klinik mantık (hekim onayı gerekli)." }
     ],
 
+    // e-Nabız (oyun içi temsilî kayıt). gecmisId: bu satırı görünce o geçmiş kaydı "bakıldı" sayılır.
+    enabiz: {
+      ziyaretler: [
+        { tarih: "6 ay önce", kurum: "İş yeri hekimliği", tani: "İşe giriş muayenesi (Z02.1)", not: "Muayene ve tahliller normal.", gecmisId: "enabiz_tahlil" },
+        { tarih: "1 yıl önce", kurum: "Aile Sağlığı Merkezi", tani: "Dispepsi (K30)", not: "Üst karında yanma. 2 hafta mide koruyucu verildi. Endoskopi yapılmamış.", gecmisId: "ozgecmis_gastrit" },
+        { tarih: "4 yıl önce", kurum: "Devlet Hastanesi · Acil Servis", tani: "Üreter taşı (N20.1)", not: "Sağ böğürde dalga dalga ağrı, idrarda kan. BT'de 4 mm sağ üreter taşı. Kendiliğinden düştü, taburcu.", gecmisId: "enabiz_bobrek_tasi" }
+      ],
+      tahliller: [
+        { tarih: "6 ay önce", test: "Lökosit (WBC)", sonuc: "6,8", birim: "10³/µL", referans: "4,0–10,0", durum: "normal", gecmisId: "enabiz_tahlil" },
+        { tarih: "6 ay önce", test: "CRP", sonuc: "1", birim: "mg/L", referans: "< 5", durum: "normal", gecmisId: "enabiz_tahlil" },
+        { tarih: "6 ay önce", test: "Hemoglobin", sonuc: "15,3", birim: "g/dL", referans: "13,5–17,5", durum: "normal", gecmisId: "enabiz_tahlil" }
+      ],
+      receteler: [
+        { tarih: "1 yıl önce", ilac: "Pantoprazol 40 mg", kullanim: "Günde 1, 14 gün", not: "", gecmisId: "ozgecmis_gastrit" }
+      ],
+      hastaliklar: [],
+      alerjiler: [],
+      radyoloji: [
+        { tarih: "4 yıl önce", tetkik: "BT (üriner sistem)", rapor: "Sağ üreterde 4 mm taş.", gecmisId: "enabiz_bobrek_tasi" }
+      ]
+    },
+
     muayene: {
       genel:     { varsayilan: "Bilinç açık, koopere. Ağrılı görünüyor, hareket etmekten kaçınıyor.", rahatladi: "Bilinç açık, koopere. Ağrısı hafiflemiş, daha rahat.", perforasyon: "Ağrılı ve terli; dizlerini karnına çekmiş, kıpırdamıyor." },
       kvs:       { varsayilan: "Kalp sesleri ritmik; ek ses ve üfürüm yok.", perforasyon: "Taşikardik; ek ses ve üfürüm yok." },
@@ -536,6 +586,26 @@ window.VAKALAR = [
       { id: "sosyal_kovan", kategori: "Sosyal öykü", ad: "Ev, bahçe ve alışkanlıklar", ozet: "Bahçe ve arı maruziyeti", kaynak: "yakin", cevap: "(Annesi) Komşunun kovanları bahçe duvarının dibinde, yaz boyunca arılar bahçeye geliyor. Kızım çiçekleri sulamayı çok sever. Sigara ve alkol kullanmaz, üniversite öğrencisi.", onem: "ipucu", not: "Tekrarlayan venom maruziyeti ve temas ile reaksiyon arasındaki dakikalar anafilaksi tanısını destekler [K12][K13]. Alerjenin açık kaynağı: tanı kliniktir, tetkik beklenmez." },
       { id: "enabiz_kayit_yok", kategori: "e-Nabız", ad: "Önceki acil başvuruları", ozet: "Önceki anafilaksi ve oto-enjektör kaydı", kaynak: "enabiz", cevap: "Önceki acil/yatış kaydı yok. Adrenalin oto-enjektör reçetesi yok. Alerji uzmanı muayenesi, venom testi ya da triptaz tetkiki yok.", onem: "notr", not: "İlk sistemik reaksiyon: oto-enjektör ve venom immünoterapisi yönlendirmesi taburculukta yapılmalı [K12][K13][K15]. İmmünoterapi atfı için hekim onayı gerekli." }
     ],
+
+    // e-Nabız (oyun içi temsilî kayıt). gecmisId: bu satırı görünce o geçmiş kaydı "bakıldı" sayılır.
+    enabiz: {
+      ziyaretler: [
+        { tarih: "8 ay önce", kurum: "Kadın Hastalıkları ve Doğum Polikliniği", tani: "Kontrasepsiyon danışmanlığı", not: "Kombine oral kontraseptif başlandı, 3 aylık yenilemeler düzenli.", gecmisId: "ilac_oks" },
+        { tarih: "2 yıl önce", kurum: "KBB Polikliniği", tani: "Mevsimsel alerjik rinit (J30.2)", not: "Baharda burun akıntısı ve hapşırık. Çocuklukta hafif egzama.", gecmisId: "ozgecmis_atopi" }
+      ],
+      tahliller: [],
+      receteler: [
+        { tarih: "1 ay önce", ilac: "Kombine oral kontraseptif", kullanim: "Günde 1", not: "3 aylık reçete.", gecmisId: "ilac_oks" },
+        { tarih: "2 yıl önce", ilac: "Loratadin 10 mg", kullanim: "Günde 1, mevsimsel", not: "", gecmisId: "ozgecmis_atopi" }
+      ],
+      hastaliklar: [
+        { tani: "Mevsimsel alerjik rinit", kod: "J30.2", tarih: "2 yıl önce", gecmisId: "ozgecmis_atopi" }
+      ],
+      alerjiler: [
+        { alerjen: "Kayıt yok", not: "Kayıtlı ilaç, besin ya da arı alerjisi yok. Adrenalin oto-enjektör reçetesi yok. Önceki acil başvurusu yok.", gecmisId: "enabiz_kayit_yok" }
+      ],
+      radyoloji: []
+    },
 
     muayene: {
       genel:     { varsayilan: "Bilinç açık, ajite ve korkmuş. Sesi boğuk, kısa cümlelerle konuşuyor.", agir: "Huzursuz, konuşmakta çok zorlanıyor; boğazını tutuyor.", duzelme: "Bilinç açık, daha sakin; rahat konuşabiliyor." },

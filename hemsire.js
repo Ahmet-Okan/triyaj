@@ -166,23 +166,33 @@ window.HEMSIRE = {
   },
 
   // "Ercan Abi'ye danış": her danışmada bir kademe ilerler, en fazla 3. Puan ve süre yemez.
+  // Ahmet + ortak (06.10): bilmece yok, açık konuşur. 1 = yön, 2 = somut adım, 3 = ne yapılacağı açıkça.
   ipucu: {
     "gogus-agrisi": [
-      "Hocam, bu adam yarım saattir bu hâlde. Burada dakika para gibi harcanıyor; ilk neye bakman gerektiğini bir düşün.",
-      "Göğüs ağrısında kalbin elektriğine bakmadan hiçbir şeye karar verilmez. Kâğıdı çıkar; tahlil sonucunu da bekleme, o saat geç saat.",
-      "EKG'de ön duvara bakan derivasyonlarda yükselme görürsen kateter laboratuvarını ara; tahlil beklenmez. Çiğnetilecek o ucuz beyaz hapı da unutma."
+      "Hocam, göğüs ağrısında ilk iş: monitör, damar yolu ve EKG. İlk on dakikada EKG çekilmiş olmalı.",
+      "EKG'de ön derivasyonlara bak, V1'den V4'e. ST yükselmesi varsa troponini bekleme; bu tanı EKG ile konur.",
+      "Açık konuşayım hocam: aspirin çiğnet, kardiyolojiyi ara, primer PKG için kateter laboratuvarını açtır. Troponini bekleme."
     ],
     "karin-agrisi": [
-      "Hocam, bu çocuğun ağrısı bir yerden başlayıp başka bir yere inmiş. Anlattığı yolu iyi dinle.",
-      "Karnına elle bak, ağrı bir noktaya oturmuş mu. Kanını ve ultrasonu öne al. Ağrısını da kes; ağrı kesmek muayeneyi bozmaz.",
-      "Bu iş bıçak işi hocam: ağzına bir şey verme, damar yolu ve serum, cerrahi nöbetçisini ara. Geç kalırsak karnın her yeri ağrır."
+      "Hocam, ağrı nerede başladı, nereye gitti, onu sor. Sonra karnına bak, özellikle sağ alta.",
+      "Hemogram ve CRP iste, görüntüleme için USG. Ağrısını da kes: IV ağrı kesici tanıyı maskelemez.",
+      "Ağızdan alımı kes, damar yolu aç, serum başla, genel cerrahiyi ara. Bu çocuk ameliyata gidiyor hocam."
     ],
     "nefes-darligi": [
-      "Dakikalar önemli hocam. Bahçeden gelen, her tarafı şişen bir hasta; neyin hızla kötüleştiğini düşün.",
-      "Tahlil de film de bu hastayı kurtarmaz. Acil çantasında dakikalar içinde fark yaratan tek bir ilaç var. Cilde, dudağa, tansiyona bak.",
-      "Uyluğun dış yanına, kasa, tek doz: çantadaki o ampul. Sonra oksijen, sonra yatır, bacaklarını kaldır. Kaşıntı ilacı en sona kalır."
+      "Hocam, arı sokması, şişen dudak, hırıltı, düşük tansiyon. Bu hasta dakikalarla yarışıyor, tetkik bekleme.",
+      "İlk ilaç adrenalin: 0,5 mg, kas içine, uyluğun dış yanına. Damardan değil.",
+      "Adrenalinden sonra oksijen ver, yatırıp bacaklarını kaldır, damar yolu açıp sıvı ver. Antihistaminik en sona. Sonra gözleme al; reaksiyon geri dönebilir."
     ]
   },
+  // Doğru hamlelerin arasında araya giren espriler (vaka başına en fazla iki)
+  mizah: [
+    "Hocam, kahve makinesi yine bozuk. Bu nöbeti adrenalinle döndüreceğiz.",
+    "Geçen hafta bir intörn monitör kablosunu şarj aleti sandı. Sen iyisin, merak etme.",
+    "Nöbet bitince simit benden hocam. Çay da senden.",
+    "Bu hızla gidersen başhekim seni yanına alır, haberin olsun.",
+    "Yirmi bir yıldır buradayım, şu sandalye hâlâ gıcırdıyor. Bir o değişmedi.",
+    "Hocam, kızım da tıp istiyor. Bu gece eve gidince 'iyi düşün' diyeceğim."
+  ],
   ipucuBitti: "Daha fazlasını söylersem sen gitmiş olursun hocam.",
 
   etkilesim: {
