@@ -104,6 +104,8 @@ window.ISLEM_TABLOSU = {
     { id: "pkg",            ad: "Kardiyoloji · primer PKG aktivasyonu", grup: "Konsültasyon ve karar", sureSn: 120 },
     { id: "cerrahi",        ad: "Genel cerrahi konsültasyonu",         grup: "Konsültasyon ve karar", sureSn: 120 },
     { id: "gozlem",         ad: "Gözleme al",                          grup: "Konsültasyon ve karar", sureSn: 60 },
+    { id: "aile",           ad: "Evdekileri acile çağır (112)",         grup: "Konsültasyon ve karar", sureSn: 60 },
+    { id: "hbo",            ad: "Hiperbarik oksijen merkezine danış",  grup: "Konsültasyon ve karar", sureSn: 120 },
     { id: "taburcu",        ad: "Taburcu et",                          grup: "Konsültasyon ve karar", sureSn: 0, bitirir: true }
   ]
 };
@@ -283,6 +285,8 @@ window.VAKALAR = [
       bacak_kaldir:   { sinif: "gereksiz", yanit: "Hasta sırtüstü yatırıldı, bacakları kaldırıldı." },
       cerrahi:        { sinif: "gereksiz", yanit: "Genel cerrahi: \"Cerrahi bir sorun düşünmüyoruz.\"", not: "Cerrahi bir tablo yok; zaman kaybı." },
       gozlem:         { sinif: "gereksiz", yanit: "Hasta gözlem alanına alındı.", not: "STEMI gözlemle yönetilmez; reperfüzyon gecikir." },
+      aile:           { sinif: "gereksiz", yanit: "Eşi zaten yanında; evde başka hasta yok." },
+      hbo:            { sinif: "gereksiz", yanit: "Hiperbarik merkez: \"Endikasyon yok.\"" },
       taburcu:        { sinif: "zararli", yanit: "Hasta taburcu edildi.", not: "STEMI'li hasta taburcu edilmez." }
     },
 
@@ -319,6 +323,27 @@ window.VAKALAR = [
     ],
 
     // Sonuç ekranındaki kılavuz kartı (QRH tarzı).
+    // Düşünce dolabı (Disco Elysium'un düşünce dolabı gibi): bulgu toplandıkça açılır, oyuncu en fazla 3'ünü dolaba koyar.
+    // acan: herhangi biri görülünce açılır · destek / curutur: görülen kanıt düşünceyi güçlendirir ya da zayıflatır. Puanı etkilemez.
+    // Kanıt anahtarları: soru:<id> · muayene:<id> · sonuc:<tetkik> · gecmis:<id> · vital:<k> · eb:<bölüm> · mudahale:<id>
+    dusunceler: [
+      { id: "iskemi", ad: "Kalp mi sıkışıyor?", tani: "stemi", metin: "Göğüste baskı, sola yayılım, soğuk ter. Kalbin bir bölgesi kansız kalıyor olabilir.",
+        acan: ["soru:nitelik", "soru:yayilim", "soru:eslik"],
+        destek: ["soru:yayilim", "soru:eslik", "sonuc:ekg", "gecmis:soygecmis_kalp", "soru:sigara", "gecmis:enabiz_acil"], curutur: [] },
+      { id: "diseksiyon", ad: "Aort yırtılıyor olabilir mi?", tani: "diseksiyon", metin: "Göğüs ağrısında atlanmaması gereken tehlike: yırtılır gibi, sırta vuran ağrı, kollar arasında nabız farkı.",
+        acan: ["soru:sirt", "soru:nitelik"],
+        destek: [], curutur: ["soru:sirt", "muayene:kvs"] },
+      { id: "pe", ad: "Akciğere pıhtı mı attı?", tani: "pe", metin: "Ani nefes darlığı, düşük satürasyon, uzun yolculuk ya da ameliyat?",
+        acan: ["soru:emboli", "vital:spo2"],
+        destek: [], curutur: ["soru:emboli", "vital:spo2"] },
+      { id: "perikardit", ad: "Kalp zarı mı iltihaplı?", tani: "perikardit", metin: "Nefesle ve pozisyonla değişen ağrı, yaygın ST yükselmesi?",
+        acan: ["soru:pozisyon"],
+        destek: [], curutur: ["soru:pozisyon", "sonuc:ekg"] },
+      { id: "reflu", ad: "Mide mi yanıyor?", tani: "reflu", metin: "Reflüsü varmış. Ama mide ağrısı soğuk ter döktürür mü?",
+        acan: ["gecmis:ozgecmis_reflu", "soru:nitelik"],
+        destek: ["gecmis:ozgecmis_reflu"], curutur: ["soru:eslik", "sonuc:ekg"] }
+    ],
+
     kilavuz: {
       baslik: "Akut anterior STEMI",
       adimlar: [
@@ -499,6 +524,8 @@ window.VAKALAR = [
       antiasit:       { sinif: "gereksiz", yanit: "Antiasit verildi. Ağrı değişmedi.", not: "Ağızdan alım kesilmesi gereken hastada ağızdan ilaç verilmez." },
       pkg:            { sinif: "gereksiz", yanit: "Kardiyoloji: \"Kardiyak bir tablo düşündüren bulgu yok.\"", not: "Kardiyak bir tablo yok; zaman kaybı." },
       gozlem:         { sinif: "gereksiz", yanit: "Hasta gözlem alanına alındı.", not: "Tanı belliyken cerrahi konsültasyon yerine gözlem ameliyatı geciktirir." },
+      aile:           { sinif: "gereksiz", yanit: "Ev arkadaşı burada; evde başka hasta yok." },
+      hbo:            { sinif: "gereksiz", yanit: "Hiperbarik merkez: \"Endikasyon yok.\"" },
       taburcu:        { sinif: "zararli", yanit: "Hasta taburcu edildi.", not: "Akut apandisitli hasta taburcu edilmez; perforasyon riski." }
     },
 
@@ -526,6 +553,25 @@ window.VAKALAR = [
       { id: "kolesistit",    ad: "Akut kolesistit",          not: "Sağ üst kadran ağrısı, Murphy bulgusu ve safra kesesinde duvar kalınlaşması beklenirdi." },
       { id: "lenfadenit",    ad: "Mezenter lenfadenit",      not: "Genellikle çocuk ve gençlerde, çoğu kez üst solunum yolu enfeksiyonu sonrası; USG'de büyümüş lenf nodları ve normal apendiks beklenirdi." },
       { id: "meckel",        ad: "Meckel divertiküliti",     not: "Apandisite benzeyebilir ama nadirdir; burada USG apendiks patolojisini gösterdi." }
+    ],
+
+    // Düşünce dolabı: bulgu toplandıkça açılır, en fazla 3'ü dolaba konur. Puanı etkilemez.
+    dusunceler: [
+      { id: "apandisit", ad: "Apandiks mi iltihaplandı?", tani: "apandisit", metin: "Göbekten başlayıp sağ alta inen ağrı, iştahsızlık. Klasik yolculuk.",
+        acan: ["soru:yer", "muayene:batin"],
+        destek: ["soru:yer", "soru:istah", "muayene:batin", "sonuc:hemogram", "sonuc:crp", "sonuc:rad_usg", "gecmis:ozgecmis_ameliyat"], curutur: [] },
+      { id: "tas", ad: "Böbrek taşı mı düşüyor?", tani: "ureter", metin: "Daha önce taş düşürmüş. Ama taş ağrısı dalga dalga gelir, kasığa vurur.",
+        acan: ["soru:kolik", "soru:idrar", "gecmis:enabiz_bobrek_tasi"],
+        destek: ["gecmis:enabiz_bobrek_tasi"], curutur: ["soru:kolik", "soru:idrar", "sonuc:idrar"] },
+      { id: "enfeksiyon", ad: "Bağırsak enfeksiyonu mu?", tani: "gastroenterit", metin: "Kusma, bulantı... İshal ve aynı yemeği yiyenlerde şikâyet var mı?",
+        acan: ["soru:ishal", "gecmis:sosyal_yemek"],
+        destek: [], curutur: ["soru:ishal", "gecmis:sosyal_yemek"] },
+      { id: "safra", ad: "Safra kesesi mi?", tani: "kolesistit", metin: "Yemekten sonra sağ üstte ağrı olurdu. Bu ağrı nerede?",
+        acan: ["soru:son-yemek", "soru:yer"],
+        destek: [], curutur: ["soru:yer", "muayene:batin"] },
+      { id: "mide", ad: "Midesi mi?", tani: "", metin: "Geçen yıl mide yanması için ilaç almış. Ama ağrı mideden aşağı inmiş.",
+        acan: ["gecmis:ozgecmis_gastrit", "eb:ziyaretler"],
+        destek: ["gecmis:ozgecmis_gastrit"], curutur: ["soru:yer", "muayene:batin"] }
     ],
 
     kilavuz: {
@@ -713,6 +759,8 @@ window.VAKALAR = [
       oral_kes:       { sinif: "notr", yanit: "Ağızdan alım kesildi." },
       pkg:            { sinif: "gereksiz", yanit: "Kardiyoloji: \"Kardiyak bir tablo düşündüren bulgu yok.\"" },
       cerrahi:        { sinif: "gereksiz", yanit: "Genel cerrahi: \"Cerrahi bir sorun yok.\"" },
+      aile:           { sinif: "gereksiz", yanit: "Annesi burada; evde başka hasta yok." },
+      hbo:            { sinif: "gereksiz", yanit: "Hiperbarik merkez: \"Endikasyon yok.\"" },
       taburcu:        { sinif: "zararli", yanit: "Hasta taburcu edildi.", not: "Bifazik reaksiyon riski: anafilaksi sonrası gözlem gerekir, erken taburculuk zararlıdır." }
     },
 
@@ -742,6 +790,25 @@ window.VAKALAR = [
       { id: "yabanci",    ad: "Yabancı cisim aspirasyonu",      not: "Ani öksürük ve boğulma öyküsü beklenirdi; cilt bulgularını açıklamaz." }
     ],
 
+    // Düşünce dolabı: bulgu toplandıkça açılır, en fazla 3'ü dolaba konur. Puanı etkilemez.
+    dusunceler: [
+      { id: "anafilaksi", ad: "Ağır alerjik reaksiyon mu?", tani: "anafilaksi", metin: "Arıdan dakikalar sonra cilt, nefes ve tansiyon birlikte bozuldu.",
+        acan: ["soru:ne-oldu", "soru:belirti", "muayene:cilt"],
+        destek: ["soru:ne-oldu", "muayene:cilt", "vital:ta", "soru:bas-donmesi", "gecmis:ozgecmis_onceki_sokma", "gecmis:sosyal_kovan"], curutur: [] },
+      { id: "astim", ad: "Astım krizi mi?", tani: "astim", metin: "Hırıltı var. Ama astım kurdeşen döktürüp tansiyonu düşürür mü?",
+        acan: ["muayene:solunum", "soru:belirti"],
+        destek: ["muayene:solunum"], curutur: ["soru:astim", "gecmis:ozgecmis_astim", "muayene:cilt"] },
+      { id: "panik", ad: "Panik atak mı?", tani: "panik", metin: "Korkmuş, hızlı soluyor. Ama panik tansiyonu ve satürasyonu düşürmez.",
+        acan: ["soru:panik", "muayene:genel"],
+        destek: [], curutur: ["soru:panik", "vital:ta", "vital:spo2"] },
+      { id: "anjiyoodem", ad: "İlaca bağlı şişlik mi?", tani: "anjiyoodem", metin: "Dudak ve göz kapağı şiş. Tansiyon ilacı (ACE inhibitörü) kullanıyor mu? Kurdeşen var mı?",
+        acan: ["soru:ilac", "muayene:cilt"],
+        destek: [], curutur: ["soru:ilac", "gecmis:ilac_yok", "muayene:cilt"] },
+      { id: "pe", ad: "Akciğere pıhtı mı?", tani: "", metin: "Doğum kontrol hapı kullanıyor, nefesi daralmış. Ama pıhtı kurdeşen yapmaz.",
+        acan: ["gecmis:ilac_oks", "eb:receteler"],
+        destek: ["gecmis:ilac_oks"], curutur: ["muayene:cilt", "soru:ne-oldu"] }
+    ],
+
     kilavuz: {
       baslik: "Anafilaksi",
       adimlar: [
@@ -758,6 +825,232 @@ window.VAKALAR = [
         "IV bolus adrenalin sadece arrestte; arrest dışında IM yol."
       ],
       kaynak: "WAO Anafilaksi Kılavuzu 2020 (Cardona ve ark.) · EAACI Anafilaksi Kılavuzu, 2021 güncellemesi (Muraro ve ark.) · Resuscitation Council UK, 2021"
+    }
+  },
+  /* ===================================================================
+     VAKA 4 · BAŞ AĞRISI (gizli tanı: karbonmonoksit zehirlenmesi, kış gecesi soba)
+     Türkiye'ye özgü vaka. Tuzak: nabız oksimetresi normal görünür; tanı COHb ile konur.
+     =================================================================== */
+  {
+    id: "bas-agrisi",
+    baslik: "Baş ağrısı",
+    sahne: "img/ai/bg-sari-alan.webp",
+    triyaj: "sari",               // doğru triyaj alanı: kirmizi | sari | yesil (hekim onayı)
+    yakin: {
+      ad: "Eşi", portre: "img/ai/yakin-co.webp",
+      olaylar: [
+        { id: "es-co-1", sonraSn: 100,
+          soru: "Hocam... benim de başım zonkluyor. Oğlan da evde kustu, kızım halsiz. Bu ne? Mikrop mu kaptık?",
+          tekrarSoru: "Hocam, başım çatlıyor, ben de oturamıyorum...",
+          secenekler: [
+            { ad: "“Evdeki soba hepinizi zehirlemiş olabilir. Siz de muayene olacaksınız; çocukları hemen getirtelim, evi havalandırsınlar.”", tur: "iyi", sureSn: 30,
+              cevap: "Soba mı?! Tamam hocam, komşuyu arıyorum, çocukları getirsin.", ercan: "İyi yakaladın hocam. Müdahaleden 'evdekileri çağır' emrini de ver, 112 ile ben ilgilenirim." },
+            { ad: "“Mevsim geçişi, grip olmuşsunuzdur. Geçer.”", tur: "kotu", sureSn: 15,
+              cevap: "Grip mi? Hepimiz aynı gece mi?", ercan: "Hocam, aynı gece, aynı ev, herkesin başı ağrıyor... Bunu grip diye geçme." },
+            { ad: "“Siz dışarıda bekleyin, sırası gelince size de bakarız.”", tur: "sert", sureSn: 10,
+              cevap: "Başım çatlıyor ama... tamam.", ercan: "Hocam, adamın da rengi atmış. Bekleme salonunda bayılırsa iki hastamız olur." }
+          ],
+          gormezden: { cevap: "Hocam... başım...", ercan: "Hocam, adamın rengi atmış. Ona da bir bakmamız lazım.", tekrarSn: 120 } }
+      ]
+    },
+    onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
+    hasta: { yas: 41, cinsiyet: "Kadın" },
+    sikayet: "Gece uyandım, başım çatlıyor. Midem bulanıyor, iki kere kustum, başım dönüyor.",
+
+    durumlar: {
+      baslangic: {
+        gorsel: "img/ai/co-1.webp",
+        ton: ["soluk"],
+        gorunus: "Soluk ve uykulu. Elini alnına bastırıyor, kucağında kusma kabı var. Kalın hırkası pijamasının üstünde.",
+        vitaller: { ta: "128/82", nabiz: 112, spo2: 98, solunum: 22, ates: 36.6, seker: 104, gks: 15, ritim: "Sinüs taşikardisi" }
+      },
+      konfuzyon: {
+        gorsel: "img/ai/co-2.webp",
+        ton: ["soluk"],
+        gorunus: "Uykuya kayıyor, sorulara geç ve karışık cevap veriyor. Bir kez daha kustu.",
+        mesaj: "Hastanın durumu kötüleşiyor: bilinci bulanıklaştı.",
+        oykuCevabi: "(Cümleleri karışık, soruyu anlamıyor gibi.) \"Neredeyim... çocuklar nerede?\"",
+        vitaller: { ta: "118/74", nabiz: 124, spo2: 98, solunum: 24, gks: 13 },
+        ceza: { puan: 60, ad: "Bilinç bulanıklaştı (oksijen gecikti)" }
+      },
+      agir: {
+        gorsel: "img/ai/co-2.webp",
+        ton: ["soluk"],
+        gorunus: "Kısa bir kasılma nöbeti geçirdi; şimdi uykulu, ağrılı uyaranla gözünü açıyor.",
+        mesaj: "Hasta nöbet geçirdi.",
+        oykuCevabi: "(Yanıt vermiyor; ağrılı uyaranla inliyor.)",
+        vitaller: { ta: "108/68", nabiz: 132, spo2: 97, solunum: 26, gks: 9 },
+        ceza: { puan: 120, ad: "Nöbet geçirdi (oksijen çok gecikti)" }
+      },
+      duzelme: {
+        gorsel: "img/ai/co-3.webp",
+        ton: ["soluk"],
+        gorunus: "Oksijen maskesiyle daha uyanık. Baş ağrısının azaldığını, bulantısının geçtiğini söylüyor.",
+        mesaj: "Oksijen etkisini gösteriyor: hasta daha uyanık, baş ağrısı azaldı.",
+        iyi: true,
+        vitaller: { nabiz: 98, solunum: 18, gks: 15 }
+      }
+    },
+
+    seyir: [
+      { saatDk: 20, durum: "konfuzyon", onleyen: ["oksijen"] },
+      { saatDk: 45, durum: "agir",      onleyen: ["oksijen"] },
+      { mudahale: "oksijen", sonraDk: 15, durum: "duzelme", sadece: ["baslangic", "konfuzyon"] },
+      { mudahale: "oksijen", sonraDk: 30, durum: "duzelme", sadece: ["agir"] }
+    ],
+
+    oyku: [
+      { id: "baslangic",          soru: "Şikâyetleriniz ne zaman başladı?",                                   cevap: "Akşam yemekten sonra hafif başım ağrıyordu. Gece üçte uyandım, başım çatlıyor. İki kere kustum." },
+      { id: "bas-agrisi-nitelik", soru: "Baş ağrınız nasıl? Birden mi patladı, hayatınızın en şiddetli ağrısı mı?", cevap: "Zonklayan, bütün başımda bir ağrı. Çok kötü ama birden patlamadı, yavaş yavaş arttı." },
+      { id: "evdekiler",          soru: "Evde başka kimsede benzer şikâyet var mı?",                         cevap: "Kocam da başım ağrıyor diyordu. Küçük oğlan da akşam halsizdi, erken yattı." },
+      { id: "isinma",             soru: "Evi neyle ısıtıyorsunuz?",                                           cevap: "Kömür sobası. Akşam doldurup yattık, gece soğuk oluyor." },
+      { id: "disari",             soru: "Evden çıkınca şikâyetleriniz değişti mi?",                          cevap: "Arabaya binince biraz açıldım galiba. Bilmiyorum, çok kötüydüm." },
+      { id: "ates-ense",          soru: "Ateşiniz, ense sertliğiniz, ışıktan rahatsızlık var mı?",            cevap: "Ateşim yok, ensem tutulmadı. Işık biraz rahatsız ediyor ama başım ağrıyınca hep öyle olur." },
+      { id: "migren",             soru: "Daha önce böyle baş ağrılarınız olur mu, migreniniz var mı?",       cevap: "Arada migrenim olur ama bu farklı. Hiç böyle kusturmazdı." },
+      { id: "yemek",              soru: "Akşam ne yediniz? Başkaları da aynı şeyi yedi mi?",                 cevap: "Mercimek çorbası, pilav. Hepimiz aynı şeyi yedik. İshal olmadım." },
+      { id: "gogus-nefes",        soru: "Göğüs ağrısı, çarpıntı ya da nefes darlığı var mı?",                 cevap: "Kalbim çok hızlı atıyor gibi. Göğsümde ağrı yok." },
+      { id: "gebelik",            soru: "Hamilelik ihtimaliniz var mı?",                                      cevap: "Hayır, yok." }
+    ],
+
+    gecmis: [
+      { id: "ozgecmis_migren", kategori: "Özgeçmiş", ad: "Kronik hastalıkları var mı?", ozet: "Migren", kaynak: "hasta", cevap: "Yıllardır migrenim var, ayda bir iki kez olur; ilacı alınca geçer.", onem: "celdirici", not: "Migren öyküsü yeni ve farklı bir baş ağrısını açıklamaz; evdekilerde de benzer şikâyet olması migrenle açıklanmaz (hekim onayı)." },
+      { id: "ilaclar", kategori: "Kullandığı ilaçlar", ad: "Düzenli kullandığı ilaçlar", ozet: "İlaçlar", kaynak: "hasta", cevap: "Migren için ağrı kesici, o kadar.", onem: "notr", not: "" },
+      { id: "sigara", kategori: "Sosyal öykü", ad: "Sigara içiyor mu?", ozet: "Sigara", kaynak: "hasta", cevap: "İçmiyorum. Kocam içer ama balkonda.", onem: "notr", not: "Sigara içenlerde COHb tabanı yüksek olabilir; bu hasta içmiyor, yüksek COHb'yi sigara açıklamaz (hekim onayı)." },
+      { id: "evdekiler_yakin", kategori: "Sosyal öykü", ad: "Evde başka hasta var mı?", ozet: "Evdekilerde de baş ağrısı ve kusma", kaynak: "yakin", cevap: "(Eşi) Benim de başım zonkluyor. Oğlan akşam kustu, kızım da halsiz. Çocukları komşuya bıraktım.", onem: "ipucu", not: "Aynı evde birden fazla kişide eş zamanlı baş ağrısı, bulantı: karbonmonoksit zehirlenmesinin en güçlü klinik ipucu." },
+      { id: "soba_bakim", kategori: "Sosyal öykü", ad: "Ev ve ısınma", ozet: "Eski kömür sobası, temizlenmemiş baca", kaynak: "yakin", cevap: "(Eşi) Soba eski, bacayı bu kış temizletemedik. Dün gece rüzgâr vardı, soba biraz tütüyordu.", onem: "ipucu", not: "Kömür sobası, temizlenmemiş baca ve rüzgârlı gece: CO kaynağı." },
+      { id: "enabiz_onceki_kis", kategori: "e-Nabız", ad: "Önceki acil başvuruları", ozet: "Geçen ocak ailece baş ağrısıyla acil başvurusu", kaynak: "enabiz", cevap: "Geçen ocak: gece baş ağrısı ve bulantıyla acil başvurusu; eşi ve çocuğu da aynı gece başvurmuş. Ağrı kesici verilip taburcu edilmiş.", onem: "ipucu", not: "Kışın tekrarlayan, ailece aynı gece başvurular: atlanmış CO zehirlenmesini düşündürür." },
+      { id: "enabiz_migren", kategori: "e-Nabız", ad: "Poliklinik kayıtları", ozet: "Aurasız migren (nöroloji, 3 yıl önce)", kaynak: "enabiz", cevap: "3 yıl önce nöroloji: aurasız migren. Beyin MR normal.", onem: "notr", not: "Bilinen migren yeni tabloyu açıklamaz." }
+    ],
+
+    enabiz: {
+      ziyaretler: [
+        { tarih: "Geçen ocak", kurum: "Devlet Hastanesi · Acil Servis", tani: "Baş ağrısı (R51)", not: "Gece baş ağrısı ve bulantı. Eşi ve küçük oğlu da aynı gece başvurmuş. Ağrı kesici verildi, taburcu.", gecmisId: "enabiz_onceki_kis" },
+        { tarih: "3 yıl önce", kurum: "Nöroloji Polikliniği", tani: "Aurasız migren (G43.0)", not: "Ayda 1-2 atak. Beyin MR normal.", gecmisId: "enabiz_migren" }
+      ],
+      tahliller: [],
+      receteler: [
+        { tarih: "6 ay önce", ilac: "Naproksen sodyum 550 mg", kullanim: "Gerektiğinde", not: "Migren atakları için.", gecmisId: "enabiz_migren" }
+      ],
+      hastaliklar: [
+        { tani: "Aurasız migren", kod: "G43.0", tarih: "3 yıl önce", gecmisId: "enabiz_migren" }
+      ],
+      alerjiler: [],
+      radyoloji: [
+        { tarih: "3 yıl önce", tetkik: "Beyin MR", rapor: "Normal.", gecmisId: "enabiz_migren" }
+      ]
+    },
+
+    muayene: {
+      genel:     { varsayilan: "Bilinç açık ama uykulu; yavaş yanıt veriyor. Soluk.", konfuzyon: "Uykuya meyilli, yer ve zaman oryantasyonu bozuk.", agir: "Uykulu, ağrılı uyaranla gözünü açıyor; nöbet sonrası durumda.", duzelme: "Bilinç açık, oryante; daha canlı." },
+      kvs:       "Taşikardik, ritmik. Üfürüm yok. Periferik nabızlar dolgun.",
+      solunum:   "Takipneik; solunum sesleri doğal, ral ve ronküs yok.",
+      batin:     "Batın yumuşak, hassasiyet yok. Barsak sesleri normal.",
+      cilt:      "Soluk, hafif terli. Döküntü yok. (Ders kitaplarındaki 'kiraz kırmızısı' renk nadirdir, burada yok.)",
+      norolojik: { varsayilan: "Ense sertliği yok. Pupiller izokorik, ışık refleksi var. Lateralize bulgu yok. Tandem yürüyüşte dengesiz.", konfuzyon: "Konfüze; ense sertliği yok, lateralize bulgu yok.", agir: "Postiktal; lateralize bulgu yok, ense sertliği yok.", duzelme: "Oryante; ense sertliği yok, lateralize bulgu yok." }
+    },
+
+    tetkikler: {
+      ekg:       { sinif: "gerekli", sekil: "sinus-tasikardi", sonuc: "Sinüs taşikardisi, 112/dk. Belirgin iskemik değişiklik yok." },
+      kan_gazi:  { sinif: "zorunlu", sonuc: { varsayilan: "Venöz kan gazı (CO-oksimetri): COHb %28 (yüksek). pH 7,33, laktat 3,4 mmol/L. Nabız oksimetresi bunu göremez: COHb'yi oksijenli hemoglobin sanar.", duzelme: "Venöz kan gazı (CO-oksimetri): COHb %12 (oksijenle düşüyor). Laktat 1,9 mmol/L." } },
+      yb_usg:    { sinif: "notr", sonuc: "Kalp kasılmaları iyi, perikardiyal sıvı yok." },
+      idrar:     { sinif: "notr", sonuc: "Normal. Gebelik testi negatif." },
+      hemogram:  { sinif: "notr", sonuc: "Normal sınırlarda." },
+      biyokimya: { sinif: "notr", sonuc: "Normal; CK hafif yüksek." },
+      crp:       { sinif: "notr", sonuc: "3 mg/L (normal)." },
+      troponin:  { sinif: "gerekli", sonuc: "Hafif yüksek. Karbonmonoksit kalbi de etkileyebilir: monitörde izle, EKG'yi tekrarla." },
+      akc_grafi: { sinif: "notr", sonuc: "Normal." },
+      rad_usg:   { sinif: "gereksiz", sonuc: "Batın USG: olağan.", not: "Tablo karın kaynaklı değil." },
+      bt:        { sinif: "notr", sonuc: "Beyin BT: kanama ya da kitle yok.", not: "Bilinç değişikliğinde ayırıcı tanı için çekilebilir; karbonmonoksit zehirlenmesini göstermez." }
+    },
+    zorunluTetkikler: [
+      { ad: "Kan gazı (COHb)", idler: ["kan_gazi"] }
+    ],
+
+    mudahaleler: {
+      oksijen:        { sinif: "kritik", yanit: "Geri solumasız maskeyle %100 oksijen başlandı (15 L/dk)." },
+      aile:           { sinif: "kritik", yanit: "112 arandı: evdekiler acile getiriliyor; sobanın söndürülmesi ve evin havalandırılması istendi." },
+      hbo:            { sinif: "kritik", yanit: "Hiperbarik oksijen merkeziyle görüşüldü: COHb sonucu ve klinik bilgiler gönderildi, hasta değerlendirmeye kabul edildi.",
+                        gerekenSonuc: "kan_gazi", gerekenYoksa: "Hiperbarik merkez: \"COHb değeri olmadan karar veremeyiz. Kan gazını gönderin.\"" },
+      damar_yolu:     { sinif: "gerekli", yanit: "Damar yolu açıldı." },
+      iv_sivi:        { sinif: "notr", yanit: "Serum fizyolojik başlandı." },
+      oral_kes:       { sinif: "notr", yanit: "Ağızdan alım kesildi." },
+      analjezi:       { sinif: "notr", yanit: "IV analjezik verildi. Baş ağrısı biraz hafifledi.", not: "Belirtiyi hafifletir ama asıl tedavi oksijendir." },
+      gozlem:         { sinif: "notr", yanit: "Gözleme alındı; oksijen sürüyor." },
+      bacak_kaldir:   { sinif: "gereksiz", yanit: "Bacakları kaldırıldı.", not: "Hipotansiyon yok." },
+      aspirin:        { sinif: "gereksiz", yanit: "Aspirin çiğnetildi.", not: "Akut koroner sendrom bulgusu yok." },
+      nitrat:         { sinif: "gereksiz", yanit: "Dil altı nitrat verildi.", not: "Endikasyon yok; baş ağrısını artırabilir." },
+      adrenalin_im:   { sinif: "zararli", yanit: "Adrenalin IM yapıldı. Nabız fırladı.", not: "Endikasyonu olmayan adrenalin zararlıdır." },
+      adrenalin_iv:   { sinif: "zararli", yanit: "Adrenalin IV bolus verildi.", not: "Arrest dışında IV bolus adrenalin zararlıdır." },
+      antihistaminik: { sinif: "gereksiz", yanit: "Antihistaminik verildi. Uykusu arttı.", not: "Endikasyon yok; bilinç değerlendirmesini zorlaştırır." },
+      steroid:        { sinif: "gereksiz", yanit: "Steroid verildi.", not: "Endikasyon yok." },
+      salbutamol:     { sinif: "gereksiz", yanit: "Salbutamol nebül verildi.", not: "Bronkospazm yok." },
+      antibiyotik:    { sinif: "gereksiz", yanit: "IV antibiyotik başlandı.", not: "Ateş ve enfeksiyon bulgusu yok." },
+      antiasit:       { sinif: "gereksiz", yanit: "Antiasit verildi.", not: "Bulantının kaynağı mide değil." },
+      pkg:            { sinif: "gereksiz", yanit: "Kardiyoloji: \"ST elevasyonu yok. Troponin yüksekse monitörde izleyin.\"" },
+      cerrahi:        { sinif: "gereksiz", yanit: "Genel cerrahi: \"Cerrahi bir sorun yok.\"" },
+      taburcu:        { sinif: "zararli", yanit: "Hasta taburcu edildi.", not: "COHb yüksekken ve soba kontrol edilmeden eve göndermek: hasta ve ailesi aynı zehirli ortama döner." }
+    },
+
+    puanlama: {
+      tani: 400,
+      kritikler: [
+        { id: "oksijen",  ad: "%100 oksijen (geri solumasız maske)",  puan: 150, hedefDk: 10, not: "Tanı beklenmeden başlanır; karbonmonoksitin vücuttan atılmasını hızlandırır." },
+        { id: "kan_gazi", ad: "COHb ölçümü (kan gazı, CO-oksimetri)",  puan: 80,  hedefDk: 30, not: "Nabız oksimetresi yanıltır; tanı COHb ile konur." },
+        { id: "aile",     ad: "Evdekileri acile çağırma",              puan: 50,  hedefDk: 60, not: "Aynı evdekiler de zehirleniyor olabilir." },
+        { id: "hbo",      ad: "Hiperbarik oksijen için danışma",        puan: 40,  hedefDk: 90 },
+        { id: "monitor",  ad: "Monitöre bağlandı",                      puan: 30,  hedefDk: 15 }
+      ],
+      hedefler: [
+        { id: "oksijen",  ad: "Oksijen ≤ 10 dk (tanı beklenmeden)", hedefDk: 10, puan: 100, kaynak: "ACEP 2017 · oyun hedefi" },
+        { id: "kan_gazi", ad: "COHb sonucu ≤ 30 dk", hedefDk: 30, puan: 50, kaynak: "oyun hedefi" }
+      ],
+      verimlilik: { puan: 100, maliyetHedef: 600, maliyetSifir: 3000, sureHedefDk: 30, sureSifirDk: 90 }
+    },
+
+    tanilar: [
+      { id: "co",           ad: "Karbonmonoksit zehirlenmesi", dogru: true, not: "Kışın sobalı evde gece başlayan baş ağrısı, bulantı ve baş dönmesi; evdekilerde de benzer şikâyet. SpO₂ normal görünür; tanı CO-oksimetriyle (COHb) konur." },
+      { id: "migren",       ad: "Migren atağı",                 not: "Migreni var ama bu ağrı farklı; evdekilerde de baş ağrısı ve kusma olması migrenle açıklanmaz." },
+      { id: "gastroenterit", ad: "Besin zehirlenmesi",          not: "Aynı yemeği yiyenlerde şikâyet var ama baskın belirti baş ağrısı ve baş dönmesi; ishal yok, COHb yüksek." },
+      { id: "menenjit",     ad: "Menenjit",                     not: "Ateş ve ense sertliği beklenirdi; ikisi de yok." },
+      { id: "sak",          ad: "Subaraknoid kanama",           not: "Ani başlayan, hayatının en şiddetli 'gök gürültüsü' baş ağrısı beklenirdi; ağrı yavaş arttı." },
+      { id: "gerilim",      ad: "Gerilim tipi baş ağrısı",      not: "Kusma, baş dönmesi, taşikardi ve bilinç değişikliği gerilim tipi baş ağrısıyla açıklanmaz." },
+      { id: "viral",        ad: "Grip / viral enfeksiyon",      not: "Ateş ve kas ağrısı beklenirdi; COHb yüksekliğini açıklamaz." }
+    ],
+
+    dusunceler: [
+      { id: "co", ad: "Evde bir zehir mi var?", tani: "co", metin: "Gece, sobalı bir ev, başı ağrıyan bir aile. Baş ağrısının kaynağı hastanın içinde değil, evin havasında olabilir.",
+        acan: ["soru:evdekiler", "soru:isinma", "gecmis:evdekiler_yakin", "gecmis:soba_bakim"],
+        destek: ["soru:evdekiler", "soru:isinma", "soru:disari", "gecmis:soba_bakim", "gecmis:enabiz_onceki_kis", "sonuc:kan_gazi"], curutur: [] },
+      { id: "migren", ad: "Bildiğimiz migren mi?", tani: "migren", metin: "Migreni var. Ama migren evdekilerin de başını ağrıtır mı?",
+        acan: ["soru:migren", "gecmis:ozgecmis_migren", "eb:hastaliklar"],
+        destek: ["gecmis:ozgecmis_migren"], curutur: ["soru:migren", "soru:evdekiler", "sonuc:kan_gazi"] },
+      { id: "menenjit", ad: "Beyin zarı iltihabı mı?", tani: "menenjit", metin: "Baş ağrısı, kusma, ışıktan rahatsızlık. Ateş ve ense sertliği var mı?",
+        acan: ["soru:ates-ense", "muayene:norolojik"],
+        destek: [], curutur: ["soru:ates-ense", "vital:ates", "muayene:norolojik"] },
+      { id: "sak", ad: "Beyinde kanama mı?", tani: "sak", metin: "Hayatının en şiddetli baş ağrısı mı, birden mi patladı?",
+        acan: ["soru:bas-agrisi-nitelik"],
+        destek: [], curutur: ["soru:bas-agrisi-nitelik", "muayene:norolojik"] },
+      { id: "besin", ad: "Yemekten mi zehirlendiler?", tani: "gastroenterit", metin: "Aynı sofradan kalkan bir aile, kusma... Ama ishal nerede?",
+        acan: ["soru:yemek", "gecmis:evdekiler_yakin"],
+        destek: ["soru:yemek"], curutur: ["muayene:batin", "sonuc:kan_gazi"] }
+    ],
+
+    kilavuz: {
+      baslik: "Karbonmonoksit zehirlenmesi",
+      adimlar: [
+        "Şüphelen: kışın, sobalı ya da şofbenli evde gece başlayan baş ağrısı, bulantı, baş dönmesi; evde birden fazla kişide aynı şikâyet.",
+        "Tanı beklenmeden %100 oksijen: geri solumasız maske, 15 L/dk.",
+        "Nabız oksimetresi yanıltır (COHb'yi oksijenli hemoglobin sanar): COHb'yi kan gazında CO-oksimetriyle ölç.",
+        "Monitöre bağla, EKG çek, troponine bak: karbonmonoksit kalbi de etkileyebilir.",
+        "Hiperbarik oksijen için danış: bilinç kaybı ya da değişikliği, nörolojik bulgu, kardiyak iskemi, gebelik, yüksek COHb (ör. > %25).",
+        "Evdekileri de acile çağır; soba ve baca kontrol edilmeden kimseyi aynı eve gönderme."
+      ],
+      kirmiziBayraklar: [
+        "Bilinç bulanıklığı, nöbet, bayılma.",
+        "Göğüs ağrısı, EKG değişikliği, troponin yüksekliği.",
+        "Gebelik: fetüs karbonmonoksitten daha çok etkilenir."
+      ],
+      kaynak: "ACEP Klinik Politikası: karbonmonoksit zehirlenmesi (2017) · UHMS hiperbarik oksijen endikasyonları · hekim onayı bekliyor"
     }
   }
 ];

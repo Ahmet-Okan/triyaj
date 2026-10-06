@@ -38,6 +38,10 @@ window.HEMSIRE = {
       "Hocam, yirmi dört yaşında bir hanım. Bahçede çiçek sularken arı sokmuş, boğazı şişiyor!",
       "Hocam, hızlı! Dudağı şişmiş, hırıltılı soluyor.",
       "Hocam, bu hastayı bekletemeyiz. Gözünün kapağına bak, dudağına bak."
+    ],
+    "bas-agrisi": [
+      "Hocam, kırk bir yaşında bir hanım. Gece başı çatlamış, iki kere kusmuş. Kocası getirdi, onun da rengi pek iyi değil.",
+      "Hocam, baş ağrısı, bulantı, kucağında kusma kabı. Saturasyonu iyi görünüyor ama bende bir tuhaflık var."
     ]
   },
 
@@ -62,6 +66,11 @@ window.HEMSIRE = {
       "Hocam, dudakları mor! Hışırtı çıkarıyor, nefes alamıyor!",
       "Tansiyon yetmiş hocam, hemen bir şey yapmamız lazım!",
       "Saturasyon seksen beş hocam! Boğazını tutuyor!"
+    ],
+    "bas-agrisi": [
+      "Hocam, uykuya kayıyor! Sorulara cevap vermiyor.",
+      "Hocam, kafası karıştı, nerede olduğunu bilmiyor!",
+      "Hocam, kasılıyor! Nöbet!"
     ]
   },
 
@@ -141,6 +150,10 @@ window.HEMSIRE = {
     "nefes-darligi": [
       "Nefesi rahatladı hocam, hırıltı azaldı!",
       "Hocam, konuşabiliyor artık. Ama gözlemden çıkarmayalım."
+    ],
+    "bas-agrisi": [
+      "Hocam, maske işe yaradı. Gözleri açıldı, başı daha az ağrıyormuş.",
+      "Rengi geliyor hocam. Oksijen dediğin böyle bir şey."
     ]
   },
 
@@ -149,13 +162,15 @@ window.HEMSIRE = {
       genel: ["İyi nöbetti hocam.", "Hm. Bu sefer not aldım ama iyi taraftan.", "Hocam, sana bir şey diyeceğim: iyiydin."],
       "gogus-agrisi": ["Hocam, amca kateter laboratuvarına zamanında girdi. Bu iş böyle yapılır."],
       "karin-agrisi": ["Cerrahi aldı hocam. Çocuk patlamadan gitti."],
-      "nefes-darligi": ["Hanım gözlemde hocam. İlk ilaç doğru yerdeydi."]
+      "nefes-darligi": ["Hanım gözlemde hocam. İlk ilaç doğru yerdeydi."],
+      "bas-agrisi": ["Hocam, evdekilerin hepsi geldi, COHb'leri yüksekti. Bir aileyi kurtardın, bunu unutma."]
     },
     kotu: {
       genel: ["Hocam, bu hasta kurtuldu ama biz şanslıydık.", "Bir daha olursa ilk dakikaya bakalım hocam.", "Not aldım hocam. Hepsini."],
       "gogus-agrisi": ["Hocam, amca yetişti ama kalbin bir kısmı geç kaldı."],
       "karin-agrisi": ["Bu kadar beklemek gerekmiyordu hocam."],
-      "nefes-darligi": ["Hanım toparladı ama dudaklar morarırken çok geç kalmıştık."]
+      "nefes-darligi": ["Hanım toparladı ama dudaklar morarırken çok geç kalmıştık."],
+      "bas-agrisi": ["Hanım toparladı ama evdekileri düşünmeden olmazdı hocam. Soba hâlâ yanıyor olabilir."]
     },
     kayip: {
       genel: ["Hocam.", "Bu iş bazen böyle olur hocam. Ama bazen olmazdı.", "Yirmi bir yıldır bu kapıdan giriyorum. Alışılmıyor."],
@@ -182,6 +197,11 @@ window.HEMSIRE = {
       "Hocam, arı sokması, şişen dudak, hırıltı, düşük tansiyon. Bu hasta dakikalarla yarışıyor, tetkik bekleme.",
       "İlk ilaç adrenalin: 0,5 mg, kas içine, uyluğun dış yanına. Damardan değil.",
       "Adrenalinden sonra oksijen ver, yatırıp bacaklarını kaldır, damar yolu açıp sıvı ver. Antihistaminik en sona. Sonra gözleme al; reaksiyon geri dönebilir."
+    ],
+    "bas-agrisi": [
+      "Hocam, kış gecesi, aynı evden gelen, başı ağrıyan bir aile... Evin nasıl ısındığını sor.",
+      "Saturasyonun yüzde doksan sekiz olmasına aldanma. Nabız oksimetresi karbonmonoksiti ayırt edemez; kan gazında COHb'ye bak.",
+      "Açık konuşayım: geri solumasız maskeyle yüzde yüz oksijen, kan gazında COHb, monitör. Evdekileri acile çağır. COHb yüksekse hiperbarik merkeze danış."
     ]
   },
   // Doğru hamlelerin arasında araya giren espriler (vaka başına en fazla iki)
@@ -239,6 +259,20 @@ window.HEMSIRE = {
         secenekler: [
           { ad: "Yatır, bacaklarını kaldır", eylem: "mudahale:bacak_kaldir", hemsire: "Yatırıyorum hocam. Bacaklarını da kaldırdım." },
           { ad: "Oturt", eylem: null, hemsire: "Oturtuyorum hocam. Ama tansiyon bu kadar düşükken dik oturtmak iyi olmaz, bir daha düşün." }
+        ] }
+    ],
+    "bas-agrisi": [
+      { id: "co-oksijen", sonraSn: 150, yoksa: "mudahale:oksijen", tekrarSn: 240,
+        soru: "Hocam, saturasyonu doksan sekiz görünüyor ama bu hanımın hâli içime sinmedi. Maske takayım mı?",
+        secenekler: [
+          { ad: "%100 oksijen tak", eylem: "mudahale:oksijen", hemsire: "Takıyorum hocam: geri solumasız, on beş litre." },
+          { ad: "Gerek yok, saturasyon iyi", eylem: null, hemsire: "Sen bilirsin hocam. Ama saturasyon her zaman doğruyu söylemez." }
+        ] },
+      { id: "co-gaz", sonraSn: 480, yoksa: "tetkik:kan_gazi", tekrarSn: 300,
+        soru: "Hocam, kan gazı alayım mı? Makinemiz karbonmonoksiti de ölçüyor.",
+        secenekler: [
+          { ad: "Al, COHb'ye bak", eylem: "tetkik:kan_gazi", hemsire: "Alıyorum hocam, beş dakikaya sonuç elinde." },
+          { ad: "Şimdilik gerek yok", eylem: null, hemsire: "Peki hocam." }
         ] }
     ]
   }

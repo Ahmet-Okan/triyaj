@@ -1,6 +1,6 @@
 // Triyaj servis çalışanı: oyunu çevrimdışı da çalıştırır (önce ağ, ağ yoksa önbellek).
 // Dosya eklenince ya da değişince SURUM'u artır ki telefonlar yeni sürümü alsın.
-var SURUM = "triyaj-20261006-180401";
+var SURUM = "triyaj-20261006-183312";
 var DOSYALAR = [
   "./", "./index.html", "./vakalar.js", "./hemsire.js", "./manifest.webmanifest",
   "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png",
@@ -8,6 +8,7 @@ var DOSYALAR = [
   "./img/ai/nefes-1.webp", "./img/ai/nefes-2.webp", "./img/ai/nefes-3.webp",
   "./img/ai/hemsire.webp", "./img/ai/hemsire-kizgin.webp",
   "./img/ai/yakin-gogus.webp", "./img/ai/yakin-karin.webp", "./img/ai/yakin-nefes.webp",
+  "./img/ai/co-1.webp", "./img/ai/co-2.webp", "./img/ai/co-3.webp", "./img/ai/yakin-co.webp",
   "./img/ai/bg-kirmizi-alan.webp", "./img/ai/bg-sari-alan.webp", "./img/ai/bg-triaj-girisi.webp"
 ];
 
