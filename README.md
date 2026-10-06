@@ -15,6 +15,8 @@ HASAT 2026 (Teknopark İstanbul) başvurusu için geliştirildi.
 - Hasta geçmişi (hastaya ve yakınına sorma) ve e-Nabız penceresi
 - Kıdemli hemşire Ercan Abi: tepki, ipucu, etkileşimli sorular
 - Hasta yakını baskını: üç cevap ya da görmezden gelmek
+- Paradox oyunlarından öğrenilenler: iç içe terim ipuçları (tıbbi terimin üstüne gelince açıklama, açıklamanın içindeki terim de açılır), üst çubukta uyarılar, kısayollar (1-6, N, Space), duraklatma, kütüphane (terimler, kılavuz kartları), rozetler
+- Ses: müzik ve acil servis ortam sesi (Higgsfield ile üretildi), saturasyona göre perdesi değişen monitör bipi ve alarmlar (WebAudio)
 - Ayırıcı tanı dolabı: bulgular "düşünce" olarak açılır, oyuncu en fazla 3'ünü dolaba koyar; kanıt geldikçe düşünce güçlenir ya da zayıflar (Disco Elysium'un düşünce dolabından esinlenildi)
 - Sonuç ekranı: puan kırılımı, senin yolun ile ideal yol, kılavuz kartı, paylaşım metni
 
