@@ -120,6 +120,26 @@ window.VAKALAR = [
     id: "gogus-agrisi",
     baslik: "Göğüs ağrısı",                 // giriş kartında görünür, tanıyı vermez
     sahne: "img/ai/bg-kirmizi-alan.webp",                 // PC sürümünde sahnenin arka planı
+    triyaj: "kirmizi",               // doğru triyaj alanı: kirmizi | sari | yesil (hekim onayı)
+    // Hasta yakını: belli bir anda bütün ekranı kaplar, soru sorar. 3 cevap + görmezden gel. Puanı etkilemez, sonuçta "İletişim" olarak görünür.
+    // tur: iyi (dürüst ve net) | kotu (boş güvence) | sert. sureSn: cevabın vaka saatinden yediği süre.
+    yakin: {
+      ad: "Eşi", portre: "img/ai/yakin-gogus.webp",
+      olaylar: [
+        { id: "es-1", sonraSn: 150,
+          soru: "Hocam! Kocam ne olacak? Kalp krizi mi geçiriyor? Bir şey söyleyin!",
+          tekrarSoru: "Hocam, bana bakın! Kocam içeride, kimse bir şey söylemiyor!",
+          secenekler: [
+            { ad: "“Kalbiyle ilgili ciddi bir durum olabilir. Tetkiklerini yapıyoruz, tedaviye başladık. Bir gelişme olunca size hemen söyleyeceğim.”", tur: "iyi", sureSn: 30,
+              cevap: "Tamam hocam... Tamam. Ben buradayım, ne lazımsa.", ercan: "Güzel konuştun hocam. Kısa, net, dürüst." },
+            { ad: "“Merak etmeyin, bir şeyi yok. Mideden olabilir.”", tur: "kotu", sureSn: 15,
+              cevap: "Mide mi? Ama eli hep göğsünde... Peki, siz bilirsiniz.", ercan: "Hocam, emin olmadığın şeyi söyleme. Kadın sonra bize hesap sorar." },
+            { ad: "“Şu an çok meşgulüm, lütfen dışarıda bekleyin.”", tur: "sert", sureSn: 10,
+              cevap: "Dışarıda mı? Kocam içeride ölüyor!", ercan: "Hocam, bir cümle de olsa bilgi ver. Korkan insan kapıda bekleyemez." }
+          ],
+          gormezden: { cevap: "Hocam! Bana bakın! Hocam!", ercan: "Hocam, kadına bir dakika ver, yoksa güvenliği çağırmak zorunda kalacağım.", tekrarSn: 120 } }
+      ]
+    },
     onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
     hasta: { yas: 58, cinsiyet: "Erkek" },
     sikayet: "Yarım saattir göğsümün ortasında bir baskı var, sol koluma vuruyor.",
@@ -325,6 +345,25 @@ window.VAKALAR = [
     id: "karin-agrisi",
     baslik: "Karın ağrısı",
     sahne: "img/ai/bg-sari-alan.webp",                 // PC sürümünde sahnenin arka planı
+    triyaj: "sari",               // doğru triyaj alanı: kirmizi | sari | yesil (hekim onayı)
+    // Hasta yakını: belli bir anda bütün ekranı kaplar, soru sorar. 3 cevap + görmezden gel. Puanı etkilemez.
+    yakin: {
+      ad: "Ev arkadaşı", portre: "img/ai/yakin-karin.webp",
+      olaylar: [
+        { id: "arkadas-1", sonraSn: 120,
+          soru: "Hocam, triyajda bir saat bekledik zaten! Çocuk kıvranıyor, ne zaman bir şey yapacaksınız?",
+          tekrarSoru: "Hocam, size diyorum! Bu ne biçim acil ya?",
+          secenekler: [
+            { ad: "“Arkadaşınla şu an ilgileniyorum. Muayene ediyorum, tahlillerini istiyorum, ağrısı için de ilaç vereceğiz. Sonuçlar gelince seni bilgilendireceğim.”", tur: "iyi", sureSn: 25,
+              cevap: "Tamam hocam, kusura bakmayın. Çok korktum.", ercan: "Hocam, ağrı kesici dedin; sözünü tut, unutma." },
+            { ad: "“Önemli bir şey değil, gaz sancısıdır. Rahat ol.”", tur: "kotu", sureSn: 15,
+              cevap: "Gaz mı? Dünden beri kıvranıyor...", ercan: "Hocam, muayene bitmeden 'önemli değil' deme." },
+            { ad: "“Burası acil, sırayla bakıyoruz. Dışarı çık.”", tur: "sert", sureSn: 10,
+              cevap: "Bu ne biçim hastane ya! Şikâyet edeceğim!", ercan: "Hocam, sesini yükseltene sesini yükseltme. İki cümle bilgi, sorun biter." }
+          ],
+          gormezden: { cevap: "Hocam! Hocam, size diyorum!", ercan: "Hocam, çocuk sinirlendi. Bir dakikanı ver, yoksa iş büyür.", tekrarSn: 120 } }
+      ]
+    },
     onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
     hasta: { yas: 28, cinsiyet: "Erkek" },
     sikayet: "Dünden beri karnım ağrıyor, şimdi sağ tarafıma vurdu.",
@@ -515,6 +554,25 @@ window.VAKALAR = [
     id: "nefes-darligi",
     baslik: "Nefes darlığı",
     sahne: "img/ai/bg-kirmizi-alan.webp",                 // PC sürümünde sahnenin arka planı
+    triyaj: "kirmizi",               // doğru triyaj alanı: kirmizi | sari | yesil (hekim onayı)
+    // Hasta yakını: belli bir anda bütün ekranı kaplar, soru sorar. 3 cevap + görmezden gel. Puanı etkilemez.
+    yakin: {
+      ad: "Annesi", portre: "img/ai/yakin-nefes.webp",
+      olaylar: [
+        { id: "anne-1", sonraSn: 75,
+          soru: "Kızım nefes alamıyor! Bir şey yapın! Ölecek mi?!",
+          tekrarSoru: "Hocam, kızım! Lütfen!",
+          secenekler: [
+            { ad: "“Ağır bir alerjik reaksiyon. İlacını hemen yapıyoruz. Yanında kalabilirsiniz, ama bize alan bırakın.”", tur: "iyi", sureSn: 15,
+              cevap: "Tamam... tamam. Kızım, buradayım annecim.", ercan: "Doğru. Anneyi yanında tut, hasta sakinleşir." },
+            { ad: "“Sakin olun, basit bir arı sokması, geçer.”", tur: "kotu", sureSn: 10,
+              cevap: "Basit mi? Dudakları morarıyor!", ercan: "Hocam, buna basit denmez. Anneyi de kandırma, kendini de." },
+            { ad: "“Lütfen çıkın, çalışamıyorum!”", tur: "sert", sureSn: 10,
+              cevap: "Bırakmam onu!", ercan: "Hocam, kadını kapıya ben götürürüm, sen hastaya dön. Ama bir cümle bilgi verseydin kendisi çıkardı." }
+          ],
+          gormezden: { cevap: "Hocam! Kızım!", ercan: "Hocam, anneye bir cümle, sonra hastaya dön.", tekrarSn: 90 } }
+      ]
+    },
     onay: { durum: "DEMO — hekim onayı bekliyor", dogrulayan: "", tarih: "" },
     hasta: { yas: 24, cinsiyet: "Kadın" },
     sikayet: "Bahçede arı soktu, nefesim daralıyor, boğazım şişiyor gibi.",
