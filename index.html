@@ -742,6 +742,32 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 .rozet-kart.acik b{color:var(--kehribar)}
 .rozet-kart.yeni{box-shadow:0 0 0 1px var(--kehribar),0 0 24px rgba(209,160,74,.3)}
 
+/* ===== Serbest soru ===== */
+.serbest{display:flex;gap:6px;margin-bottom:14px;min-width:0}
+.sekme-ic{grid-template-columns:minmax(0,1fr)}
+.serbest input{flex:1 1 0;width:10px;min-width:0;min-height:46px;padding:10px 12px;background:#0b0a09;border:1px solid var(--cizgi-2);color:var(--beyaz);font:15px var(--f-govde)}
+.serbest input:focus{outline:2px solid var(--secim);outline-offset:0;border-color:var(--secim)}
+.serbest input::placeholder{color:#6f695d;font-style:italic}
+.ss-cevap{display:grid;gap:6px;margin:-4px 0 14px;padding:10px 12px;border-left:3px solid var(--kehribar);background:linear-gradient(90deg,rgba(209,160,74,.12),transparent 85%)}
+.ss-oneri{margin:-4px 0 14px;padding:10px 12px;border:1px dashed var(--cizgi-2)}
+.ss-oneri p{font:italic 14px var(--f-govde);color:var(--soluk);margin-bottom:4px}
+.ss-anlamadi{margin:-4px 0 14px;font-size:15px}
+/* ===== Rehber ===== */
+.rehber{position:fixed;z-index:85;display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;width:min(440px,calc(100vw - 24px));padding:12px 14px;background:#0b0a09;border:1px solid #3d6a63;border-top:3px solid #8fd3c7;box-shadow:0 18px 50px rgba(0,0,0,.75)}
+.rehber img{width:64px;aspect-ratio:3/4;object-fit:cover;border:1px solid #5a534a}
+.rehber-adim{font:600 12px var(--f-baslik);letter-spacing:.16em;text-transform:uppercase;color:#8fd3c7;margin-bottom:4px}
+.rehber-btn{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.rehber-hedef{outline:2px solid #8fd3c7!important;outline-offset:3px;box-shadow:0 0 0 6px rgba(143,211,199,.15),0 0 40px rgba(143,211,199,.25)!important;position:relative;z-index:2}
+/* ===== Günün vakası ve düello ===== */
+.vk-demo.gunun{color:#0b0a09;background:var(--kehribar);letter-spacing:.1em}
+.giris-ayar{display:flex;gap:6px;flex-wrap:wrap}
+.duello-bant{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 16px;align-items:center;padding:14px 16px;border:1px solid var(--secim);background:linear-gradient(90deg,rgba(232,96,58,.16),rgba(10,10,9,.7) 80%)}
+.duello-bant b{font:700 15px var(--f-baslik);letter-spacing:.18em;text-transform:uppercase;color:var(--secim)}
+.duello-bant strong{color:var(--beyaz);font-size:18px}
+@media (max-width:600px){ .duello-bant{grid-template-columns:1fr} }
+.duello-sonuc{font:700 18px var(--f-baslik);letter-spacing:.1em;text-transform:uppercase}
+.duello-sonuc.ok{color:var(--iyi)} .duello-sonuc.kotu{color:var(--kotu)} .duello-sonuc.esit{color:var(--uyari)}
+
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .ecg path{stroke-dashoffset:0}
@@ -757,6 +783,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 <script src="vakalar.js" charset="utf-8"></script>
 <script src="hemsire.js" charset="utf-8"></script>
 <script src="terimler.js" charset="utf-8"></script>
+<script src="ses/ercan/harita.js" charset="utf-8"></script>
 
 <!-- =====================================================================
      MOTOR · oyun mantığı. Saf fonksiyonlar, DOM yok.
@@ -918,6 +945,71 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     return s;
   }
   var BITTI = { ok: false, neden: "bitti" };
+
+  /* ---------- serbest soru eşleştirme (çevrimdışı, yapay zekâ yok) ----------
+     Öğrencinin yazdığı soruyu vakadaki hazır sorulardan (öykü + hastaya/yakına sorulan geçmiş) en uygununa eşler.
+     Türkçe ekler kaba biçimde atılır (ilk 4 harf kök), eş anlamlılar kavrama çevrilir, nadir kelime daha çok puan alır.
+     Cevaplar her zaman vakadaki hazır, onaylı metinlerdir; sistem cevap uydurmaz. */
+  var SS_DUR = {};
+  ("ne mi mı mu mü var yok bir ve ya da de ki siz sizin size sen senin misiniz mısınız musunuz müsünüz miydi mıydı mısın misin musun müsün " +
+   "bu şu o çok hiç daha gibi için ile hocam peki acaba herhangi bana söyler söyle anlatır anlat şey şimdi oldu olur olduğu oluyor " +
+   "neler nedir nasılsınız lütfen merhaba iyi akşamlar olan").split(" ").forEach(function (w) { SS_DUR[ssNorm(w)] = 1; });
+  function ssNorm(x) {
+    return String(x).toLocaleLowerCase("tr").replace(/i̇/g, "i").replace(/ç/g, "c").replace(/ş/g, "s").replace(/ğ/g, "g")
+      .replace(/ı/g, "i").replace(/ö/g, "o").replace(/ü/g, "u").replace(/â/g, "a").replace(/î/g, "i");
+  }
+  var SS_ES = [
+    ["ZAMAN", "zaman saat saattir gun gundur dakika basladi baslangic sure suredir once kac sabah aksam dun gece ne_zaman"],
+    ["AGRI", "agri agriyor sanci sizi aci aciyor"],
+    ["YAYIL", "yayiliyor yayilim vuruyor gidiyor kola kolu kolum sirt sirtiniza cene omuz kasik kasiga"],
+    ["NITELIK", "nasil tarif nitelik tur benziyor baski sikisma batma yanma zonklama"],
+    ["ESLIK", "terleme terliyor bulanti kusma kustu eslik"],
+    ["NEFES", "nefes soluk daralma bogulma"],
+    ["POZ", "pozisyon yatinca oturunca kalkinca degisiyor"],
+    ["HASTALIK", "hastalik hasta kronik tansiyon seker diyabet kalp sorun"],
+    ["ILAC", "ilac hap kullandiginiz kullaniyor recete"],
+    ["ALERJI", "alerji alerjik kasinti"],
+    ["SIGARA", "sigara alkol icki"],
+    ["AILE", "aile ailede anne baba kardes akraba soygecmis"],
+    ["ATES", "ates titreme usume"],
+    ["ISHAL", "ishal tuvalet diski kabizlik"],
+    ["IDRAR", "idrar ciş cis"],
+    ["GEBELIK", "gebe gebelik hamile hamilelik adet regl"],
+    ["YEMEK", "yemek yedi yediniz istah icti"],
+    ["ISINMA", "isinma isitiyor isitma soba kalorifer sofben komur"],
+    ["EV", "evde ev evdeki baska kimse"],
+    ["SOKMA", "ari sokma soktu bocek"],
+    ["AMELIYAT", "ameliyat operasyon"],
+    ["BAYILMA", "bayilma bayilacak dondu donuyor donmesi karariyor"]
+  ];
+  var SS_KAVRAM = {};
+  SS_ES.forEach(function (g) { g[1].split(" ").forEach(function (w) { SS_KAVRAM[ssNorm(w).replace(/_/g, " ").slice(0, 4)] = g[0]; }); });
+  function ssJeton(metin) {
+    var j = {};
+    ssNorm(metin).replace(/ne zaman/g, "ne_zaman").split(/[^a-z0-9_]+/).forEach(function (w) {
+      if (w.length < 2 || SS_DUR[w]) return;
+      var k = w.replace(/_/g, " ").slice(0, 4); j[k] = 1;
+      if (SS_KAVRAM[k]) j[SS_KAVRAM[k]] = 1;
+    });
+    return j;
+  }
+  // Sıralı eşleşmeler: [{ tip: "soru" | "gecmis", id, metin, puan }]
+  function soruEsle(vaka, metin) {
+    var aday = [];
+    vaka.oyku.forEach(function (q) { aday.push({ tip: "soru", id: q.id, metin: q.soru, j: ssJeton(q.soru + " " + (q.anahtar || "")) }); });
+    (vaka.gecmis || []).forEach(function (g) {
+      if (g.kaynak === "enabiz") return;
+      aday.push({ tip: "gecmis", id: g.id, metin: g.ad, j: ssJeton(g.ad + " " + (g.ozet || "") + " " + (g.anahtar || "")) });
+    });
+    var df = {}, N = aday.length;
+    aday.forEach(function (a) { for (var t in a.j) df[t] = (df[t] || 0) + 1; });
+    var u = ssJeton(metin);
+    return aday.map(function (a) {
+      var p = 0, n = Object.keys(a.j).length || 1;
+      for (var t in u) if (a.j[t]) p += Math.log(1 + N / df[t]);
+      return { tip: a.tip, id: a.id, metin: a.metin, puan: p / Math.sqrt(n) };
+    }).sort(function (x, y) { return (y.puan - x.puan) || (x.tip === "soru" ? -1 : 1); });
+  }
 
   /* ---------- işlemler ---------- */
   function vitalOlc(s, id) {
@@ -1200,7 +1292,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 
   root.TriyajMotor = {
     yeniOyun: yeniOyun, ilerlet: ilerlet, vitalOlc: vitalOlc, monitoreBagla: monitoreBagla,
-    soruSor: soruSor, gecmisBak: gecmisBak, enabizAc: enabizAc, enabizBolum: enabizBolum, ENABIZ_BOLUM: ENABIZ_BOLUM, KAYNAK_AD: KAYNAK_AD, muayeneEt: muayeneEt, tetkikIste: tetkikIste, mudahaleYap: mudahaleYap,
+    soruSor: soruSor, soruEsle: soruEsle, gecmisBak: gecmisBak, enabizAc: enabizAc, enabizBolum: enabizBolum, ENABIZ_BOLUM: ENABIZ_BOLUM, KAYNAK_AD: KAYNAK_AD, muayeneEt: muayeneEt, tetkikIste: tetkikIste, mudahaleYap: mudahaleYap,
     taburcuEt: taburcuEt, bekleSonuc: bekleSonuc, bekle: bekle, bitir: bitir, puanla: puanla,
     paylasimMetni: paylasimMetni, durumAt: durumAt, sonrakiDegisim: sonrakiDegisim,
     anlikVitaller: anlikVitaller, bekleyenler: bekleyenler, tetkikBilgisi: tetkikBilgisi,
@@ -1353,9 +1445,18 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function sesSahne(ad) {
     SES.sahne = ad || SES.sahne;
     var t = SAHNE_SES[SES.sahne]; if (!t) return;
-    Object.keys(t).forEach(function (k) { var h = SES.acik ? t[k] * (SES.kisik ? (k === "ortam" ? .45 : .35) : 1) : 0; if (h > 0 || SES[k + "A"]) sesSeviye(k, h, ad ? 900 : 300); });
+    Object.keys(t).forEach(function (k) { var h = SES.acik ? t[k] * (SES.kisik ? (k === "ortam" ? .45 : .35) : SES.konusma ? (k === "muzik" ? .45 : .75) : 1) : 0; if (h > 0 || SES[k + "A"]) sesSeviye(k, h, ad ? 900 : 300); });
   }
   function sesKis(k) { SES.kisik = k; sesSahne(); }
+  // Ercan Abi seslendirmesi (edge-tts, ses/ercan/): replik metni → mp3. Konuşurken müzik kısılır; üst üste gelirse sıraya girer.
+  var ERCAN = window.ERCAN_SES || {}, ercanKuyruk = [], ercanCalan = null;
+  function ercanSes(metin) {
+    if (!SES.acik || !metin || !ERCAN[metin]) return;
+    if (ercanCalan) { ercanKuyruk = [metin]; return; }
+    var a = new Audio(ERCAN[metin]); a.volume = 1; ercanCalan = a; SES.konusma = true; sesSahne();
+    a.onended = a.onerror = function () { ercanCalan = null; if (ercanKuyruk.length) ercanSes(ercanKuyruk.shift()); else { SES.konusma = false; sesSahne(); } };
+    var p = a.play(); if (p && p.catch) p.catch(function () { ercanCalan = null; SES.konusma = false; });
+  }
   function sesDegistir() {
     SES.acik = !SES.acik;
     try { localStorage.setItem("triyaj-ses", SES.acik ? "1" : "0"); } catch (e) { /* yok say */ }
@@ -1363,6 +1464,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     sesSahne();
     var b = $("sesBtn"); if (b) { b.setAttribute("aria-pressed", SES.acik); b.textContent = SES.acik ? "♪ Ses" : "♪ Kapalı"; }
   }
+  function rehberEtiket() { return ui.rehberIste ? "Rehber: açık" : "Rehber: kapalı"; }
   function sesEtiket() { return SES.acik ? "♪ Ses açık" : "♪ Ses kapalı"; }
   function ton(f, sure, tip, vol, gec, f2) {
     var c = SES.acik && sesCtx(); if (!c) return;
@@ -1528,6 +1630,31 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     }
     return h + "</section>";
   }
+  // Günün vakası (İstanbul saatiyle her gün başka vaka) ve düello bağlantısı (?duello=vakaId.skor)
+  function gununVakasi() { return V[Math.floor((Date.now() + 3 * 3600000) / 86400000) % V.length].id; }
+  var DUELLO = (function () {
+    try {
+      var q = new URLSearchParams(location.search).get("duello"); if (!q) return null;
+      var p = q.split("."), v = bul(V, p[0]), sk = parseInt(p[1], 10);
+      return v && sk >= 0 && sk <= 1000 ? { id: v.id, skor: sk } : null;
+    } catch (e) { return null; }
+  })();
+  function duelloHTML() {
+    if (!DUELLO) return "";
+    var v = bul(V, DUELLO.id);
+    return '<div class="duello-bant"><b>Meydan okuma</b><p>Bir arkadaşın <em>' + esc(v.baslik) + "</em> vakasını <strong>" + DUELLO.skor + "</strong> puanla bitirdi. Geçebilir misin?</p>" +
+      '<button class="btn" type="button" data-act="baslat" data-id="' + esc(v.id) + '" data-k="duello-kabul">Kabul et</button></div>';
+  }
+  function meydanOku() {
+    var s = ui.s, p = ui.p; if (!s || !p) return;
+    var url = location.origin + location.pathname + "?duello=" + ui.vaka.id + "." + p.toplam;
+    var metin = (ui.vaka.id === gununVakasi() ? "Günün vakası · " : "") + M.paylasimMetni(s, p) + "\nBenden iyi yapabilir misin?";
+    var b = $("meydanBtn");
+    if (navigator.share) { navigator.share({ title: "Triyaj", text: metin, url: url }).catch(function () {}); return; }
+    var hepsi = metin + "\n" + url;
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(hepsi).then(function () { if (b) b.textContent = "Bağlantı kopyalandı"; });
+    else if (b) b.textContent = url;
+  }
   function geceSaati() { var dk = 60 + Math.floor(Math.random() * 240); return "0" + Math.floor(dk / 60) + "." + ("0" + (dk % 60)).slice(-2); }
 
   var GIRIS_SESLER = [
@@ -1542,7 +1669,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       var e = enIyiOku(v.id), b = (v.durumlar && v.durumlar.baslangic) || {};
       var resim = (b.gorsel && !basarisizGorsel[b.gorsel]) ? '<img src="' + esc(b.gorsel) + '" alt="" decoding="async">' : "";
       return '<button class="vkart" type="button" data-act="baslat" data-id="' + esc(v.id) + '" data-k="baslat-' + esc(v.id) + '">' +
-        '<span class="vk-gorsel">' + siluet(b.ton) + resim + '<span class="vk-demo" aria-hidden="true">Demo</span>' +
+        '<span class="vk-gorsel">' + siluet(b.ton) + resim + (v.id === gununVakasi() ? '<span class="vk-demo gunun">Günün vakası</span>' : '<span class="vk-demo" aria-hidden="true">Demo</span>') +
           '<span class="vk-skor' + (e == null ? " bos" : "") + '" aria-hidden="true">' + (e == null ? "—" : e) + "</span></span>" +
         '<span class="vk-yazi"><span class="vk-ad">' + esc(v.baslik) + '</span><span class="vk-alt">' + esc(v.hasta.cinsiyet) + " · " + esc(v.hasta.yas) + " yaş</span></span>" +
         '<span class="sr">' + (e == null ? "Henüz oynanmadı." : "En iyi skor " + e + " / 1000.") + " Vakayı başlat.</span>" +
@@ -1557,9 +1684,11 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         "<h1>TRİY<span>A</span>J</h1>" +
         '<p class="tez">Pilotlar simülatörde prova eder. Tıp öğrencisinin provası Triyaj.</p>' +
         '<p class="meta">Hasta kapıdan girer, gerisi senin kararın.</p>' +
-        '<button class="btn ikincil kucuk ses-ac" type="button" data-act="ses" data-k="ses-giris">' + sesEtiket() + "</button>" +
+        '<div class="giris-ayar"><button class="btn ikincil kucuk ses-ac" type="button" data-act="ses" data-k="ses-giris">' + sesEtiket() + "</button>" +
+        '<button class="btn ikincil kucuk" type="button" data-act="rehber" data-k="rehber-giris">' + rehberEtiket() + "</button></div>" +
         '<svg class="ecg" viewBox="0 0 900 46" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 H150 L165 30 L172 22 L180 30 H230 L240 34 L250 4 L262 42 L272 30 H330 L350 22 L372 30 H520 L535 30 L542 22 L550 30 H600 L610 34 L620 4 L632 42 L642 30 H700 L720 22 L742 30 H900"/></svg>' +
       "</header>" +
+      duelloHTML() +
       '<section aria-labelledby="h-vakalar"><div class="bolum-bas"><h2 id="h-vakalar">Bir hasta seç</h2><small>' + V.length + " vaka</small></div>" +
         '<div class="kartlar">' + kartlar + "</div>" +
         '<p class="ipucu">Köşedeki sayı en iyi skorun. Vakalar hekim onayı bekliyor.</p></section>' +
@@ -1568,7 +1697,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     "</main>";
   }
   function girise() {
-    sinemaTemizle(); yakinKapat(); ui.intro = false;
+    sinemaTemizle(); yakinKapat(); rehberBitir(false); ui.intro = false;
     document.body.classList.remove("intro", "intro-portre");
     ui.ekran = "giris"; ui.s = null;
     document.body.classList.add("giris-modu");
@@ -1589,7 +1718,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     ui.bildirim = null; ui.bildirimBitis = 0;
     ui.enabiz = { acik: false, bolum: "ziyaretler" }; ui.gunlukFiltre = "onemli";
     ui.dolap = { acik: {}, yer: [], yeni: 0 };
-    ui.duraklat = false; ui.duraklatSay = 0; ui.sesBakilan = 0; ui.yeniRozet = null;
+    ui.duraklat = false; ui.duraklatSay = 0; ui.sesBakilan = 0; ui.yeniRozet = null; ui.rehberAdim = null;
+    ui.ssOneri = null; ui.ssAnlamadi = false; ui.ssSon = null; ui.ssMetin = ""; ui.ssSoru = "";
     ui.yakinOfset = Math.round(Math.random() * 50) - 20; // her oyunda yakın biraz farklı anda gelir
     ui.bilgiAcik = false; ui.sonResim = null; ui.gecisBitis = 0; ui.flashSahne = 0; ui.triyaj = null; ui.yakin = {}; ui.yakinAcik = null; ui.iletisim = [];
     ui.hms = { bakilan: 0, say: {}, tohum: Math.floor(Math.random() * 6), tetkik: {}, sonuc: {}, yapilan: {}, kritik: {}, etk: {},
@@ -1690,6 +1820,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   function sinemaAsama(n, atla) {
     var el = $("sinema"); if (!el || ui.snAsama >= n) return;
     if (atla) { snZaman.forEach(clearTimeout); snZaman = []; var y = el.querySelector(".sn-yaz"); if (y) y.textContent = ui.vaka.sikayet; }
+    if (n >= 5 && ui.snAsama < 5 && ui.hms) ercanSes(ui.hms.son);
     ui.snAsama = n;
     for (var i = 1; i <= n; i++) el.classList.add("s" + i);
     el.classList.add("acik");
@@ -1717,7 +1848,9 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     var el = $("sinema");
     document.body.classList.remove("intro");
     sesSahne("vaka");
-    ui.intro = false; ui.sonTick = simdi(); ui.sonEylem = ui.sonTick;
+    ui.intro = false;
+    if (ui.hms) ercanSes(ui.hms.son);
+    if (ui.rehberIste) setTimeout(rehberBaslat, azHareket ? 0 : 950); ui.sonTick = simdi(); ui.sonEylem = ui.sonTick;
     if (ui.s && ui.s.bitti) { sinemaTemizle(); document.body.classList.remove("intro-portre"); sonucaGec(); return; }
     render();
     var img = el && el.querySelector(".sn-portre"), hedef = document.querySelector("#pHasta .gorsel");
@@ -1981,8 +2114,52 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     setHTML(el, "<b>" + esc(ui.bildirim.e) + "</b><span>" + esc(ui.bildirim.metin) + "</span>");
   }
 
+  /* ---------- Serbest soru kutusu (Öykü ve Geçmiş panelinde) ---------- */
+  function serbestHTML(s) {
+    var h = '<form class="serbest" autocomplete="off"><label class="sr" for="serbestSoru">Hastaya ya da yakınına soru yaz</label>' +
+      '<input id="serbestSoru" type="text" maxlength="160" placeholder="İstediğini yaz… (ör. ağrı kola vuruyor mu?)" value="' + esc(ui.ssMetin || "") + '">' +
+      '<button class="btn kucuk" type="submit">Sor</button></form>';
+    if (ui.ssSon) {
+      var x = ui.ssSon, kim, metin;
+      if (x.tip === "soru") { var c = s.sorulan[x.id]; if (c) { kim = '<span class="kim hst">Hasta</span>'; metin = "“" + esc(c.cevap) + "”"; } }
+      else { var r = s.gecmis[x.id], g = bul(ui.vaka.gecmis || [], x.id); if (r && g) { var k = gecmisKim(g, r.cevap); kim = k.kim; metin = k.metin; } }
+      if (kim) h += '<div class="ss-cevap"><p class="replik"><span class="kim sen">Sen</span> – “' + esc(ui.ssSoru || "") + '”</p><p class="replik">' + kim + " – " + metin + "</p></div>";
+    }
+    if (ui.ssOneri && ui.ssOneri.length) {
+      h += '<div class="ss-oneri"><p>“' + esc(ui.ssSoru) + '” · bunu mu demek istedin?</p><div class="liste">' + ui.ssOneri.map(function (o) {
+        return '<button class="islem beyaz" type="button" data-act="ss-sec" data-id="' + o.tip + ":" + esc(o.id) + '"><span class="ad">' + esc(o.metin) +
+          (o.tip === "gecmis" ? ' <span class="alt">geçmiş</span>' : "") + "</span></button>";
+      }).join("") + "</div></div>";
+    }
+    if (ui.ssAnlamadi) h += '<p class="ss-anlamadi"><span class="kim hst">Hasta</span> – “Anlamadım hocam, başka türlü sorar mısınız?”</p>';
+    return h;
+  }
+  function serbestOdak() { var i = $("serbestSoru"); if (i) i.focus({ preventScroll: true }); }
+  function ssUygula(tip, id) {
+    var s = ui.s; if (!s || s.bitti) return;
+    ui.ssOneri = null; ui.ssAnlamadi = false; ui.ssSon = { tip: tip, id: id };
+    if (tip === "soru") { var c = s.sorulan[id]; if (!c || c.cevapsiz) M.soruSor(s, id); }
+    else { var g = s.gecmis[id]; if (!g || g.cevapsiz) M.gecmisBak(s, id); }
+    sonra(); serbestOdak();
+  }
+  function serbestSor(metin) {
+    var s = ui.s; metin = String(metin || "").trim();
+    if (!s || s.bitti || !metin) return;
+    ui.ssOneri = null; ui.ssAnlamadi = false; ui.ssSon = null; ui.ssSoru = metin; ui.ssMetin = "";
+    var r = M.soruEsle(ui.vaka, metin), b = r[0], c = r[1];
+    if (b && b.puan >= 1.5 && (!c || b.puan >= c.puan * 1.25)) { ssUygula(b.tip, b.id); return; }
+    if (b && b.puan >= 0.6) { ui.ssOneri = r.filter(function (x) { return x.puan >= b.puan * 0.5; }).slice(0, 3); render(); serbestOdak(); return; }
+    ui.ssAnlamadi = true;
+    s.gunluk.push({ t: s.t, tur: "oyku", metin: metin + " → Anlamadım hocam, başka türlü sorar mısınız?" }); s.surum++;
+    M.ilerlet(s, 10); sonra(); serbestOdak();
+  }
+  app.addEventListener("submit", function (e) {
+    var f = e.target; if (!f.classList || !f.classList.contains("serbest")) return;
+    e.preventDefault(); serbestSor(f.querySelector("input").value);
+  });
+
   function oykuHTML(s) {
-    var oyku = ui.vaka.oyku, h = "";
+    var oyku = ui.vaka.oyku, h = serbestHTML(s);
     var sorulan = oyku.filter(function (q) { return s.sorulan[q.id]; }).sort(function (a, b) { return s.sorulan[a.id].t - s.sorulan[b.id].t; });
     if (sorulan.length) {
       h += '<div class="diyalog">';
@@ -2020,6 +2197,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     var ebGor = s.enabiz ? Object.keys(s.enabiz.bolum).length : 0;
     h += '<button class="btn eb-ac" type="button" data-act="enabiz-ac" data-k="enabiz-ac-panel">e-Nabız kayıtlarını aç' +
       (s.enabiz ? ' · <span class="mono">' + ebGor + "/" + M.ENABIZ_BOLUM.length + " bölüm</span>" : ' · <span class="mono">' + M.sureYaz(T.enabizSn || 30) + "</span>") + "</button>";
+    h += serbestHTML(s);
     var bakilan = gl.filter(function (g) { return s.gecmis[g.id] && !s.gecmis[g.id].enabiz; }).sort(function (a, b) { return s.gecmis[a.id].t - s.gecmis[b.id].t; });
     if (bakilan.length) {
       h += '<div class="diyalog">';
@@ -2355,6 +2533,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     if (!zorunlu && ui.hms.sonT != null && s.t - ui.hms.sonT < 20) return false; // art arda konuşup ekranı boğmasın
     s.gunluk.push({ t: s.t, tur: "hemsire", metin: metin }); s.surum++;
     ui.hms.sonT = s.t; ui.hms.son = metin; ui.hms.ruh = ruh || "sakin";
+    if (!ui.intro) ercanSes(metin);
     return true;
   }
   function hSoyle(s, alan, anahtar, ruh, zorunlu) {
@@ -2530,7 +2709,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     var gEl = $("pGunluk"), gHtml = gunlukHTML(s);
     if (gEl.__html !== gHtml) { setHTML(gEl, gHtml); var gOl = gEl.querySelector("ol"); if (gOl) gOl.scrollTop = gOl.scrollHeight; }
     sesOlaylar(s);
-    var dbn = $("duraklatBant"); if (dbn) dbn.hidden = !ui.duraklat;
+    var dbn = $("duraklatBant"); if (dbn) dbn.hidden = !ui.duraklat || ui.rehberAdim != null;
     var dbt = $("duraklatBtn"); if (dbt) { dbt.setAttribute("aria-pressed", !!ui.duraklat); dbt.textContent = ui.duraklat ? "▶" : "❚❚"; }
     if (s.gunluk.length > ui.sonGunluk) { bildirimYakala(s); duyuru.textContent = s.gunluk[s.gunluk.length - 1].metin; ui.sonGunluk = s.gunluk.length; }
     bildirimCiz();
@@ -2562,7 +2741,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   /* ================= SONUÇ ================= */
   function sonucaGec() {
     var s = ui.s;
-    sinemaTemizle(); yakinKapat(); ui.intro = false;
+    sinemaTemizle(); yakinKapat(); rehberBitir(false); ui.intro = false;
     document.body.classList.remove("intro", "intro-portre");
     ui.ekran = "sonuc";
     document.body.classList.remove("vaka-modu");
@@ -2630,7 +2809,10 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     var h = '<main class="wrap sonuc">' +
       '<header class="skor-bas"><div class="eyebrow">Vaka sonu · ' + esc(v.baslik) + "</div>" +
       '<h1 id="h-sonuc" tabindex="-1" class="skor"><span class="v">' + p.toplam + '</span><span class="m">/ 1000 puan</span></h1>' +
-      '<p class="hukum ' + hukumSinif + '">' + esc(hukum) + "</p>" + hemsireSonHTML(s, p) +
+      '<p class="hukum ' + hukumSinif + '">' + esc(hukum) + "</p>" +
+      (DUELLO && DUELLO.id === v.id ? '<p class="duello-sonuc ' + (p.toplam > DUELLO.skor ? "ok" : p.toplam === DUELLO.skor ? "esit" : "kotu") + '">Meydan okuma: ' +
+        (p.toplam > DUELLO.skor ? "kazandın" : p.toplam === DUELLO.skor ? "berabere" : "kaybettin") + " · " + p.toplam + " – " + DUELLO.skor + "</p>" : "") +
+      hemsireSonHTML(s, p) +
       (p.kayip ? '<p class="muted">Vaka kaybedildiğinde skor en fazla 150 olur.</p>' : "") +
       '<div class="nitelik" role="list" aria-label="Puan kırılımı">' + p.bolumler.slice(0, 4).map(function (b, i) {
         return '<div role="listitem" style="--c:' + NITELIK[i].c + '"><span class="v' + (b.puan > 0 ? " dolu" : "") + '">' + b.puan + '</span><span class="mx">/ ' + b.max +
@@ -2712,7 +2894,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     // Paylaşım
     h += '<section class="kart paylas" data-etiket="vaka sonu · paylaş" aria-labelledby="h-paylas"><div class="kart-bas"><h2 id="h-paylas">Paylaş</h2><small>tanıyı vermez</small></div>' +
       '<pre id="paylasMetin">' + esc(M.paylasimMetni(s, p)) + "</pre>" +
-      '<div class="btns"><button class="btn" type="button" data-act="kopyala" id="kopyalaBtn">Sonucu kopyala</button></div></section>';
+      '<div class="btns"><button class="btn" type="button" data-act="kopyala" id="kopyalaBtn">Sonucu kopyala</button>' +
+      '<button class="btn ikincil" type="button" data-act="meydan" id="meydanBtn">Meydan oku · bağlantı paylaş</button></div></section>';
 
     h += '<div class="son-btns"><button class="btn" type="button" data-act="tekrar">Tekrar oyna</button><button class="btn ikincil" type="button" data-act="don">Vakalara dön</button></div>';
     return h + "</main>";
@@ -2742,6 +2925,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       case "tekrar": baslat(ui.vaka.id); return;
       case "don": case "cik": girise(); return;
       case "kopyala": kopyala(); return;
+      case "meydan": meydanOku(); return;
+      case "rehber": ui.rehberIste = !ui.rehberIste; try { localStorage.setItem("triyaj-rehber", ui.rehberIste ? "acik" : "bitti"); } catch (e) { /* yok say */ } b.textContent = rehberEtiket(); return;
     }
     if (!s || s.bitti) return;
     ui.sonEylem = simdi();
@@ -2750,6 +2935,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       case "monitor": M.monitoreBagla(s); break;
       case "soru": M.soruSor(s, id); break;
       case "gecmis": M.gecmisBak(s, id); break;
+      case "ss-sec": var sp = id.split(":"); ssUygula(sp[0], sp[1]); return;
       case "bilgi": ui.bilgiAcik = !ui.bilgiAcik; render(); return;
       case "duraklat": duraklatDegistir(); return;
       case "dus-koy": if (ui.dolap.yer.length < 3 && ui.dolap.yer.indexOf(id) < 0) ui.dolap.yer.push(id); render(); return;
@@ -2809,13 +2995,67 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     if (!genis()) window.scrollTo(0, 0); // telefonda her sekme ayrı ekran
     var t = $("sekme-" + id); if (t) t.focus({ preventScroll: true });
   }
+  /* ---------- Rehberli ilk vaka (CK3'ün mini öğreticileri gibi): Ercan Abi ekranı tek tek gösterir, rehberde saat durur ---------- */
+  var REHBER = [
+    { hedef: "#pHasta", tel: "hasta", metin: "Hocam, bu senin hastan. Portresine tıklayınca görünüşünü okursun. Üstündeki rozetler hastaya yaptıklarını gösterir." },
+    { hedef: "#pVital", tel: "hasta", metin: "Vitaller kapalı, ölçmeden göremezsin. Monitöre bağla ya da tek tek ölç. Her ölçüm vaka saatinden zaman yer." },
+    { hedef: "#pNav", metin: "Kararların burada: bir öykü, iki geçmiş, üç muayene, dört tetkik, beş müdahale, altı tanı. N tuşu e-Nabız'ı açar." },
+    { hedef: ".serbest", sekme: "oyku", metin: "Hastaya istediğini yazarak sorabilirsin. Anlamazsa sana en yakın soruları önerir." },
+    { hedef: ".ust", metin: "Üst çubuk dikkat isteyen her şeyi gösterir: kötüleşme, gelen sonuç, bekleyen tetkik. Tıklayınca oraya gidersin. Space ile duraklatırsın." },
+    { hedef: "#pHemsire", tel: "hasta", metin: "Ben buradayım. Takılırsan bana danış, puanını kırmam ama cevabı da vermem. Arada ben de sana soru sorarım." },
+    { hedef: ".alt-eylem", metin: "Tetkik sonuçları arka planda gelir. Sonucu bekle düğmesi saati ileri sarar, alttaki şerit neyin ne zaman geleceğini gösterir." },
+    { hedef: "#sekme-tani", metin: "Bulgu topladıkça düşünceler açılır. Tanı sekmesindeki dolaba en fazla üçünü koy, kanıt geldikçe güçlenir ya da zayıflar. Hazırsan saat şimdi başlıyor." }
+  ];
+  function rehberIstekOku() { try { return localStorage.getItem("triyaj-rehber") !== "bitti"; } catch (e) { return true; } }
+  ui.rehberIste = rehberIstekOku();
+  function rehberBaslat() {
+    if (!ui.s || ui.s.bitti || ui.ekran !== "vaka") return;
+    ui.rehberAdim = 0; ui.duraklat = true; render(); rehberCiz();
+  }
+  function rehberCiz() {
+    document.querySelectorAll(".rehber-hedef").forEach(function (x) { x.classList.remove("rehber-hedef"); });
+    var a = REHBER[ui.rehberAdim];
+    if (!a) { rehberBitir(true); return; }
+    if (a.sekme) sekmeSec(a.sekme); else if (a.tel && !genis()) sekmeSec(a.tel);
+    var el = $("rehber");
+    if (!el) {
+      el = document.createElement("div"); el.id = "rehber"; el.className = "rehber"; el.setAttribute("role", "dialog"); el.setAttribute("aria-label", "Rehber");
+      document.body.appendChild(el);
+      el.addEventListener("click", function (e) { var b = e.target.closest("[data-r]"); if (!b) return; if (b.getAttribute("data-r") === "ileri") { ui.rehberAdim++; rehberCiz(); } else rehberBitir(true); });
+    }
+    var son = ui.rehberAdim === REHBER.length - 1;
+    el.innerHTML = (H ? '<img src="' + esc(H.portre) + '" alt="">' : "") + '<div><p class="rehber-adim">Rehber · ' + (ui.rehberAdim + 1) + " / " + REHBER.length + "</p>" +
+      '<p class="replik"><span class="kim hms-k">Ercan Abi</span> – ' + tx(a.metin) + "</p>" +
+      '<div class="rehber-btn"><button type="button" class="btn kucuk" data-r="ileri">' + (son ? "Başla" : "İleri · Enter") + '</button><button type="button" class="btn kucuk ikincil" data-r="kapat">Rehberi kapat</button></div></div>';
+    var hedef = document.querySelector(a.hedef), r = hedef && hedef.getBoundingClientRect();
+    if (hedef && r.width && r.height) {
+      hedef.classList.add("rehber-hedef");
+      var w = el.offsetWidth, h = el.offsetHeight, x = Math.min(Math.max(12, r.left), window.innerWidth - w - 12), y = r.bottom + 12;
+      if (y + h > window.innerHeight - 12) y = r.top - h - 12;
+      if (y < 12) y = Math.max(12, (window.innerHeight - h) / 2);
+      el.style.left = x + "px"; el.style.top = y + "px"; el.style.bottom = "auto";
+    } else { el.style.left = "50%"; el.style.top = "auto"; el.style.bottom = "24px"; el.style.transform = "translateX(-50%)"; }
+    if (hedef && r.width) el.style.transform = "none";
+    var ileri = el.querySelector('[data-r="ileri"]'); if (ileri) ileri.focus({ preventScroll: true });
+    ercanSes(a.metin);
+  }
+  function rehberBitir(kaydet) {
+    var el = $("rehber"); if (el) el.remove();
+    document.querySelectorAll(".rehber-hedef").forEach(function (x) { x.classList.remove("rehber-hedef"); });
+    if (ui.rehberAdim == null) return;
+    ui.rehberAdim = null; ui.duraklat = false; ui.sonTick = simdi(); ui.sonEylem = ui.sonTick;
+    if (kaydet) { ui.rehberIste = false; try { localStorage.setItem("triyaj-rehber", "bitti"); } catch (e) { /* yok say */ } }
+    if (ui.s && !ui.s.bitti) render();
+  }
+
   // Duraklatma (Paradox oyunlarındaki gibi): saat durur; işlemler yine kendi süresini yer.
   function duraklatDegistir() {
-    if (!ui.s || ui.s.bitti || ui.intro || ui.yakinAcik) return;
+    if (!ui.s || ui.s.bitti || ui.intro || ui.yakinAcik || ui.rehberAdim != null) return;
     ui.duraklat = !ui.duraklat; if (ui.duraklat) ui.duraklatSay++;
     ui.sonTick = simdi(); ui.sonEylem = ui.sonTick; render();
   }
   app.addEventListener("input", function (e) {
+    if (e.target && e.target.id === "serbestSoru") { ui.ssMetin = e.target.value; return; }
     if (!e.target || e.target.id !== "terimAra") return;
     var q = trKucuk(e.target.value.trim());
     app.querySelectorAll(".terim-satir").forEach(function (r) { r.hidden = !!q && r.getAttribute("data-ara").indexOf(q) < 0; });
@@ -2827,6 +3067,11 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       if (e.key === "Escape" || e.key === " " || e.key === "Enter") { if (ui.snAsama < 6) { sinemaAsama(6, true); e.preventDefault(); } return; }
       var alanlar = { "1": "kirmizi", "2": "sari", "3": "yesil" };
       if (ui.snAsama >= 6 && alanlar[e.key]) { triyajSec(alanlar[e.key]); e.preventDefault(); }
+      return;
+    }
+    if (ui.rehberAdim != null) {
+      if (e.key === "Enter") { ui.rehberAdim++; rehberCiz(); e.preventDefault(); }
+      else if (e.key === "Escape") { rehberBitir(true); e.preventDefault(); }
       return;
     }
     if (ui.yakinAcik) {

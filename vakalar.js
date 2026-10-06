@@ -182,15 +182,15 @@ window.VAKALAR = [
 
     // Öykü: soru → hastanın cevabı. Her soru 20 sn.
     oyku: [
-      { id: "baslangic", soru: "Ağrı ne zaman başladı, o sırada ne yapıyordunuz?", cevap: "Yarım saat kadar önce. Oturmuş televizyon izliyordum, hiç yorulmamıştım bile." },
-      { id: "nitelik",   soru: "Ağrıyı nasıl tarif edersiniz?",                      cevap: "Batma gibi değil. Sanki göğsüme ağır bir şey oturmuş, sıkıştırıyor. Tam ortada." },
-      { id: "yayilim",   soru: "Ağrı bir yere yayılıyor mu?",                        cevap: "Sol koluma vuruyor, kolum uyuşur gibi oldu." },
-      { id: "eslik",     soru: "Yanında bulantı, terleme gibi başka şikâyet var mı?", cevap: "Midem bulanıyor ama kusmadım. Bir de soğuk soğuk terliyorum." },
+      { id: "baslangic", soru: "Ağrı ne zaman başladı, o sırada ne yapıyordunuz?", anahtar: "ne zaman başladı kaç saattir ne zamandır", cevap: "Yarım saat kadar önce. Oturmuş televizyon izliyordum, hiç yorulmamıştım bile." },
+      { id: "nitelik",   soru: "Ağrıyı nasıl tarif edersiniz?", anahtar: "nasıl bir ağrı baskı sıkışma batma yanma tarif",                      cevap: "Batma gibi değil. Sanki göğsüme ağır bir şey oturmuş, sıkıştırıyor. Tam ortada." },
+      { id: "yayilim",   soru: "Ağrı bir yere yayılıyor mu?", anahtar: "kola koluma sol kol vuruyor gidiyor çene omuz yayılım",                        cevap: "Sol koluma vuruyor, kolum uyuşur gibi oldu." },
+      { id: "eslik",     soru: "Yanında bulantı, terleme gibi başka şikâyet var mı?", anahtar: "terleme terliyor bulantı kusma", cevap: "Midem bulanıyor ama kusmadım. Bir de soğuk soğuk terliyorum." },
       { id: "pozisyon",  soru: "Nefes alınca ya da pozisyon değiştirince ağrı değişiyor mu?", cevap: "Yok, değişmiyor. Otursam da uzansam da aynı baskı." },
-      { id: "sirt",      soru: "Ağrı sırtınıza vuruyor mu, yırtılır gibi mi?",       cevap: "Sırtıma vurmuyor. Yırtılma gibi değil, baskı gibi." },
+      { id: "sirt",      soru: "Ağrı sırtınıza vuruyor mu, yırtılır gibi mi?", anahtar: "sırt sırtıma sırtınıza yırtılma bıçak",       cevap: "Sırtıma vurmuyor. Yırtılma gibi değil, baskı gibi." },
       { id: "ozgecmis",  soru: "Bilinen hastalığınız, kullandığınız ilaç var mı?",   cevap: "Tansiyonum var, hap içiyorum ama bazen unutuyorum. Başka hastalığım yok." },
       { id: "sigara",    soru: "Sigara içiyor musunuz?",                             cevap: "İçiyorum. Gençlikten beri günde bir paket." },
-      { id: "emboli",    soru: "Son zamanda uzun yolculuk, ameliyat ya da bacakta şişlik oldu mu?", cevap: "Hayır, hiçbiri olmadı." },
+      { id: "emboli",    soru: "Son zamanda uzun yolculuk, ameliyat ya da bacakta şişlik oldu mu?", anahtar: "yolculuk ameliyat bacak şişlik pıhtı", cevap: "Hayır, hiçbiri olmadı." },
       { id: "alerji",    soru: "İlaç alerjiniz var mı?",                             cevap: "Bildiğim bir alerjim yok." }
     ],
 
@@ -427,15 +427,15 @@ window.VAKALAR = [
 
     oyku: [
       { id: "baslangic", soru: "Ağrı ne zaman başladı?",                              cevap: "Dün akşam başladı. On iki saat falan oldu." },
-      { id: "yer",       soru: "Ağrı ilk nerede başladı, şimdi nerede?",              cevap: "Önce göbeğimin etrafındaydı, tam yerini gösteremiyordum. Sonra sağ alta indi, şimdi hep burada." },
+      { id: "yer",       soru: "Ağrı ilk nerede başladı, şimdi nerede?", anahtar: "nerede hangi taraf sağ alt göbek yer",              cevap: "Önce göbeğimin etrafındaydı, tam yerini gösteremiyordum. Sonra sağ alta indi, şimdi hep burada." },
       { id: "nitelik",   soru: "Ağrı nasıl? Hareketle ya da öksürünce artıyor mu?",   cevap: "Sürekli bir ağrı. Yürürken, öksürünce daha çok saplanıyor." },
-      { id: "istah",     soru: "İştahınız nasıl? Bulantı, kusma var mı?",             cevap: "Dünden beri hiçbir şey yiyemedim, canım istemiyor. Midem bulanıyor ama kusmadım." },
+      { id: "istah",     soru: "İştahınız nasıl? Bulantı, kusma var mı?", anahtar: "iştah bulantı kusma yemek yiyemedim",             cevap: "Dünden beri hiçbir şey yiyemedim, canım istemiyor. Midem bulanıyor ama kusmadım." },
       { id: "ates",      soru: "Ateşiniz oldu mu?",                                   cevap: "Biraz halsizim, ateşim var gibi ama ölçmedim." },
       { id: "idrar",     soru: "İdrar yaparken yanma, sık idrara çıkma ya da kan var mı?", cevap: "Yok, idrarım normal." },
-      { id: "kolik",     soru: "Ağrı dalga dalga mı geliyor? Sırtınıza ya da kasığınıza vuruyor mu?", cevap: "Gelip giden bir ağrı değil, hep orada. Sırtıma, kasığıma vurmuyor." },
+      { id: "kolik",     soru: "Ağrı dalga dalga mı geliyor? Sırtınıza ya da kasığınıza vuruyor mu?", anahtar: "dalga dalga kasık sırt gelip giden", cevap: "Gelip giden bir ağrı değil, hep orada. Sırtıma, kasığıma vurmuyor." },
       { id: "ishal",     soru: "İshal ya da kabızlık var mı? Çevrenizde benzer şikâyeti olan var mı?", cevap: "İshal olmadım, tuvaletim normal. Evde herkes iyi." },
       { id: "ozgecmis",  soru: "Daha önce ameliyat oldunuz mu? Hastalığınız, ilacınız var mı?", cevap: "Hiç ameliyat olmadım. Hastalığım yok, ilaç kullanmıyorum." },
-      { id: "son-yemek", soru: "En son ne zaman yediniz, içtiniz?",                   cevap: "Dün öğlen yemek yedim. Sabah birkaç yudum su içtim, o kadar." }
+      { id: "son-yemek", soru: "En son ne zaman yediniz, içtiniz?", anahtar: "en son yemek içmek ne zaman yedi",                   cevap: "Dün öğlen yemek yedim. Sabah birkaç yudum su içtim, o kadar." }
     ],
 
     // Hasta geçmişi (kaynak: arastirma/hasta-gecmisi-ve-gorsel-ipuclari.md). kaynak: hasta | yakin | enabiz.
@@ -665,9 +665,9 @@ window.VAKALAR = [
     ],
 
     oyku: [
-      { id: "ne-oldu",      soru: "Ne oldu, ne zaman oldu?",                              cevap: "Bahçede çiçekleri suluyordum, bir arı elimin üstünden soktu. On dakika falan oldu, sonra her şey hızlandı." },
-      { id: "belirti",      soru: "Şu an neler hissediyorsunuz?",                         cevap: "Boğazım şişiyor gibi, yutkunamıyorum. Nefes alırken hırıltı geliyor. Her yerim kaşınıyor." },
-      { id: "once",         soru: "Daha önce arı soktu mu, böyle bir şey oldu mu?",       cevap: "Çocukken bir kere soktu, sadece o yer şişmişti. Böyle bir şey hiç olmadı." },
+      { id: "ne-oldu",      soru: "Ne oldu, ne zaman oldu?", anahtar: "arı sokma soktu ne oldu ne zaman",                              cevap: "Bahçede çiçekleri suluyordum, bir arı elimin üstünden soktu. On dakika falan oldu, sonra her şey hızlandı." },
+      { id: "belirti",      soru: "Şu an neler hissediyorsunuz?", anahtar: "ne hissediyorsun şikâyet boğaz kaşıntı",                         cevap: "Boğazım şişiyor gibi, yutkunamıyorum. Nefes alırken hırıltı geliyor. Her yerim kaşınıyor." },
+      { id: "once",         soru: "Daha önce arı soktu mu, böyle bir şey oldu mu?", anahtar: "daha önce arı soktu reaksiyon",       cevap: "Çocukken bir kere soktu, sadece o yer şişmişti. Böyle bir şey hiç olmadı." },
       { id: "astim",        soru: "Astımınız ya da başka bir alerjiniz var mı?",          cevap: "Astımım yok. İlaç ya da yiyecek alerjim yok." },
       { id: "ilac",         soru: "Düzenli kullandığınız bir ilaç var mı?",               cevap: "Tansiyon ya da kalp ilacı kullanmıyorum, doğum kontrol hapı dışında bir şey yok." },
       { id: "bas-donmesi",  soru: "Başınız dönüyor mu, bayılacak gibi oluyor musunuz?",   cevap: "Evet, başım dönüyor, gözlerim kararıyor." },
@@ -901,11 +901,11 @@ window.VAKALAR = [
 
     oyku: [
       { id: "baslangic",          soru: "Şikâyetleriniz ne zaman başladı?",                                   cevap: "Akşam yemekten sonra hafif başım ağrıyordu. Gece üçte uyandım, başım çatlıyor. İki kere kustum." },
-      { id: "bas-agrisi-nitelik", soru: "Baş ağrınız nasıl? Birden mi patladı, hayatınızın en şiddetli ağrısı mı?", cevap: "Zonklayan, bütün başımda bir ağrı. Çok kötü ama birden patlamadı, yavaş yavaş arttı." },
-      { id: "evdekiler",          soru: "Evde başka kimsede benzer şikâyet var mı?",                         cevap: "Kocam da başım ağrıyor diyordu. Küçük oğlan da akşam halsizdi, erken yattı." },
-      { id: "isinma",             soru: "Evi neyle ısıtıyorsunuz?",                                           cevap: "Kömür sobası. Akşam doldurup yattık, gece soğuk oluyor." },
+      { id: "bas-agrisi-nitelik", soru: "Baş ağrınız nasıl? Birden mi patladı, hayatınızın en şiddetli ağrısı mı?", anahtar: "nasıl bir ağrı şiddetli birden patladı zonklama", cevap: "Zonklayan, bütün başımda bir ağrı. Çok kötü ama birden patlamadı, yavaş yavaş arttı." },
+      { id: "evdekiler",          soru: "Evde başka kimsede benzer şikâyet var mı?", anahtar: "evdekiler aile çocuklar eşiniz kocanız evde başka",                         cevap: "Kocam da başım ağrıyor diyordu. Küçük oğlan da akşam halsizdi, erken yattı." },
+      { id: "isinma",             soru: "Evi neyle ısıtıyorsunuz?", anahtar: "soba kalorifer doğalgaz şofben kömür ısınma ısıtma",                                           cevap: "Kömür sobası. Akşam doldurup yattık, gece soğuk oluyor." },
       { id: "disari",             soru: "Evden çıkınca şikâyetleriniz değişti mi?",                          cevap: "Arabaya binince biraz açıldım galiba. Bilmiyorum, çok kötüydüm." },
-      { id: "ates-ense",          soru: "Ateşiniz, ense sertliğiniz, ışıktan rahatsızlık var mı?",            cevap: "Ateşim yok, ensem tutulmadı. Işık biraz rahatsız ediyor ama başım ağrıyınca hep öyle olur." },
+      { id: "ates-ense",          soru: "Ateşiniz, ense sertliğiniz, ışıktan rahatsızlık var mı?", anahtar: "ateş ense sertlik ışık",            cevap: "Ateşim yok, ensem tutulmadı. Işık biraz rahatsız ediyor ama başım ağrıyınca hep öyle olur." },
       { id: "migren",             soru: "Daha önce böyle baş ağrılarınız olur mu, migreniniz var mı?",       cevap: "Arada migrenim olur ama bu farklı. Hiç böyle kusturmazdı." },
       { id: "yemek",              soru: "Akşam ne yediniz? Başkaları da aynı şeyi yedi mi?",                 cevap: "Mercimek çorbası, pilav. Hepimiz aynı şeyi yedik. İshal olmadım." },
       { id: "gogus-nefes",        soru: "Göğüs ağrısı, çarpıntı ya da nefes darlığı var mı?",                 cevap: "Kalbim çok hızlı atıyor gibi. Göğsümde ağrı yok." },
