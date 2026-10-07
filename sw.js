@@ -1,6 +1,6 @@
 // Triyaj servis çalışanı: oyunu çevrimdışı da çalıştırır (önce ağ, ağ yoksa önbellek).
 // Dosya eklenince ya da değişince SURUM'u artır ki telefonlar yeni sürümü alsın.
-var SURUM = "triyaj-20261007-110900";
+var SURUM = "triyaj-20261007-114732";
 var DOSYALAR = [
   "./", "./index.html", "./vakalar.js", "./hemsire.js", "./terimler.js", "./manifest.webmanifest",
   "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png",

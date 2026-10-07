@@ -972,6 +972,19 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 .mod-yazi.mod-gercekci{color:var(--kotu)} .mod-yazi.mod-pratik{color:var(--iyi)}
 /* masanın boş halindeki satır içi raptiye ikonu (boyutsuz SVG ekranı kaplıyordu) */
 .masa-govde .ipucu svg{display:inline-block;width:14px;height:14px;vertical-align:-2px;fill:none;stroke:currentColor;stroke-width:1.6}
+/* ===== Daktilo ve sonuç animasyonu ===== */
+.yaziyor::after{content:"▌";margin-left:1px;color:var(--soluk);animation:imlec .7s steps(1) infinite}
+@keyframes imlec{50%{opacity:0}}
+.yaziyor{cursor:pointer}
+.ic-bulgu{position:relative;padding:0 8px 12px 42px;margin-top:-6px}
+.ic-bulgu .ic-yanit{font-size:15px;color:var(--metin)}
+.mud-yapildi .ic-soru{color:var(--iyi)}
+.yeni-sonuc .ic-yanit{animation:sonuc-gel .45s ease-out .5s both}
+.yeni-sonuc::after{content:"";position:absolute;left:42px;right:8px;bottom:3px;height:2px;background:var(--uyari);transform-origin:left;animation:islem-bar .5s linear both,bar-sol .3s ease-out .55s forwards}
+@keyframes islem-bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes bar-sol{to{opacity:0}}
+@keyframes sonuc-gel{from{opacity:0;transform:translateY(-5px)}}
+@media (prefers-reduced-motion: reduce){ .yeni-sonuc .ic-yanit,.yeni-sonuc::after{animation:none} }
 /* ===== Sonuç geldi simgesi (sol alt; Ercan Abi'nin karşı köşesi) ===== */
 .sonuc-ikon{position:fixed;z-index:24;left:calc(72px + 16px);bottom:20px;display:flex;align-items:center;gap:10px;max-width:236px;padding:8px 14px 8px 8px;border:1px solid var(--uyari);
   background:rgba(11,10,9,.96);color:var(--metin);box-shadow:0 12px 30px rgba(0,0,0,.7);cursor:pointer;text-align:left;font:inherit;animation:si-gel .35s ease-out,si-nabiz 1.8s ease-in-out .35s infinite}
@@ -2194,7 +2207,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       '<header class="hero">' +
         '<div class="eyebrow">Acil servis vaka oyunu · demo</div>' +
         "<h1>TRİY<span>A</span>J</h1>" +
-        '<p class="tez">Pilotlar simülatörde prova eder. Tıp öğrencisinin provası Triyaj.</p>' +
+        '<p class="tez">İlk acil nöbetin, gerçeğinden önce.</p>' +
         '<p class="meta">Hasta kapıdan girer, gerisi senin kararın.</p>' +
         '<div class="giris-ayar"><button class="btn ikincil kucuk ses-ac" type="button" data-act="ses" data-k="ses-giris">' + sesEtiket() + "</button>" +
         '<button class="btn ikincil kucuk" type="button" data-act="ayar" data-k="ayar-giris">⚙ Ayarlar · nasıl oynanır (Esc)</button></div>' +
@@ -2239,6 +2252,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     ui.dolap = { acik: {}, yer: [], yeni: 0 };
     ui.olaylar = { acik: false, filtre: "onemli" }; ui.olaylarDuraklatti = false;
     ui.hmsAcik = false; ui.hmsBalon = null; ui.hmsSoruGizle = null; ui.pencere = false; ui.geri = null;
+    ui.yazildi = {}; ui.yazIlerleme = {}; ui.yazAtla = {}; // daktilo: yazılması biten konuşmalar
     ui.mod = ui.modSecim || "pratik"; // bu vakanın modu: vaka sürerken değişmez
     ui.mudGrup = null; ui.tetkikSayfa = "istem"; // müdahale penceresinde seçili grup, tetkik penceresinde İstem / Sonuçlar
     ui.masa = { kart: [], acik: false }; ui.masaDuraklatti = false;
@@ -2721,7 +2735,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       '<button class="btn kucuk" type="submit">Sor</button></form>';
     if (ui.ssSon) {
       var x = ui.ssSon, kim, metin;
-      if (x.tip === "soru") { var c = s.sorulan[x.id]; if (c) { kim = '<span class="kim hst">Hasta</span>'; metin = "“" + esc(c.cevap) + "”"; } }
+      if (x.tip === "soru") { var c = s.sorulan[x.id]; if (c) { kim = '<span class="kim hst">Hasta</span>'; metin = "“" + yazHTML("ss:" + x.id + ":" + c.t, c.cevap, "", s.t - c.t < 30) + "”"; } }
       else { var r = s.gecmis[x.id], g = bul(ui.vaka.gecmis || [], x.id); if (r && g) { var k = gecmisKim(g, r.cevap); kim = k.kim; metin = k.metin; } }
       if (kim) h += '<div class="ss-cevap"><p class="replik"><span class="kim sen">Sen</span> – “' + esc(ui.ssSoru || "") + '”</p><p class="replik">' + kim + " – " + metin + "</p></div>";
     }
@@ -2759,6 +2773,32 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   });
 
   // Öykü: soru listesi hep aynı sırada; sorulan sorunun cevabı hemen altında çıkar (numara kaymaz).
+  // Daktilo (Undertale gibi): yeni gelen konuşma harf harf yazılır, harf başına kısa bir "blip". Üstüne tıklayınca hemen tamamlanır.
+  function yazHTML(k, metin, ses, taze) {
+    if (!taze || !ui.yazildi || ui.yazildi[k]) return esc(metin);
+    return '<span class="yaz" data-yaz="' + esc(k) + '" data-ses="' + (ses || "") + '">' + esc(metin) + "</span>";
+  }
+  function yazBlip(ses) {
+    if (!SES.acik || !SES.ayar.efekt) return;
+    ton((ses === "yakin" ? 330 : 196) + Math.random() * 22, .04, "square", .016);
+  }
+  function yazBaslat() {
+    if (!ui.yazildi) return;
+    app.querySelectorAll(".yaz[data-yaz]").forEach(function (el) {
+      if (el.__yaz) return;
+      var k = el.getAttribute("data-yaz"); if (ui.yazildi[k]) return;
+      var tam = el.textContent, i = Math.min(ui.yazIlerleme[k] || 0, tam.length), ses = el.getAttribute("data-ses");
+      el.__yaz = true; el.classList.add("yaziyor"); el.textContent = tam.slice(0, i);
+      (function adim() {
+        if (!el.isConnected) return; // panel yeniden çizildi: yeni öğe kaldığı yerden sürer
+        if (ui.yazAtla[k]) i = tam.length;
+        if (i >= tam.length) { el.textContent = tam; ui.yazildi[k] = true; el.classList.remove("yaziyor"); return; }
+        var ch = tam.charAt(i++); el.textContent = tam.slice(0, i); ui.yazIlerleme[k] = i;
+        if (ses && i % 2 && /[0-9A-Za-zÇĞİÖŞÜçğıöşüâîû]/.test(ch)) yazBlip(ses);
+        setTimeout(adim, /[.!?…]/.test(ch) ? 140 : /[,;:–]/.test(ch) ? 80 : 24);
+      })();
+    });
+  }
   function oykuHTML(s) {
     var oyku = ui.vaka.oyku, h = "";
     if (!oyku.some(function (q) { return s.sorulan[q.id]; }))
@@ -2768,7 +2808,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       var c = s.sorulan[q.id];
       if (c && !c.cevapsiz) {
         h += '<div class="islem-cevap" id="soru-' + esc(q.id) + '"><p class="ic-soru">“' + esc(q.soru) + '” <span class="zaman">' + M.saatYaz(c.t) + "</span></p>" +
-          '<p class="replik ic-yanit"><span class="kim hst">Hasta</span> – “' + esc(c.cevap) + "”" + masaPin("oyku:" + q.id, "oyku", "“" + q.soru + "”", c.cevap) + "</p></div>";
+          '<p class="replik ic-yanit"><span class="kim hst">Hasta</span> – “' + yazHTML("oyku:" + q.id + ":" + c.t, c.cevap, "hasta", s.t - c.t < 30) + "”" +
+          masaPin("oyku:" + q.id, "oyku", "“" + q.soru + "”", c.cevap) + "</p></div>";
         return;
       }
       h += '<button class="islem' + (c ? " beyaz" : "") + '" type="button" data-act="soru" data-id="' + esc(q.id) + '" data-k="soru-' + esc(q.id) + '"><span class="ad">“' +
@@ -2801,6 +2842,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
         var r = s.gecmis[g.id], sure = M.sureYaz((T.gecmisSn || {})[g.kaynak] || T.oykuSn);
         if (r && !r.cevapsiz) {
           var k = r.enabiz ? { kim: '<span class="kim snc">e-Nabız</span>', metin: "kayıtta görüldü" } : gecmisKim(g, r.cevap);
+          if (!r.enabiz) { var ym = g.kaynak === "yakin" && /^\(([^)]+)\)\s*/.exec(r.cevap), ham = ym ? r.cevap.slice(ym[0].length) : r.cevap;
+            k.metin = "“" + yazHTML("gecmis:" + g.id + ":" + r.t, ham, g.kaynak === "yakin" ? "yakin" : "hasta", s.t - r.t < 30) + "”"; }
           h += '<div class="islem-cevap" id="gecmis-' + esc(g.id) + '"><p class="ic-soru">' + esc(g.ad) + ' <span class="zaman">' + M.saatYaz(r.t) + "</span></p>" +
             '<p class="replik ic-yanit">' + k.kim + " – " + k.metin + masaPin("gecmis:" + g.id, "gecmis", g.ad, r.cevap) + "</p></div>";
           return;
@@ -2866,25 +2909,16 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   }
 
   function muayeneHTML(s) {
-    var h = "", yapilan = T.muayeneSistemleri.filter(function (m) { return s.muayene[m.id]; })
-      .sort(function (a, b) { return s.muayene[a.id].t - s.muayene[b.id].t; });
-    if (yapilan.length) {
-      h += '<div class="diyalog">';
-      yapilan.forEach(function (m) {
-        var r = s.muayene[m.id];
-        h += '<p class="replik"><span class="kim">' + esc(m.ad) + "</span> – " + tx(r.bulgu) +
-          ' <span class="zaman">' + M.saatYaz(r.t) + ' · <span data-once="' + r.t + '">' + onceYaz(s.t - r.t) + "</span></span>" +
-          masaPin("muayene:" + m.id, "muayene", m.ad, r.bulgu) + "</p>";
-      });
-      h += "</div>";
-    } else {
+    var h = "";
+    if (!T.muayeneSistemleri.some(function (m) { return s.muayene[m.id]; }))
       h += '<p class="ipucu">Neye bakacaksın? Her muayene ' + M.sureYaz(T.muayeneSn) + "; hastanın durumu değişirse tekrar bakabilirsin.</p>";
-    }
     h += '<div class="liste">';
     T.muayeneSistemleri.forEach(function (m) {
       var r = s.muayene[m.id], btn = MUAYENE_BUTON[m.id] || (m.ad + " muayenesi");
       h += '<button class="islem' + (r ? " beyaz" : "") + '" type="button" data-act="muayene" data-id="' + m.id + '" data-k="muayene-' + m.id + '"><span class="ad">' +
         esc(btn) + (r ? " (tekrar)" : "") + '</span><span class="sure">' + M.sureYaz(T.muayeneSn) + "</span></button>";
+      if (r) h += '<div class="ic-bulgu' + (s.t - r.t < 2.5 ? " yeni-sonuc" : "") + '"><p class="replik ic-yanit"><span class="kim">' + esc(m.ad) + "</span> – " + tx(r.bulgu) +
+        ' <span class="zaman">' + M.saatYaz(r.t) + ' · <span data-once="' + r.t + '">' + onceYaz(s.t - r.t) + "</span></span>" + masaPin("muayene:" + m.id, "muayene", m.ad, r.bulgu) + "</p></div>";
     });
     return h + "</div>";
   }
@@ -2944,9 +2978,14 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     }).join("") + "</div>";
     h += '<p class="ipucu pen-aciklama">İlaç, damar yolu, oksijen ve pozisyon 1 dk; konsültasyon ve aktivasyon 2 dk. ' + (gercekci() ? "Gerçekçi mod: verdiğin ilaç ve istediğin tetkik geri alınmaz." : "Fikrini değiştirirsen son müdahaleden 30 sn içinde vazgeçebilirsin: Ercan Abi daha uygulamamıştır, ama geçen süre geri gelmez.") + '</p>';
     [sec].forEach(function (g) {
-      if (!kalan(g).length) { h += '<p class="ipucu">Bu gruptaki işlemlerin hepsi yapıldı. Yapılanlar aşağıda.</p>'; return; }
       h += '<div class="liste">';
-      kalan(g).forEach(function (m) {
+      T.mudahaleler.filter(function (m) { return m.grup === g; }).forEach(function (m) {
+        if (s.yapilan[m.id] != null) {
+          var mb = M.mudahaleBilgisi(s, m.id) || m, ty = s.yapilan[m.id];
+          h += '<div class="islem-cevap mud-yapildi' + (s.t - ty < 2.5 ? " yeni-sonuc" : "") + '"><p class="ic-soru">✓ ' + esc(m.ad) + ' <span class="zaman">' + M.saatYaz(ty) + "</span></p>" +
+            '<p class="replik ic-yanit">' + tx(mb.yanit || (m.ad + " yapıldı.")) + masaPin("mudahale:" + m.id, "mudahale", m.ad, M.saatYaz(ty) + (mb.yanit ? " · " + mb.yanit : "")) + "</p></div>";
+          return;
+        }
         if (m.bitirir) {
           h += '<button class="islem tehlike" type="button" data-act="taburcu-sor" data-k="taburcu-sor"><span class="ad">' + esc(m.ad) + '</span><span class="sure">geri alınamaz</span></button>';
           if (ui.onay === "taburcu") {
@@ -2965,7 +3004,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       h += "</div>";
     });
     if (yapildi.length) {
-      h += '<details class="yapilanlar"' + (kalan(sec).length ? "" : " open") + "><summary>Yapılanlar · " + yapildi.length + "</summary><ul>" + yapildi.sort(function (a, b) { return s.yapilan[a.id] - s.yapilan[b.id]; }).map(function (m) {
+      h += '<details class="yapilanlar">' + "<summary>Tüm yapılanlar · " + yapildi.length + "</summary><ul>" + yapildi.sort(function (a, b) { return s.yapilan[a.id] - s.yapilan[b.id]; }).map(function (m) {
         var mb = M.mudahaleBilgisi(s, m.id) || m;
         return "<li><span>" + esc(m.ad) + '</span><span class="mono">✓ ' + M.saatYaz(s.yapilan[m.id]) + " " +
           masaPin("mudahale:" + m.id, "mudahale", m.ad, M.saatYaz(s.yapilan[m.id]) + (mb.yanit ? " · " + mb.yanit : "")) + "</span></li>";
@@ -3412,7 +3451,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       ust = '<div class="ercan-balon soru"><button type="button" class="balon-kapat" data-act="hms-gizle" title="Sonra cevapla" aria-label="Sonra cevapla">×</button>' +
         '<p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + tx(b.soru.soru) + "</p>" + secenek + "</div>";
     } else if (ui.hmsBalon) {
-      ust = '<div class="ercan-balon"><p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + tx(ui.hmsBalon.metin) +
+      ust = '<div class="ercan-balon"><p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + yazHTML("e:" + ercanAnahtar(ui.hmsBalon.metin) + ":" + Math.round(ui.hmsBalon.bitis), ui.hmsBalon.metin, "", true) +
         masaPin(ercanAnahtar(ui.hmsBalon.metin), "ercan", "", ui.hmsBalon.metin) + "</p></div>";
     }
     return '<div class="ercan-ic' + (kizgin ? " kizgin" : "") + '">' + ust +
@@ -3468,6 +3507,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       if (y) y.focus({ preventScroll: true });
     }
     canliGuncelle();
+    yazBaslat();
     if (ui.rehberAdim != null) rehberKontrol();
   }
 
@@ -3664,6 +3704,8 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 
   /* ================= OLAYLAR ================= */
   app.addEventListener("click", function (e) {
+    var yz = e.target.closest ? e.target.closest(".yaziyor") : null;
+    if (yz && ui.yazAtla) ui.yazAtla[yz.getAttribute("data-yaz")] = true; // yazılan konuşmaya tıklamak onu hemen bitirir
     var b = e.target.closest ? e.target.closest("[data-act]") : null;
     if (!b || b.disabled) return;
     var act = b.getAttribute("data-act"), id = b.getAttribute("data-id"), s = ui.s;
