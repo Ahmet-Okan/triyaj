@@ -1042,6 +1042,14 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 .mk-t{font:500 12px var(--f-baslik);letter-spacing:.04em;color:#7a6f60;font-variant-numeric:tabular-nums}
 .mk-kaldir{margin-left:auto;width:28px;height:28px;padding:0;border:0;background:none;color:#7a6f60;font-size:19px;line-height:1;cursor:pointer}
 .mk-kaldir:hover{color:#a8311a}
+.masa-kart[draggable="true"]{cursor:grab}
+.masa-kart.suruk{opacity:.45;cursor:grabbing}
+.masa-kart.birak{outline:2px dashed var(--kehribar);outline-offset:4px}
+.mk-tasi{display:flex;gap:2px;margin-left:auto}
+.mk-tasi + .mk-kaldir{margin-left:0}
+.mk-tasi button{width:24px;height:24px;padding:0;border:0;background:none;color:#7a6f60;font-size:14px;line-height:1;cursor:pointer}
+.mk-tasi button:hover:not(:disabled){color:#2b2520}
+.mk-tasi button:disabled{opacity:.25;cursor:default}
 .mk-bas{font:600 15px/1.3 var(--f-baslik);letter-spacing:.03em;color:#1e1a16}
 .mk-metin{font:400 14px/1.5 var(--f-govde);color:#2b2520}
 @media (min-width:1100px){
@@ -3178,10 +3186,43 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     else m.kart.push({ k: k, tur: tur || "oyku", baslik: baslik || "", metin: metin || "", t: ui.s ? ui.s.t : 0 });
     render();
   }
+  // Kartın yerini değiştir (sürükle-bırak ya da ◂ ▸)
+  function masaTasi(i, j) {
+    var K = ui.masa && ui.masa.kart; if (!K || i === j || i < 0 || j < 0 || i >= K.length || j >= K.length) return;
+    var x = K.splice(i, 1)[0]; K.splice(j, 0, x); render();
+  }
+  app.addEventListener("dragstart", function (e) {
+    var k = e.target.closest && e.target.closest(".masa-kart[data-masa-i]"); if (!k) return;
+    ui.masaSurukle = +k.getAttribute("data-masa-i"); k.classList.add("suruk");
+    try { e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(ui.masaSurukle)); } catch (x) { /* yok say */ }
+  });
+  app.addEventListener("dragover", function (e) {
+    if (ui.masaSurukle == null) return;
+    var k = e.target.closest && e.target.closest(".masa-kart[data-masa-i]"); if (!k) return;
+    e.preventDefault();
+    app.querySelectorAll(".masa-kart.birak").forEach(function (x) { if (x !== k) x.classList.remove("birak"); });
+    if (+k.getAttribute("data-masa-i") !== ui.masaSurukle) k.classList.add("birak");
+  });
+  app.addEventListener("drop", function (e) {
+    if (ui.masaSurukle == null) return;
+    var k = e.target.closest && e.target.closest(".masa-kart[data-masa-i]"); if (!k) return;
+    e.preventDefault();
+    var i = ui.masaSurukle, j = +k.getAttribute("data-masa-i"); ui.masaSurukle = null;
+    EYLEM_SES.sekme(); masaTasi(i, j);
+  });
+  app.addEventListener("dragend", function () {
+    if (ui.masaSurukle == null && !app.querySelector(".masa-kart.suruk")) return;
+    ui.masaSurukle = null; app.querySelectorAll(".masa-kart.suruk,.masa-kart.birak").forEach(function (x) { x.classList.remove("suruk", "birak"); });
+    if (ui.s) render();
+  });
   function masaSayi() { return ui.masa ? ui.masa.kart.length : 0; }
-  function masaKartHTML(x, i) {
-    return '<article class="masa-kart mk-' + esc(x.tur) + '" style="--egim:' + (((i * 7) % 5) - 2) * 0.6 + 'deg"><header><span class="mk-tur">' + esc(MASA_TUR[x.tur] || "Not") +
-      '</span><span class="mk-t">' + M.saatYaz(x.t) + '</span><button type="button" class="mk-kaldir" data-act="masa-kaldir" data-id="' + esc(x.k) +
+  function masaKartHTML(x, i, K) {
+    var n = K ? K.length : 0;
+    return '<article class="masa-kart mk-' + esc(x.tur) + '" draggable="true" data-masa-i="' + i + '" title="Sürükleyip yerini değiştir" style="--egim:' + (((i * 7) % 5) - 2) * 0.6 + 'deg"><header><span class="mk-tur">' + esc(MASA_TUR[x.tur] || "Not") +
+      '</span><span class="mk-t">' + M.saatYaz(x.t) + "</span>" +
+      '<span class="mk-tasi"><button type="button" data-act="masa-tasi" data-id="' + i + '" data-yon="-1"' + (i === 0 ? " disabled" : "") + ' aria-label="Sola taşı">◂</button>' +
+      '<button type="button" data-act="masa-tasi" data-id="' + i + '" data-yon="1"' + (i >= n - 1 ? " disabled" : "") + ' aria-label="Sağa taşı">▸</button></span>' +
+      '<button type="button" class="mk-kaldir" data-act="masa-kaldir" data-id="' + esc(x.k) +
       '" title="Masadan kaldır" aria-label="Masadan kaldır: ' + esc(x.baslik) + '">×</button></header>' +
       (x.baslik ? '<b class="mk-bas">' + esc(x.baslik) + "</b>" : "") + (x.metin ? '<p class="mk-metin">' + esc(x.metin) + "</p>" : "") + "</article>";
   }
@@ -3204,7 +3245,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       '<button type="button" class="masa-kapat" data-act="masa-kapat" data-k="masa-kapat">× Esc</button></div>' +
       '<div class="masa-govde">' +
       '<section class="masa-kartlar" aria-label="Masadakiler"><h3 class="grup-bas">Masadakiler · ' + K.length + "</h3>" +
-      (K.length ? '<div class="masa-izgara">' + K.map(masaKartHTML).join("") + "</div>"
+      (K.length ? '<div class="masa-izgara">' + K.map(function (x, i) { return masaKartHTML(x, i, K); }).join("") + "</div>"
                 : '<p class="ipucu">Masan boş. Cevapların, muayene bulgularının, sonuçların, e-Nabız satırlarının yanındaki küçük raptiyeye (' + MASA_IKON + ') bas: kart olarak buraya düşer. Tanıyı koymadan önce hepsini burada yan yana gör.</p>') +
       "</section></div></div></div>";
   }
@@ -3492,7 +3533,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     setHTML($("pEnabiz"), enabizHTML(s));
     setHTML($("pMasa"), masaSeritHTML(s));
     var mbEl = $("pMasaBuyuk"), mbG = mbEl && mbEl.querySelector(".masa-govde"), mbSt = mbG ? mbG.scrollTop : 0;
-    setHTML(mbEl, masaBuyukHTML(s)); mbG = mbEl && mbEl.querySelector(".masa-govde"); if (mbG && mbSt) mbG.scrollTop = mbSt;
+    if (ui.masaSurukle == null) { setHTML(mbEl, masaBuyukHTML(s)); mbG = mbEl && mbEl.querySelector(".masa-govde"); if (mbG && mbSt) mbG.scrollTop = mbSt; } // sürüklerken masa yeniden çizilmez
     var mus = $("masaUstSay"); if (mus) mus.textContent = masaSayi() ? " · " + masaSayi() : "";
     setHTML($("altEylem"), altEylemHTML(s));
     setHTML($("pSekme"), panelHTML(s));
@@ -3765,6 +3806,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       case "masa-ac": masaAc(); return;
       case "masa-kapat": masaKapat(); return;
       case "masa-dis": masaKapat(); return;
+      case "masa-tasi": masaTasi(+id, +id + (+b.getAttribute("data-yon"))); return;
       case "masa-kaldir": if (ui.masa) { ui.masa.kart = ui.masa.kart.filter(function (x) { return x.k !== id; }); render(); } return;
       case "hms-danis": if (!gercekci()) hemsireDanis(s); render(); return;
       case "hms-sec":
