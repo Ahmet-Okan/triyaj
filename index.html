@@ -1636,6 +1636,14 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   "use strict";
   var M = window.TriyajMotor, T = window.ISLEM_TABLOSU, V = window.VAKALAR;
   var app = document.getElementById("app");
+  // Deneme özellikleri (Ahmet seçecek). Varsayılan KAPALI; ?oz=hepsi ya da ?oz=monitor,palet ile açılır, localStorage "triyaj-oz" de aynı biçimde.
+  var OZ_ADLAR = ["monitor", "atmosfer", "bileklik", "palet", "telefon", "ekg", "karne", "anons", "gecmis", "paylas"];
+  var OZ = (function () {
+    var o = {}, acik = "";
+    try { acik = new URLSearchParams(location.search).get("oz") || localStorage.getItem("triyaj-oz") || ""; } catch (e) { /* yok say */ }
+    OZ_ADLAR.forEach(function (k) { o[k] = acik === "hepsi" || acik.split(",").indexOf(k) >= 0; });
+    return o;
+  })();
   var duyuru = document.getElementById("duyuru");
 
   if (!M || !T || !V || !V.length) {
@@ -3451,7 +3459,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       ust = '<div class="ercan-balon soru"><button type="button" class="balon-kapat" data-act="hms-gizle" title="Sonra cevapla" aria-label="Sonra cevapla">×</button>' +
         '<p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + tx(b.soru.soru) + "</p>" + secenek + "</div>";
     } else if (ui.hmsBalon) {
-      ust = '<div class="ercan-balon"><p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + yazHTML("e:" + ercanAnahtar(ui.hmsBalon.metin) + ":" + Math.round(ui.hmsBalon.bitis), ui.hmsBalon.metin, "", true) +
+      ust = '<div class="ercan-balon"><p class="replik"><span class="kim hms-k">' + esc(H.hitap) + "</span> – " + tx(ui.hmsBalon.metin) +
         masaPin(ercanAnahtar(ui.hmsBalon.metin), "ercan", "", ui.hmsBalon.metin) + "</p></div>";
     }
     return '<div class="ercan-ic' + (kizgin ? " kizgin" : "") + '">' + ust +
