@@ -937,6 +937,9 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 /* ===== Rehber: daha uzun anlatımlar için geniş balon ===== */
 .rehber{width:min(500px,calc(100vw - 24px))}
 .rehber .replik{font-size:15px;line-height:1.55}
+.rehber.gorev{border-color:var(--uyari);box-shadow:0 18px 50px rgba(0,0,0,.75),0 0 0 1px rgba(220,171,75,.35)}
+.rehber-bekle{font:600 12.5px var(--f-baslik);letter-spacing:.12em;text-transform:uppercase;color:var(--uyari);margin-top:4px}
+.rehber-not{font:italic 13px var(--f-govde);color:var(--soluk)}
 /* ===== Öykü / geçmiş: cevap sorunun hemen altında ===== */
 .islem-cevap{counter-increment:sec;position:relative;display:grid;gap:4px;padding:9px 8px 11px 42px;border-left:3px solid #4a443c;background:rgba(239,233,220,.03);margin:2px 0}
 .islem-cevap::before{content:counter(sec) ". –";position:absolute;left:6px;top:9px;font:500 15px/1.45 var(--f-baslik);color:#7b7467}
@@ -2398,7 +2401,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   /* ================= HASTA YAKINI (ekranı kaplayan baskın) ================= */
   function yakinKontrol(s) {
     var Y = ui.vaka && ui.vaka.yakin;
-    if (!Y || ui.intro || ui.yakinAcik || s.bitti || (ui.enabiz && ui.enabiz.acik)) return;
+    if (!Y || ui.intro || ui.yakinAcik || s.bitti || (ui.enabiz && ui.enabiz.acik) || ui.rehberAdim != null) return;
     for (var i = 0; i < Y.olaylar.length; i++) {
       var o = Y.olaylar[i], d = ui.yakin[o.id] = ui.yakin[o.id] || {};
       if (d.bitti || s.t < (d.sonra != null ? d.sonra : o.sonraSn + (ui.yakinOfset || 0))) continue;
@@ -3465,6 +3468,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       if (y) y.focus({ preventScroll: true });
     }
     canliGuncelle();
+    if (ui.rehberAdim != null) rehberKontrol();
   }
 
   function canliGuncelle() {
@@ -3776,21 +3780,56 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
   /* ---------- Rehberli ilk vaka (CK3'ün mini öğreticileri gibi): Ercan Abi ekranı tek tek gösterir, rehberde saat durur ---------- */
   // Rehber adımları. sekme: o pencereyi açar; sekme yoksa açık pencere, büyük masa ve Ercan'ın geçmiş paneli kapanır.
   // tel: telefonda açılacak sekme (yoksa hasta ekranı); hedefTel: telefonda farklı hedef. Metinler ses/ercan-metinler.json ile birebir aynı olmalı.
+  // Uygulamalı rehber (yalnız Pratik mod). bitti(s, b0) olan adımda Ercan bir şey ister; oyuncu yapınca kendiliğinden geçer ("Atla" da var).
+  // sekme: adım o pencerenin içinde (açık kalır). enabiz: e-Nabız açık kalır. yer: balonun sabit yeri (pencere içi adımlar). not: seslendirilmeyen küçük not.
+  function rehberSay(s) {
+    return { soru: Object.keys(s.sorulan).length + Object.keys(s.gecmis).length, muayene: Object.keys(s.muayene).length, tetkik: Object.keys(s.tetkik).length,
+             masa: masaSayi(), eb: s.enabiz ? Object.keys(s.enabiz.bolum).length : 0 };
+  }
+  function hastadaMi() { return pc() ? !ui.pencere : (genis() ? true : etkinSekme() === "hasta"); }
   var REHBER = [
-    { hedef: null, tel: "hasta", metin: "Hocam, hoş geldin. Amacımız belli: doğru tanıyı koy, kritik işleri zamanında yap, hastaya zarar verme, boşa tetkik isteme. Puanın bunlardan çıkar, en fazla bin." },
+    { hedef: null, tel: "hasta", metin: "Hoş geldin hocam, ben Ercan, bu nöbette yanındayım. İşin şu: kapıdan gelen hastanın derdini bulacak ve onu zamanında tedavi edeceksin. Vaka bitince sana bir karne veririm." },
+    { hedef: null, tel: "hasta", metin: "Karnede dört şeye bakarım: doğru tanıyı koydun mu, hayati işleri geç kalmadan yaptın mı, hastaya zarar verdin mi, boşuna tetkik isteyip vakit ve para harcadın mı. Hepsi yerindeyse bin puan." },
     { hedef: "#pHasta", tel: "hasta", metin: "Hocam, bu senin hastan. Portresine tıklayınca görünüşünü okursun. Üstündeki rozetler hastaya yaptıklarını gösterir." },
     { hedef: "#pVital", tel: "hasta", metin: "Vitaller kapalı, ölçmeden göremezsin. Monitöre bağlamak 2 dakika ama sonra nabız, saturasyon, tansiyon hep ekranda. Tek tek ölçmek 5 saniyeyle 1 dakika arası." },
-    { hedef: ".olcu.saat", metin: "Bu vaka saati. Burada bir saniye, gerçekte de bir saniye. Her iş süre yer: soru 20 saniye, muayene 45, tetkik istemek 30, ilaç ya da damar yolu 1 dakika, konsültasyon 2 dakika. Sen düşünürken hasta bekler, beklerse kötüleşir." },
-    { hedef: "#maliyet", metin: "Bu da masraf hocam. Tetkiğin parası var: EKG 150 lira, troponin 350, BT 1800. Öykü, muayene, ölçüm ve e-Nabız bedava, sadece zaman yer. Gereksiz tetkik hem bütçeyi hem puanını yer." },
-    { hedef: "#pNav", metin: "Kararların solda: bir öykü ve geçmiş, iki muayene, üç tetkik, dört müdahale, beş tanı. Tıklayınca büyük pencere açılır, Esc kapatır. N tuşu e-Nabız'ı açar." },
-    { hedef: ".serbest", sekme: "oyku", metin: "Öykü ve geçmiş burada. Listeden seç ya da istediğini yaz; anlamazsa sana en yakın soruları önerir. Cevap sorunun hemen altında çıkar." },
-    { hedef: "#sekmeIcerik .liste", sekme: "muayene", metin: "Muayenede altı sistem var: genel durum, kalp, akciğer, batın, cilt, nörolojik. Her biri 45 saniye. Hepsine bakmak zorunda değilsin, şikâyete göre seç. Durum değişirse tekrar bakarsın." },
-    { hedef: "#sekmeIcerik .alt-sekmeler", sekme: "tetkik", metin: "Tetkik istemek 30 saniye, sonucu arka planda gelir: EKG 5 dakikada, troponin 1 saatte. İstem ve Sonuçlar ayrı sayfada. Sonuç gelince sol altta kâğıt belirir, tıklarsın, açılır." },
-    { hedef: "#sekmeIcerik .alt-sekmeler", sekme: "mudahale", metin: "Müdahaleler dört grupta: damar yolu ve sıvı, solunum ve pozisyon, ilaç, konsültasyon ve karar. Damardan ilaç için önce damar yolu açacaksın. Zararlı ilaç en ağır cezadır. Fikrini değiştirirsen 30 saniye içinde vazgeç, ama geçen süre geri gelmez." },
-    { hedef: ".ust", metin: "Üst çubuk dikkat isteyen her şeyi gösterir: kötüleşme, gelen sonuç, bekleyen tetkik. Tıklayınca oraya gidersin. Space ile duraklatırsın." },
-    { hedef: "#pHemsire .ercan-dugme", metin: "Ben sağ alttayım. Bir şey dersem balon çıkar, arada soru da sorarım. Eski mesajlar ve danışmak için üstüme tıkla, puanını kırmam." },
-    { hedef: ".alt-eylem", metin: "Tetkik sonuçları arka planda gelir. Sonucu bekle düğmesi saati ileri sarar. Alttaki zaman şeridine tıklarsan bütün olayları görürsün." },
-    { hedef: "#pMasa", hedefTel: ".masa-ust", metin: "Burası masan hocam. Cevapların, sonuçların, benim söylediklerimin yanındaki küçük raptiyeye basarsan masaya düşer, M tuşu açar. Sonuç gelince sol altta kâğıt belirir. Hazırsan saat şimdi başlıyor." }
+    { hedef: ".olcu.saat", metin: "Bu vaka saati. Burada geçen bir saniye gerçekte de bir saniye. Yaptığın her iş saatten yer; sen düşünürken hasta bekler, beklerse kötüleşir. Takılırsan Space ile durdurursun." },
+    { hedef: "#maliyet", metin: "Bu da masraf. Tetkiklerin parası var: EKG 150 lira, tomografi 1800. Soru sormak, muayene, ölçüm ve e-Nabız bedava, sadece zaman yer. Boşuna istenen tetkik hem bütçeyi hem puanını yer." },
+    // Öykü
+    { hedef: "#sekme-oyku", metin: "Sol menüden tek tek gidelim. Birinci kısım Öykü: hastanın şikâyetini ve geçmişini burada sorarsın. Hadi, Öykü'ye tıkla.",
+      bitti: function () { return acikSekme() === "oyku"; } },
+    { hedef: ".og-bolum", sekme: "oyku", yer: "alt", metin: "Solda hastaya sorulacaklar, sağda geçmişi: hastalıkları, ilaçları, ailesi. Listeden seç ya da yukarıdaki kutuya kendin yaz. Her soru 20 saniye. Bir soru sor.",
+      bitti: function (s, b) { return rehberSay(s).soru > b.soru; } },
+    { hedef: ".islem-cevap .masa-pin", sekme: "oyku", yer: "alt", metin: "Cevap sorunun hemen altına geldi. Yanındaki küçük raptiyeyi gördün mü? Önemli bulduğun cevabı ona basıp masaya koy, sonra unutmazsın.",
+      bitti: function (s, b) { return masaSayi() > b.masa; } },
+    { hedef: '[data-k="pencere-kapat"]', hedefTel: "#sekme-hasta", sekme: "oyku", yer: "alt", metin: "Masaya düştü. Şimdi Hastaya dön düğmesine bas.", not: "Telefonda: alttaki Hasta sekmesi.",
+      bitti: function () { return hastadaMi(); } },
+    // Muayene
+    { hedef: "#sekme-muayene", metin: "İkinci kısım Muayene. Tıkla.", bitti: function () { return acikSekme() === "muayene"; } },
+    { hedef: "#sekmeIcerik .liste", sekme: "muayene", yer: "alt", metin: "Altı sistem var, her biri 45 saniye. Hepsine bakmak zorunda değilsin, şikâyete uyanı seç. Birini muayene et.",
+      bitti: function (s, b) { return rehberSay(s).muayene > b.muayene; } },
+    { hedef: '[data-k="pencere-kapat"]', hedefTel: "#sekme-hasta", sekme: "muayene", yer: "alt", metin: "Bulgu da altına yazıldı; onu da raptiyeyle masaya koyabilirsin. Hastaya dön.", not: "Telefonda: alttaki Hasta sekmesi.",
+      bitti: function () { return hastadaMi(); } },
+    // Tetkik ve zamanı iyi kullanmak
+    { hedef: "#sekme-tetkik", metin: "Üçüncü kısım Tetkik. Tıkla.", bitti: function () { return acikSekme() === "tetkik"; } },
+    { hedef: "#sekmeIcerik .liste", sekme: "tetkik", yer: "alt", metin: "Her tetkikin yanında ücreti ve sonucun ne zaman geleceği yazar. İstemek 30 saniye, sonuç arka planda gelir. EKG'yi iste: ucuzdur, sonucu 5 dakikada gelir.",
+      bitti: function (s, b) { return rehberSay(s).tetkik > b.tetkik; } },
+    { hedef: '[data-k="enabiz-ac"]', hedefTel: "#sekme-oyku", sekme: "tetkik", yer: "alt", metin: "İşte oyunun en önemli taktiği: EKG gelene kadar 5 dakika var, boş bekleme. Bu sürede soru sorar, muayene eder ya da e-Nabız'a bakarsın. Soldaki e-Nabız'a tıkla.",
+      not: "Telefonda: Öykü sekmesindeki e-Nabız düğmesi.", bitti: function () { return !!(ui.enabiz && ui.enabiz.acik); } },
+    { hedef: '[data-act="enabiz-giris"], .eb-menu', sekme: "tetkik", enabiz: true, yer: "sag-alt", metin: "Önce hastayı sorgula, 30 saniye. Sonra soldaki bölümlere bak: eski başvurular, tahliller, ilaçlar, aşılar. Bir bölüm aç.",
+      bitti: function (s, b) { return !!s.enabiz && Object.keys(s.enabiz.bolum).length > b.eb; } },
+    { hedef: '[data-k="enabiz-kapat"]', sekme: "tetkik", enabiz: true, yer: "sag-alt", metin: "Bu arada EKG'nin süresi işledi, boşa beklemedin. Şimdi e-Nabız'ı kapat, Esc de olur.",
+      bitti: function () { return !(ui.enabiz && ui.enabiz.acik); } },
+    // Müdahale ve tanı
+    { hedef: "#sekme-mudahale", metin: "Dördüncü kısım Müdahale. Tıkla.", bitti: function () { return acikSekme() === "mudahale"; } },
+    { hedef: "#sekmeIcerik .alt-sekmeler", sekme: "mudahale", yer: "alt", metin: "Müdahaleler dört grupta: damar yolu ve sıvı, solunum ve pozisyon, ilaç, konsültasyon ve karar. Üstten grubu seçersin. Damardan ilaç için önce damar yolu açılır. Yanlışlıkla bir şey yaptıysan 30 saniye içinde vazgeçebilirsin." },
+    { hedef: "#sekme-tani", metin: "Beşinci kısım Tanı. Tıkla.", bitti: function () { return acikSekme() === "tani"; } },
+    { hedef: "#sekmeIcerik fieldset", sekme: "tani", yer: "alt", metin: "Emin olunca tanını buradan seçip vakayı bitirirsin. Bitirince saat durur ve karnen gelir, o yüzden acele etme." },
+    { hedef: '[data-k="pencere-kapat"]', hedefTel: "#sekme-hasta", sekme: "tani", yer: "alt", metin: "Turu bitirdik. Hastaya dön.", not: "Telefonda: alttaki Hasta sekmesi.",
+      bitti: function () { return hastadaMi(); } },
+    // Masa, Ercan, olaylar
+    { hedef: "#pMasa", hedefTel: ".masa-ust", metin: "Sağdaki masa senin not defterin. Raptiyelediğin her şey burada; tıklayınca ya da M tuşuyla büyür." },
+    { hedef: "#pHemsire .ercan-dugme", metin: "Ben de sağ alttayım. Bir şey dersem balon çıkar, arada soru sorarım. Takılırsan üstüme tıkla, danış; puanını kırmam." },
+    { hedef: ".alt-eylem", metin: "Alttaki şerit olayları gösterir, tıklarsan hepsini görürsün. Sonuç gelince sol altta kâğıt belirir, tıklayınca sonuç açılır. Hazırsan saat şimdi başlıyor." }
   ];
   function rehberIstekOku() { try { return localStorage.getItem("triyaj-rehber") !== "bitti"; } catch (e) { return true; } }
   ui.rehberIste = rehberIstekOku();
@@ -3807,7 +3846,7 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
     var kapandi = false;
     if (ui.hmsAcik) { ui.hmsAcik = false; kapandi = true; }
     if (ui.masa && ui.masa.acik) { ui.masa.acik = false; ui.masaDuraklatti = false; kapandi = true; } // saat rehberde zaten duruyor
-    if (ui.enabiz && ui.enabiz.acik) { ui.enabiz.acik = false; kapandi = true; }
+    if (ui.enabiz && ui.enabiz.acik && !a.enabiz) { ui.enabiz.acik = false; kapandi = true; }
     if (!a.sekme && pc() && ui.pencere) { ui.pencere = false; kapandi = true; }
     if (kapandi) render();
     if (a.sekme) sekmeSec(a.sekme);
@@ -3818,12 +3857,23 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       document.body.appendChild(el);
       el.addEventListener("click", function (e) { var b = e.target.closest("[data-r]"); if (!b) return; if (b.getAttribute("data-r") === "ileri") { ui.rehberAdim++; rehberCiz(); } else rehberBitir(true); });
     }
-    var son = ui.rehberAdim === REHBER.length - 1;
-    el.innerHTML = (H ? '<img src="' + esc(H.portre) + '" alt="">' : "") + '<div><p class="rehber-adim">Rehber · ' + (ui.rehberAdim + 1) + " / " + REHBER.length + "</p>" +
-      '<p class="replik"><span class="kim hms-k">Ercan Abi</span> – ' + tx(a.metin) + "</p>" +
-      '<div class="rehber-btn"><button type="button" class="btn kucuk" data-r="ileri">' + (son ? "Başla" : "İleri · Enter") + '</button><button type="button" class="btn kucuk ikincil" data-r="kapat">Rehberi kapat</button></div></div>';
+    var son = ui.rehberAdim === REHBER.length - 1, gorev = !!a.bitti;
+    ui.rehberB0 = ui.s ? rehberSay(ui.s) : {}; ui.rehberGecis = false;
+    el.className = "rehber" + (gorev ? " gorev" : "");
+    el.innerHTML = (H ? '<img src="' + esc(H.portre) + '" alt="">' : "") + '<div><p class="rehber-adim">Rehber · ' + (ui.rehberAdim + 1) + " / " + REHBER.length + (gorev ? " · senin sıran" : "") + "</p>" +
+      '<p class="replik"><span class="kim hms-k">Ercan Abi</span> – ' + tx(a.metin) + "</p>" + (a.not && !pc() ? '<p class="rehber-not">' + esc(a.not) + "</p>" : "") +
+      (gorev ? '<p class="rehber-bekle">▸ Sen yapınca devam ederim.</p>' : "") +
+      '<div class="rehber-btn"><button type="button" class="btn kucuk' + (gorev ? " ikincil" : "") + '" data-r="ileri">' + (son ? "Başla" : gorev ? "Atla" : "İleri · Enter") + "</button>" +
+      '<button type="button" class="btn kucuk ikincil" data-r="kapat">Rehberi kapat</button></div></div>';
     var secici = !pc() && a.hedefTel ? a.hedefTel : a.hedef, hedef = secici ? document.querySelector(secici) : null, r = hedef && hedef.getBoundingClientRect();
-    if (hedef && r.width && r.height) {
+    el.style.right = "auto";
+    if (a.yer) {
+      // pencere içi görev: balon sabit yerde dursun, tıklanacak listeyi örtmesin
+      if (hedef && r.width && r.height) hedef.classList.add("rehber-hedef");
+      el.style.transform = "none"; el.style.top = "auto"; el.style.bottom = "24px";
+      if (a.yer === "sag-alt") { el.style.left = "auto"; el.style.right = "24px"; }
+      else { el.style.left = Math.max(12, (window.innerWidth - el.offsetWidth) / 2) + "px"; }
+    } else if (hedef && r.width && r.height) {
       hedef.classList.add("rehber-hedef");
       var w = el.offsetWidth, h = el.offsetHeight, x = Math.min(Math.max(12, r.left), window.innerWidth - w - 12), y = r.bottom + 12;
       if (y + h > window.innerHeight - 12) y = r.top - h - 12;
@@ -3831,8 +3881,15 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       el.style.left = x + "px"; el.style.top = y + "px"; el.style.bottom = "auto";
     } else { el.style.left = "50%"; el.style.top = "50%"; el.style.bottom = "auto"; el.style.transform = "translate(-50%, -50%)"; }
     if (hedef && r.width) el.style.transform = "none";
-    var ileri = el.querySelector('[data-r="ileri"]'); if (ileri) ileri.focus({ preventScroll: true });
+    var ileri = el.querySelector('[data-r="ileri"]'); if (ileri && !gorev) ileri.focus({ preventScroll: true });
     ercanSes(a.metin);
+  }
+  function rehberKontrol() {
+    var a = REHBER[ui.rehberAdim];
+    if (!a || !a.bitti || ui.rehberGecis || !ui.s || ui.s.bitti) return;
+    if (!a.bitti(ui.s, ui.rehberB0 || {})) return;
+    ui.rehberGecis = true; var adim = ui.rehberAdim;
+    setTimeout(function () { ui.rehberGecis = false; if (ui.rehberAdim !== adim) return; ui.rehberAdim++; rehberCiz(); }, 550);
   }
   function rehberBitir(kaydet) {
     var el = $("rehber"); if (el) el.remove();
@@ -3868,9 +3925,9 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
       return;
     }
     if (ui.rehberAdim != null) {
-      if (e.key === "Enter") { ui.rehberAdim++; rehberCiz(); e.preventDefault(); }
-      else if (e.key === "Escape") { rehberBitir(true); e.preventDefault(); }
-      return;
+      var ra = REHBER[ui.rehberAdim], gorevde = !!(ra && ra.bitti);
+      if (e.key === "Escape" && !(gorevde && ui.enabiz && ui.enabiz.acik)) { rehberBitir(true); e.preventDefault(); return; }
+      if (!gorevde) { if (e.key === "Enter") { ui.rehberAdim++; rehberCiz(); e.preventDefault(); } return; }
     }
     if (ui.yakinAcik) {
       var n = parseInt(e.key, 10);
