@@ -1768,12 +1768,13 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
   "use strict";
   var M = window.TriyajMotor, T = window.ISLEM_TABLOSU, V = window.VAKALAR;
   var app = document.getElementById("app");
-  // Deneme özellikleri (Ahmet seçecek). Varsayılan KAPALI; ?oz=hepsi ya da ?oz=monitor,palet ile açılır, localStorage "triyaj-oz" de aynı biçimde.
+  // Özellikler (07.10: Ahmet ve ortak 10 fikrin hepsini seçti). Hepsi açık; ?oz=-anons,-palet ile tek tek kapatılabilir (deneme için).
   var OZ_ADLAR = ["monitor", "atmosfer", "bileklik", "palet", "telefon", "ekg", "karne", "anons", "gecmis", "paylas"];
   var OZ = (function () {
-    var o = {}, acik = "";
-    try { acik = new URLSearchParams(location.search).get("oz") || localStorage.getItem("triyaj-oz") || ""; } catch (e) { /* yok say */ }
-    OZ_ADLAR.forEach(function (k) { o[k] = acik === "hepsi" || acik.split(",").indexOf(k) >= 0; });
+    var o = {}, k = "";
+    try { k = new URLSearchParams(location.search).get("oz") || ""; } catch (e) { /* yok say */ }
+    var kapali = k.split(",").filter(function (x) { return x.charAt(0) === "-"; }).map(function (x) { return x.slice(1); });
+    OZ_ADLAR.forEach(function (ad) { o[ad] = kapali.indexOf(ad) < 0; });
     return o;
   })();
   var duyuru = document.getElementById("duyuru");
