@@ -405,9 +405,9 @@ legend{display:inline-block;font:600 21px/1 var(--f-baslik);letter-spacing:.03em
 .son-btns .btn{flex:1 1 0}
 @media (min-width:920px){.son-btns{position:static;margin:0;padding:0;background:none;border:0}.son-btns .btn{flex:0 0 auto}}
 
-.uyari{max-width:1180px;margin:0 auto;padding:12px max(16px,env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));font:italic 12.5px/1.5 var(--f-govde);color:#7b7467;border-top:1px solid var(--cizgi)}
-.uyari strong{font-style:normal;color:var(--soluk)}
-body.vaka-modu .uyari{padding-bottom:16px}
+.demo-not{max-width:1180px;margin:0 auto;padding:12px max(16px,env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));font:italic 12.5px/1.5 var(--f-govde);color:#7b7467;border-top:1px solid var(--cizgi)}
+.demo-not strong{font-style:normal;color:var(--soluk)}
+body.vaka-modu .demo-not{padding-bottom:16px}
 .hata{padding-block:40px;display:grid;gap:12px}
 .hata h1{font-size:40px;color:var(--beyaz)}
 
@@ -499,7 +499,7 @@ body.giris-modu::before{background:
 @media (min-width:1100px){
   body.vaka-modu{overflow:hidden}
   body.vaka-modu #app{display:flex;flex-direction:column;height:100vh;height:100dvh}
-  body.vaka-modu .uyari{display:none}
+  body.vaka-modu .demo-not{display:none} /* eskiden .uyari idi: sarı vital değerlerini de gizliyordu */
   .ust .ust-ic{max-width:none;padding-inline:20px;flex-wrap:nowrap;gap:6px 22px}
   .uyarilar{flex:1 1 auto;order:0;flex-wrap:nowrap;overflow:hidden;justify-content:flex-start}
   .olcu.bek{display:none}
@@ -979,6 +979,16 @@ body.intro-portre #pHasta .gorsel img,body.intro-portre #pHasta .gorsel svg{opac
 .tel-kart.on{opacity:1;outline:3px solid var(--iyi);outline-offset:2px;transform:translateY(-2px)}
 .tk-tur{font:700 10.5px var(--f-baslik);letter-spacing:.14em;text-transform:uppercase;color:var(--mk,#7a5530)}
 .tel-alt-btn{display:flex;gap:8px}
+.tel-sekmeler{display:flex;gap:0;border-bottom:1px solid var(--cizgi-2)}
+.tel-sekme{border:1px solid transparent;border-bottom:none;background:transparent;color:var(--soluk);font:600 14px var(--f-baslik);letter-spacing:.12em;text-transform:uppercase;padding:9px 16px 8px;min-height:40px;cursor:pointer;margin-bottom:-1px}
+.tel-sekme.on{color:var(--beyaz);border-color:var(--cizgi-2);background:#1c1d1b;box-shadow:inset 0 3px 0 var(--iyi)}
+.tel-sekme:hover{color:var(--beyaz)}
+.tel-tekrar{position:fixed;z-index:24;left:calc(72px + 16px);bottom:104px;display:flex;align-items:center;gap:10px;max-width:260px;padding:8px 14px 8px 8px;border:1px solid var(--iyi);
+  background:rgba(11,10,9,.96);color:var(--metin);box-shadow:0 12px 30px rgba(0,0,0,.7);cursor:pointer;text-align:left;font:inherit;animation:si-gel .35s ease-out}
+.tel-tekrar .tel-ikon{width:40px;height:40px;font-size:20px}
+.tel-tekrar .si-yazi b{color:var(--iyi)}
+.tel-tekrar:hover,.tel-tekrar:focus-visible{background:#141d1b}
+@media (max-width:1099px){ .tel-tekrar{left:12px;bottom:calc(var(--alt-h) + env(safe-area-inset-bottom) + 84px);max-width:calc(100vw - 110px)} }
 .tel-cevap.iyi .kim{color:var(--iyi)} .tel-cevap.kotu .kim,.tel-cevap.orta .kim{color:var(--uyari)}
 .ekg-buyut{margin-top:8px}
 body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:has(.ekgb-perde) .duraklat-bant{display:none}
@@ -1220,7 +1230,7 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
 <body>
 <div id="app" aria-live="off"></div>
 <div id="duyuru" class="sr" aria-live="polite"></div>
-<p class="uyari"><strong>Eğitim amaçlı demo.</strong> Tıbbi tavsiye değildir. Vakalar hekim onayı bekliyor. · Hasta yakını efekti: “Orchestral Shock Hit”, BudgetPixel AI, CC BY 4.0 · Diğer emeği geçenler: Ayarlar.</p>
+<p class="demo-not"><strong>Eğitim amaçlı demo.</strong> Tıbbi tavsiye değildir. Vakalar hekim onayı bekliyor. · Hasta yakını efekti: “Orchestral Shock Hit”, BudgetPixel AI, CC BY 4.0 · Diğer emeği geçenler: Ayarlar.</p>
 <noscript><p class="wrap">Triyaj'ı oynamak için JavaScript açık olmalı.</p></noscript>
 
 <script src="vakalar.js" charset="utf-8"></script>
@@ -2619,7 +2629,7 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
     ozMon.t = 0; ozMon.x = 0; ozMon.yE = null; ozMon.yP = null; ozAtm.sonDurum = null; ozAtm.nefesBitis = 0; // deneme: monitör dalgası, atmosfer
     ui.hmsAcik = false; ui.hmsBalon = null; ui.hmsSoruGizle = null; ui.pencere = false; ui.geri = null;
     ui.yazildi = {}; ui.yazIlerleme = {}; ui.yazAtla = {}; // daktilo: yazılması biten konuşmalar
-    ui.palet = { acik: false, q: "", sec: 0, duraklatti: false }; ui.telefon = { acik: false, id: null, secili: [], cevap: null, aranan: {}, duraklatti: false }; ui.ekgBuyuk = null; // deneme: palet, telefon, EKG büyüteç
+    ui.palet = { acik: false, q: "", sec: 0, duraklatti: false }; ui.telefon = { acik: false, id: null, secili: [], cevap: null, aranan: {}, yarim: {}, sekme: "tum", duraklatti: false }; ui.ekgBuyuk = null; // deneme: palet, telefon, EKG büyüteç
     ui.mod = ui.modSecim || "pratik"; // bu vakanın modu: vaka sürerken değişmez
     ui.mudGrup = null; ui.tetkikSayfa = "istem"; // müdahale penceresinde seçili grup, tetkik penceresinde İstem / Sonuçlar
     ui.masa = { kart: [], acik: false }; ui.masaDuraklatti = false;
@@ -3508,26 +3518,34 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
   }
   function telefonAc(id) {
     var s = ui.s; if (!s || s.bitti || !OZ.telefon) return;
-    var t = ui.telefon; t.acik = true; t.id = id; t.secili = []; t.cevap = null; denemeDurdur(t);
+    var t = ui.telefon; t.acik = true; t.id = id; t.secili = []; t.cevap = null; t.sekme = "tum"; denemeDurdur(t);
     if (SES.acik && SES.ayar.efekt) { ton(880, .14, "sine", .05); ton(660, .14, "sine", .05, .16); ton(880, .14, "sine", .05, .7); ton(660, .14, "sine", .05, .86); }
     render();
     var k = app.querySelector(".tel-kart"); if (k) k.focus({ preventScroll: true });
   }
+  // Cevap almadan kapatılan çağrı "yarım" kalır; sol alttaki ☎ düğmesiyle tekrar aranır.
   function telefonKapat() {
     var t = ui.telefon; if (!t || !t.acik) return;
     t.acik = false; denemeSurdur(t);
+    if (t.cevap) delete t.yarim[t.id]; else t.yarim[t.id] = true;
     if (ui.s && !ui.s.bitti) render();
   }
-  // Masada kart varsa onlar; yoksa toplanan bulgular (öykü cevapları, geçmiş, muayene, gelen sonuçlar).
-  function telefonKartlar(s) {
-    if (ui.masa && ui.masa.kart.length) return ui.masa.kart.map(function (x) { return { k: x.k, tur: x.tur, baslik: x.baslik, metin: x.metin }; });
-    var v = ui.vaka, L = [];
+  function telefonYarim() { var t = ui.telefon; return t ? Object.keys(t.yarim || {}).filter(function (id) { return TEL_KISI[id]; }) : []; }
+  function telefonMasa() { return (ui.masa && ui.masa.kart.length) ? ui.masa.kart.map(function (x) { return { k: x.k, tur: x.tur, baslik: x.baslik, metin: x.metin }; }) : []; }
+  // Tümü: anlatılabilecek her şey (ölçümler, öykü, geçmiş, muayene, gelen sonuçlar) + masadaki diğer kartlar.
+  function telefonTum(s) {
+    var v = ui.vaka, L = [], var_ = {};
+    if (s.monitor != null) { var c = M.anlikVitaller(s); L.push({ k: "vital:monitor", tur: "vital", baslik: "Monitör", metin: "Nabız " + c.nabiz + " · SpO₂ %" + c.spo2 + " · TA " + c.ta + " · " + (c.ritim || "") }); }
+    HUCRELER.forEach(function (k) { var o = s.olcum[k]; if (o && !(s.monitor != null && MONITOR_K[k])) L.push({ k: "vital:" + k, tur: "vital", baslik: M.VITAL_AD[k], metin: M.bicimVital(k, o.deger) + " (" + M.saatYaz(o.t) + ")" }); });
     (v.oyku || []).forEach(function (q) { var c = s.sorulan[q.id]; if (c && !c.cevapsiz) L.push({ k: "oyku:" + q.id, tur: "oyku", baslik: "“" + q.soru + "”", metin: c.cevap }); });
     (v.gecmis || []).forEach(function (g) { var r = s.gecmis[g.id]; if (r && !r.cevapsiz && !r.enabiz) L.push({ k: "gecmis:" + g.id, tur: "gecmis", baslik: g.ad, metin: r.cevap }); });
     T.muayeneSistemleri.forEach(function (m) { var r = s.muayene[m.id]; if (r) L.push({ k: "muayene:" + m.id, tur: "muayene", baslik: m.ad, metin: r.bulgu }); });
     Object.keys(s.tetkik).forEach(function (id) { var p = s.tetkik[id]; if (p.geldi) L.push({ k: "sonuc:" + id, tur: "sonuc", baslik: M.tetkikBilgisi(s, id).ad, metin: p.sonuc }); });
+    L.forEach(function (x) { var_[x.k] = true; });
+    telefonMasa().forEach(function (x) { if (!var_[x.k]) L.push(x); });
     return L;
   }
+  function telefonKartlar(s) { return ui.telefon.sekme === "masa" ? telefonMasa() : telefonTum(s); }
   function telefonAnlat() {
     var s = ui.s, t = ui.telefon; if (!s || !t.acik || !t.secili.length) return;
     var v = ui.vaka, kritik = ((v.puanlama || {}).kritikler || []).some(function (k) { return k.id === t.id; });
@@ -3547,23 +3565,33 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
     render();
   }
   function telefonHTML(s) {
-    var t = ui.telefon; if (!t || !t.acik || !TEL_KISI[t.id]) return "";
-    var kisi = TEL_KISI[t.id], K = telefonKartlar(s), masadan = !!(ui.masa && ui.masa.kart.length);
+    var t = ui.telefon; if (!t) return "";
+    if (!t.acik) {
+      var y = telefonYarim()[0]; if (!y || s.bitti) return "";
+      return '<button type="button" class="tel-tekrar" data-act="tel-ara" data-id="' + esc(y) + '" data-k="tel-ara"><span class="tel-ikon" aria-hidden="true">☎</span>' +
+        '<span class="si-yazi"><b>Konuşma yarım kaldı</b><span>Tekrar ara · ' + esc(TEL_KISI[y][0]) + "</span></span></button>";
+    }
+    if (!TEL_KISI[t.id]) return "";
+    var kisi = TEL_KISI[t.id], K = telefonKartlar(s), nMasa = telefonMasa().length, nTum = telefonTum(s).length;
     var h = '<div class="tel-perde"><div class="tel-kutu" role="dialog" aria-modal="true" aria-labelledby="h-tel">' +
       '<div class="tel-bas"><span class="tel-ikon" aria-hidden="true">☎</span><div class="tel-kim"><h2 id="h-tel">' + esc(kisi[0]) + '</h2><span class="tel-alt">Telefon · konsültasyon · ' +
         (gercekci() ? "saat akıyor" : "saat duruyor") + '</span></div><button type="button" class="tel-kapat" data-act="tel-kapat" data-k="tel-kapat">Telefonu kapat · Esc</button></div>' +
       '<div class="tel-govde"><p class="replik"><span class="kim tel-k">' + esc(kisi[0]) + "</span> – “" + yazHTML("tel:" + t.id + ":alo", kisi[1], "yakin", true) + "”</p>";
     if (!t.cevap) {
-      h += '<p class="tel-yon"><b>Hastayı kısaca anlat.</b> En fazla 3 kart seç. SBAR: <i>durum, öykü, değerlendirme, öneri</i>. ' +
-        (masadan ? "Kartlar masandan." : "Masan boş; topladığın bulgulardan seç.") + "</p>";
-      h += K.length ? '<div class="tel-kartlar">' + K.map(function (x) {
+      h += '<p class="tel-yon"><b>Hastayı kısaca anlat.</b> En fazla 3 kart seç. SBAR: <i>durum, öykü, değerlendirme, öneri</i>.</p>';
+      h += '<div class="tel-sekmeler" role="tablist">' + [["tum", "Tümü", nTum], ["masa", "Masadakiler", nMasa]].map(function (x) {
+        var on = (t.sekme || "tum") === x[0];
+        return '<button type="button" role="tab" class="tel-sekme' + (on ? " on" : "") + '" aria-selected="' + on + '" data-act="tel-sekme" data-id="' + x[0] + '" data-k="tel-sekme-' + x[0] + '">' + x[1] + " · " + x[2] + "</button>";
+      }).join("") + "</div>";
+      if (t.sekme === "masa" && !K.length) h += '<p class="ipucu">Masan boş. Kartın yanındaki raptiyeye basınca buraya düşer; şimdilik Tümü\'nden seç.</p>';
+      else h += K.length ? '<div class="tel-kartlar">' + K.map(function (x) {
         var on = t.secili.indexOf(x.k) >= 0;
         return '<button type="button" class="tel-kart mk-' + esc(x.tur) + (on ? " on" : "") + '" data-act="tel-kart" data-id="' + esc(x.k) + '" aria-pressed="' + on + '">' +
           '<span class="tk-tur">' + esc(MASA_TUR[x.tur] || "Not") + "</span>" + (x.baslik ? "<b>" + esc(x.baslik) + "</b>" : "") + "<span>" + esc(x.metin) + "</span></button>";
       }).join("") + "</div>" : '<p class="ipucu">Elinde anlatacak bir şey yok: önce soru sor, muayene et, tetkik iste.</p>';
       h += '<div class="tel-alt-btn"><button type="button" class="btn" data-act="tel-anlat" data-k="tel-anlat"' + (t.secili.length ? "" : " disabled") + ">Anlat · " + t.secili.length + "/3</button></div>";
     } else {
-      var sec = K.filter(function (x) { return t.secili.indexOf(x.k) >= 0; });
+      var sec = telefonTum(s).filter(function (x) { return t.secili.indexOf(x.k) >= 0; });
       h += '<p class="replik"><span class="kim sen">Sen</span> – ' + sec.map(function (x) { return esc(x.baslik ? x.baslik + ": " + x.metin : x.metin); }).join(" · ") + "</p>" +
         '<p class="replik tel-cevap ' + t.cevap.tur + '"><span class="kim tel-k">' + esc(kisi[0]) + "</span> – “" + yazHTML("tel:" + t.id + ":" + t.cevap.t, t.cevap.metin, "yakin", true) + "”</p>" +
         '<p class="ipucu">Konuşma puanını etkilemez; konsültasyon zaten istendi. İyi anlatmak gerçek nöbette zaman kazandırır.</p>' +
@@ -4504,6 +4532,8 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
       case "tel-kart": var tsc = ui.telefon.secili, tsi = tsc.indexOf(id); if (tsi >= 0) tsc.splice(tsi, 1); else if (tsc.length < 3) tsc.push(id); render(); return;
       case "tel-anlat": telefonAnlat(); return;
       case "tel-kapat": telefonKapat(); return;
+      case "tel-sekme": ui.telefon.sekme = id; render(); return;
+      case "tel-ara": telefonAc(id); return;
       case "ekgb-ac": ekgAc(); return;
       case "ekgb-kapat": ekgKapat(); return;
       case "ekgb-cevap": ekgCevap(+id); return;
