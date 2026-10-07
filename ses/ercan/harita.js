@@ -206,5 +206,10 @@ window.ERCAN_SES = {
 "Turu bitirdik. Hastaya dön.": "ses/ercan/e203.mp3",
 "Sağdaki masa senin not defterin. Raptiyelediğin her şey burada; tıklayınca ya da M tuşuyla büyür.": "ses/ercan/e204.mp3",
 "Ben de sağ alttayım. Bir şey dersem balon çıkar, arada soru sorarım. Takılırsan üstüme tıkla, danış; puanını kırmam.": "ses/ercan/e205.mp3",
-"Alttaki şerit olayları gösterir, tıklarsan hepsini görürsün. Sonuç gelince sol altta kâğıt belirir, tıklayınca sonuç açılır. Hazırsan saat şimdi başlıyor.": "ses/ercan/e206.mp3"
+"Alttaki şerit olayları gösterir, tıklarsan hepsini görürsün. Sonuç gelince sol altta kâğıt belirir, tıklayınca sonuç açılır. Hazırsan saat şimdi başlıyor.": "ses/ercan/e206.mp3",
+"Güzel anlattın hocam, kısa ve net.": "ses/ercan/e207.mp3",
+"Hocam, konsültanı ararken elinde sonuç olsun.": "ses/ercan/e208.mp3",
+"Aferin hocam, gözün keskin.": "ses/ercan/e209.mp3",
+"Bir daha bak hocam: V1'den V4'e kadar ST yukarıda, ön duvar.": "ses/ercan/e210.mp3",
+"Bir daha bak hocam: burada ST yükselmesi yok.": "ses/ercan/e211.mp3"
 };
