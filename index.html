@@ -2232,6 +2232,7 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
       "<li><b>Görseller:</b> Higgsfield (GPT Image 2.5) ile üretildi; görsel dil Disco Elysium'dan esinlenildi.</li>" +
       "<li><b>Müzik ve ortam sesi:</b> Higgsfield (Sonilo, Seed Audio) ile üretildi.</li>" +
       "<li><b>Ercan Abi'nin sesi:</b> Microsoft Edge sinir ağı sesi (tr-TR-AhmetNeural, edge-tts); demo amaçlı.</li>" +
+      "<li><b>Hastane anonsları:</b> Microsoft Edge sinir ağı sesi (tr-TR-EmelNeural, edge-tts). <b>Ambiyans</b> (telefon zili, ambulans sireni, anons gongu): Higgsfield Seed Audio ile üretildi.</li>" +
       '<li><b>Hasta yakını efekti:</b> “Orchestral Shock Hit”, BudgetPixel AI (<a href="https://budgetpixel.com/sfx/orchestral-shock-hit-e9ddbc31" target="_blank" rel="noopener">budgetpixel.com</a>), CC BY 4.0.</li>' +
       '<li><b>Acil servis ortam sesi:</b> “emergency room hospital”, bruno.auzet (<a href="https://freesound.org/people/bruno.auzet/sounds/527438/" target="_blank" rel="noopener">Freesound</a>), CC0; döngü için kırpıldı.</li>' +
       "<li><b>Monitör, alarm ve düğme sesleri:</b> WebAudio ile kodla üretildi.</li>" +
@@ -2508,6 +2509,7 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
     if (sahne !== "vaka") {
       clearTimeout(anonsZaman); anonsZaman = null;
       if (anonsCalan) { try { anonsCalan.pause(); } catch (e) { /* yok say */ } anonsCalan = null; }
+      if (ambiyansCalan) { try { ambiyansCalan.pause(); } catch (e) { /* yok say */ } ambiyansCalan = null; }
       var y = $("anonsYazi"); if (y) y.remove();
       return;
     }
@@ -2519,9 +2521,17 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
     y.innerHTML = "<b>" + esc(bas) + "</b><span>" + esc(metin) + "</span>"; y.classList.remove("gizle"); void y.offsetWidth; y.classList.add("goster");
     clearTimeout(anonsYaziZaman); anonsYaziZaman = setTimeout(function () { y.classList.remove("goster"); y.classList.add("gizle"); }, 6500);
   }
-  function anonsGong() { ton(659, .55, "sine", .07); ton(523, .8, "sine", .07, .42); }
-  function telefonZili() { for (var r = 0; r < 2; r++) for (var k = 0; k < 2; k++) { var g0 = r * 1.6 + k * .5; ton(440, .4, "sine", .018, g0); ton(480, .4, "sine", .018, g0); } }
-  function ambulansSireni() { for (var i = 0; i < 4; i++) { ton(640, .85, "triangle", .012, i * 1.7, 960); ton(960, .85, "triangle", .012, i * 1.7 + .85, 640); } }
+  // Ambiyans: Higgsfield Seed Audio kayıtları; dosya yüklenmez ya da çalınamazsa eski WebAudio sentezi yedek olarak çalar.
+  var AMBIYANS = { gong: "ses/anons/gong.mp3", zil: "ses/anons/zil.mp3", siren: "ses/anons/siren.mp3" }, ambiyansCalan = null;
+  function ambiyansCal(ad, oran, yedek) {
+    var au = new Audio(AMBIYANS[ad]), dustu = false; au.volume = Math.min(1, SES.ana * oran); ambiyansCalan = au;
+    function sentez() { if (dustu || ambiyansCalan !== au) return; dustu = true; ambiyansCalan = null; yedek(); }
+    au.onerror = sentez; au.onended = function () { if (ambiyansCalan === au) ambiyansCalan = null; };
+    var p = au.play(); if (p && p.catch) p.catch(sentez);
+  }
+  function anonsGong() { ambiyansCal("gong", .45, function () { ton(659, .55, "sine", .07); ton(523, .8, "sine", .07, .42); }); }
+  function telefonZili() { ambiyansCal("zil", .6, function () { for (var r = 0; r < 2; r++) for (var k = 0; k < 2; k++) { var g0 = r * 1.6 + k * .5; ton(440, .4, "sine", .018, g0); ton(480, .4, "sine", .018, g0); } }); }
+  function ambulansSireni() { ambiyansCal("siren", .8, function () { for (var i = 0; i < 4; i++) { ton(640, .85, "triangle", .012, i * 1.7, 960); ton(960, .85, "triangle", .012, i * 1.7 + .85, 640); } }); }
   function anonsOlay(zorla) {
     anonsZaman = null;
     if (!(ui.ekran === "vaka" && ui.s && !ui.s.bitti)) return;
@@ -2535,7 +2545,7 @@ body:has(.palet-perde) .duraklat-bant,body:has(.tel-perde) .duraklat-bant,body:h
         anonsGong();
         var au = new Audio(a[0]); au.volume = Math.min(1, SES.ana * .6); anonsCalan = au;
         au.onended = function () { anonsCalan = null; };
-        setTimeout(function () { if (anonsCalan === au) { var pp = au.play(); if (pp && pp.catch) pp.catch(function () {}); } }, 1100);
+        setTimeout(function () { if (anonsCalan === au) { var pp = au.play(); if (pp && pp.catch) pp.catch(function () {}); } }, 1500);
       }
     } else if (r < .8) { anonsYazi("☎ Telefon", "Hemşire masasında telefon çalıyor."); if (ses) telefonZili(); }
     else { anonsYazi("🚑 Siren", "Uzaktan bir ambulans yaklaşıyor."); if (ses) ambulansSireni(); }
